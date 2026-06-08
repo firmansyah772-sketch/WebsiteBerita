@@ -7,6 +7,12 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
+        .logo-center-wrapper {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
         :root { --bg-body:#f4f6f8; --bg-card:#fff; --text-main:#2c3e50; --text-muted:#7f8c8d; --accent:#d32f2f; --border:#eceff1; --shadow:0 2px 8px rgba(0,0,0,0.06); }
         [data-theme="dark"] { --bg-body:#121212; --bg-card:#1e1e1e; --text-main:#e0e0e0; --text-muted:#a0a0a0; --border:#333; --shadow:0 2px 8px rgba(0,0,0,0.3); }
         
@@ -285,8 +291,12 @@
 
     <div class="main-nav">
         <div class="container nav-flex">
-            <img src="https://res.cloudinary.com/dc7guxgnm/image/upload/v1780836722/1000305521-removebg-preview_xerh50.png" alt="KJNI" style="height: 60px; width:auto; object-fit:contain;">   
-            
+    <div class="logo-center-wrapper">
+        <img src="https://res.cloudinary.com/dc7guxgnm/image/upload/v1780836722/1000305521-removebg-preview_xerh50.png"
+             alt="KJNI"
+             style="height:100px; width:auto; object-fit:contain;">
+    </div>
+    </div>          
             <button class="theme-toggle" id="themeBtn">🌓</button>
 
             <div class="searchbar-wrap">
