@@ -25,11 +25,7 @@
             --shadow: 0 4px 12px rgba(0,0,0,0.3);
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: 'Source Sans 3', sans-serif;
@@ -37,66 +33,97 @@
             color: var(--text-main);
             transition: background-color 0.3s, color 0.3s;
             line-height: 1.6;
+            padding-top: 220px; /* Jarak untuk sticky header */
         }
 
-        /* Header & Navigation */
-        header {
-            background-color: var(--bg-card);
-            border-bottom: 1px solid var(--border);
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: var(--shadow);
-        }
-        .header-container {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 15px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .logo {
-            font-family: 'Playfair Display', serif;
-            font-size: 24px;
-            font-weight: 900;
-            color: var(--text-main);
-            text-decoration: none;
-            letter-spacing: -0.5px;
-        }
-        .logo span {
-            color: var(--accent);
-        }
-        .nav-actions {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        .btn-home {
-            text-decoration: none;
-            color: var(--text-main);
-            font-weight: 600;
-            font-size: 14px;
-            padding: 6px 12px;
-            border-radius: 4px;
-            border: 1px solid var(--border);
-            transition: all 0.2s;
-        }
-        .btn-home:hover {
-            background-color: var(--accent);
-            color: white;
-            border-color: var(--accent);
-        }
-        .theme-toggle {
-            background: none;
-            border: none;
-            font-size: 20px;
-            cursor: pointer;
-            padding: 5px;
-            border-radius: 50%;
+        a { text-decoration: none; color: inherit; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+
+        /* =========================================
+           HEADER DARI INDEX.HTML
+           ========================================= */
+        .sticky-header {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 1000;
+            width: 100%;
         }
 
-        /* Main Layout */
+        /* TOP BAR */
+        .top-bar { background:#1a1a1a; color:#fff; font-size:12px; padding:8px 0; }
+        .top-bar-flex { display:flex; justify-content:space-between; align-items:center; gap: 15px; }
+        .ticker-wrap { display:flex; align-items:center; overflow:hidden; flex:1; }
+        .ticker-badge { background:var(--accent); padding:2px 8px; font-weight:700; text-transform:uppercase; margin-right:12px; border-radius:2px; font-size:11px; white-space:nowrap; flex-shrink:0; }
+        .ticker-scroll { overflow:hidden; flex:1; }
+        .ticker-text { white-space:nowrap; animation:marquee 40s linear infinite; display:inline-block; }
+        @keyframes marquee { 0%{transform:translateX(100vw)} 100%{transform:translateX(-100%)} }
+        .top-nav-links { display: flex; gap: 15px; }
+        .top-nav-links a { color:#ccc; font-size:12px; white-space: nowrap; }
+        .top-nav-links a:hover { color:#fff; }
+
+        /* AREA BRANDING */
+        .header-branding { 
+            background: var(--bg-card); 
+            padding: 15px 0; 
+            border-bottom: 1px solid var(--border); 
+            transition: background .3s;
+        }
+        .branding-flex { display: flex; justify-content: space-between; align-items: center; gap: 20px; }
+        .logo-left-wrapper img { height: 80px; width: auto; object-fit: contain; display: block; }
+        .header-ad-slot { width: 728px; height: 90px; flex-shrink: 0; }
+        .ads-header-box {
+            width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
+            background: var(--bg-body); border: 1px dashed var(--border);
+            color: var(--text-muted); font-size: 11px; font-weight: 700;
+            letter-spacing: 1px; border-radius: 4px; text-transform: uppercase;
+        }
+
+        /* NAVIGASI UTAMA */
+        .main-nav { background:var(--bg-card); border-bottom:3px solid var(--accent); box-shadow:0 2px 6px rgba(0,0,0,0.05); }
+        .nav-flex { display:flex; justify-content:space-between; align-items:center; flex-wrap: wrap; gap: 10px; padding: 10px 0; }
+        
+        .searchbar-wrap { flex: 1; min-width: 250px; }
+        .searchbar-inner { display:flex; gap:0; width:100%; border:2px solid var(--accent); border-radius:6px; overflow:hidden; }
+        .searchbar-input { flex:1; padding:8px 12px; border:none; outline:none; font-size:14px; font-family:inherit; background:var(--bg-card); color:var(--text-main); width: 100%; }
+        .searchbar-input::placeholder { color:var(--text-muted); }
+        .searchbar-btn { background:var(--accent); color:#fff; border:none; padding:8px 15px; font-size:14px; font-weight:700; cursor:pointer; transition:background .2s; white-space:nowrap; font-family:inherit; }
+        .searchbar-btn:hover { background:#b71c1c; }
+
+        .theme-toggle { background:none; border:none; cursor:pointer; color:var(--text-main); font-size:18px; padding:8px; display: flex; align-items: center;}
+
+        .menu-wrapper { position: relative; flex: 1; min-width: 0; display: flex; align-items: center; }
+        .menu { display: flex; list-style: none; overflow-x: auto; scrollbar-width: none; flex: 1; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; }
+        .menu::-webkit-scrollbar { display:none; }
+        
+        .scroll-arrow { background: var(--bg-card); border: none; font-size: 16px; font-weight: bold; color: var(--accent); cursor: pointer; height: 100%; position: absolute; top: 0; display: flex; align-items: center; justify-content: center; z-index: 10; transition: opacity 0.2s; opacity: 0; pointer-events: none; }
+        .scroll-arrow.visible { opacity: 1; pointer-events: auto; }
+        .scroll-arrow.left { left: 0; background: linear-gradient(to right, var(--bg-card) 60%, transparent); padding: 0 20px 0 5px; }
+        .scroll-arrow.right { right: 0; background: linear-gradient(to left, var(--bg-card) 60%, transparent); padding: 0 5px 0 20px; }
+        
+        .menu li a { display:block; padding:10px 14px; font-weight:700; font-size:13px; text-transform:uppercase; letter-spacing:.5px; transition:color .2s; white-space:nowrap; }
+        .menu li a:hover, .menu li.active a { color:var(--accent); }
+
+        /* =========================================
+           HASIL SEARCH (SAMA SEPERTI INDEX.HTML)
+           ========================================= */
+        .search-results-area { background:var(--bg-card); border:1px solid var(--border); border-radius:6px; margin-bottom:25px; overflow:hidden; box-shadow:var(--shadow); }
+        .search-results-header { display:flex; justify-content:space-between; align-items:center; padding:12px 16px; border-bottom:1px solid var(--border); }
+        .search-results-header span { font-size:13px; font-weight:700; }
+        .search-results-clear { background:none; border:none; color:var(--accent); font-size:13px; cursor:pointer; font-family:inherit; font-weight:600; }
+        .search-result-item { display:flex; gap:12px; padding:14px 16px; border-bottom:1px solid var(--border); cursor:pointer; transition:background .15s; }
+        .search-result-item:hover { background:var(--bg-body); }
+        .search-result-item:last-child { border-bottom:none; }
+        .search-result-thumb { width:80px; height:60px; border-radius:4px; flex-shrink:0; background:var(--border); display:flex; align-items:center; justify-content:center; font-size:22px; overflow:hidden; }
+        .search-result-thumb img { width:80px; height:60px; object-fit:cover; }
+        .search-result-info { flex:1; min-width:0; }
+        .search-result-cat { font-size:10px; font-weight:700; color:#fff; background:var(--accent); padding:2px 7px; border-radius:2px; text-transform:uppercase; display:inline-block; margin-bottom:4px; }
+        .search-result-title { font-size:14px; font-weight:700; line-height:1.4; margin-bottom:3px; }
+        .search-result-meta { font-size:11px; color:var(--text-muted); }
+        .search-no-result { text-align:center; padding:40px 20px; color:var(--text-muted); }
+
+        /* =========================================
+           MAIN LAYOUT ARTIKEL
+           ========================================= */
         .main-container {
             max-width: 1100px;
             margin: 30px auto;
@@ -105,238 +132,180 @@
             grid-template-columns: 2fr 1fr;
             gap: 30px;
         }
-
-        @media (max-width: 850px) {
-            .main-container {
-                grid-template-columns: 1fr;
-            }
-        }
+        @media (max-width: 850px) { .main-container { grid-template-columns: 1fr; } }
 
         /* Article Content */
         article {
-            background-color: var(--bg-card);
-            padding: 35px;
-            border-radius: 8px;
-            box-shadow: var(--shadow);
-            border: 1px solid var(--border);
+            background-color: var(--bg-card); padding: 35px; border-radius: 8px;
+            box-shadow: var(--shadow); border: 1px solid var(--border);
         }
-        @media (max-width: 480px) {
-            article {
-                padding: 20px;
-            }
-        }
+        @media (max-width: 480px) { article { padding: 20px; } }
+        
         .article-category {
-            display: inline-block;
-            background-color: var(--accent);
-            color: white;
-            padding: 4px 10px;
-            font-size: 12px;
-            font-weight: 700;
-            text-transform: uppercase;
-            border-radius: 4px;
-            margin-bottom: 15px;
-            letter-spacing: 0.5px;
+            display: inline-block; background-color: var(--accent); color: white;
+            padding: 4px 10px; font-size: 12px; font-weight: 700; text-transform: uppercase;
+            border-radius: 4px; margin-bottom: 15px; letter-spacing: 0.5px;
         }
         .article-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 32px;
-            font-weight: 700;
-            line-height: 1.25;
-            margin-bottom: 15px;
-            color: var(--text-main);
+            font-family: 'Playfair Display', serif; font-size: 32px; font-weight: 700;
+            line-height: 1.25; margin-bottom: 15px; color: var(--text-main);
         }
-        @media (max-width: 480px) {
-            .article-title {
-                font-size: 26px;
-            }
-        }
+        @media (max-width: 480px) { .article-title { font-size: 26px; } }
+        
         .article-meta {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            font-size: 13px;
-            color: var(--text-muted);
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 15px;
-            margin-bottom: 25px;
-        }
-        .article-meta span {
-            display: flex;
-            align-items: center;
-            gap: 5px;
+            display: flex; flex-wrap: wrap; gap: 15px; font-size: 13px;
+            color: var(--text-muted); border-bottom: 1px solid var(--border);
+            padding-bottom: 15px; margin-bottom: 25px;
         }
         .article-img-container {
-            width: 100%;
-            margin-bottom: 25px;
-            border-radius: 6px;
-            overflow: hidden;
-            background-color: #eaeaea;
+            width: 100%; margin-bottom: 25px; border-radius: 6px;
+            overflow: hidden; background-color: #eaeaea;
         }
-        .article-img {
-            width: 100%;
-            height: auto;
-            max-height: 450px;
-            object-fit: cover;
-            display: block;
-        }
-        .article-body {
-            font-size: 17px;
-            color: var(--text-main);
-            letter-spacing: 0.1px;
-        }
-        .article-body p {
-            margin-bottom: 18px;
-            text-align: justify;
-        }
+        .article-img { width: 100%; height: auto; max-height: 450px; object-fit: cover; display: block; }
+        .article-body { font-size: 17px; color: var(--text-main); letter-spacing: 0.1px; }
+        .article-body p { margin-bottom: 18px; text-align: justify; }
+
+        /* CSS IKLAN DINAMIS */
+        .ad-header-wrapper { max-width: 1100px; margin: 20px auto 0 auto; padding: 0 20px; text-align: center; }
+        .ad-tengah-wrapper { margin: 30px 0; text-align: center; border-top: 1px dashed var(--border); border-bottom: 1px dashed var(--border); padding: 15px 0; }
+        .ad-label { display: block; font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; }
+        .ad-header-wrapper a, .ad-tengah-wrapper a, .ad-sidebar-wrapper a, .ad-footer-wrapper a { display: block; margin-bottom: 15px; text-decoration: none; }
+        .ad-header-wrapper a:last-child, .ad-tengah-wrapper a:last-child, .ad-sidebar-wrapper a:last-child, .ad-footer-wrapper a:last-child { margin-bottom: 0; }
+        .ad-header-wrapper img, .ad-tengah-wrapper img, .ad-sidebar-wrapper img, .ad-footer-wrapper img { max-width: 100%; height: auto; display: block; margin: 0 auto; border-radius: 4px; }
 
         /* Share Buttons */
-        .share-box {
-            margin-top: 35px;
-            padding-top: 20px;
-            border-top: 1px solid var(--border);
-        }
-        .share-title {
-            font-size: 14px;
-            font-weight: 700;
-            color: var(--text-muted);
-            margin-bottom: 10px;
-            text-transform: uppercase;
-        }
-        .share-buttons {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        .share-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 16px;
-            border-radius: 4px;
-            color: white;
-            text-decoration: none;
-            font-size: 13px;
-            font-weight: 600;
-            transition: opacity 0.2s;
-        }
-        .share-btn:hover {
-            opacity: 0.9;
-        }
-        .share-fb { background-color: #1877f2; }
-        .share-tw { background-color: #1da1f2; }
-        .share-wa { background-color: #25d366; }
-        .share-tg { background-color: #0088cc; }
+        .share-box { margin-top: 35px; padding-top: 20px; border-top: 1px solid var(--border); }
+        .share-title { font-size: 14px; font-weight: 700; color: var(--text-muted); margin-bottom: 10px; text-transform: uppercase; }
+        .share-buttons { display: flex; flex-wrap: wrap; gap: 10px; }
+        .share-btn { display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; border-radius: 4px; color: white; text-decoration: none; font-size: 13px; font-weight: 600; }
+        .share-fb { background-color: #1877f2; } .share-tw { background-color: #1da1f2; }
+        .share-wa { background-color: #25d366; } .share-tg { background-color: #0088cc; }
 
         /* Sidebar */
-        .sidebar {
-            display: flex;
-            flex-direction: column;
-            gap: 25px;
-        }
-        .sidebar-widget {
-            background-color: var(--bg-card);
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: var(--shadow);
-            border: 1px solid var(--border);
-        }
-        .widget-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--text-main);
-            margin-bottom: 15px;
-            padding-bottom: 8px;
-            border-bottom: 2px solid var(--accent);
-        }
-        .sidebar-list {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        .sidebar-item {
-            display: flex;
-            gap: 12px;
-            text-decoration: none;
-            color: var(--text-main);
-            align-items: flex-start;
-            transition: color 0.2s;
-        }
-        .sidebar-item:hover {
-            color: var(--accent);
-        }
-        .sidebar-num {
-            font-family: 'Playfair Display', serif;
-            font-size: 20px;
-            font-weight: 900;
-            color: var(--text-muted);
-            opacity: 0.4;
-            line-height: 1;
-        }
-        .sidebar-item-title {
-            font-size: 14px;
-            font-weight: 600;
-            line-height: 1.4;
+        .sidebar { display: flex; flex-direction: column; gap: 25px; }
+        .sidebar-widget { background-color: var(--bg-card); padding: 20px; border-radius: 8px; box-shadow: var(--shadow); border: 1px solid var(--border); }
+        .widget-title { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 700; color: var(--text-main); margin-bottom: 15px; padding-bottom: 8px; border-bottom: 2px solid var(--accent); }
+        .sidebar-list { display: flex; flex-direction: column; gap: 15px; }
+        .sidebar-item { display: flex; gap: 12px; text-decoration: none; color: var(--text-main); align-items: flex-start; }
+        .sidebar-item:hover { color: var(--accent); }
+        .sidebar-num { font-family: 'Playfair Display', serif; font-size: 20px; font-weight: 900; color: var(--text-muted); opacity: 0.4; line-height: 1; }
+        .sidebar-item-title { font-size: 14px; font-weight: 600; line-height: 1.4; }
+
+        /* Footer */
+        footer { background-color: var(--bg-card); border-top: 1px solid var(--border); padding: 30px 20px; margin-top: 50px; text-align: center; }
+        .footer-container { max-width: 1100px; margin: 0 auto; }
+        .ad-footer-wrapper { max-width: 728px; margin: 0 auto 20px auto; }
+
+        /* Status States */
+        .status-container { grid-column: 1 / -1; text-align: center; padding: 60px 20px; background-color: var(--bg-card); border-radius: 8px; box-shadow: var(--shadow); border: 1px solid var(--border); }
+        .status-title { font-family: 'Playfair Display', serif; font-size: 24px; margin-bottom: 15px; }
+        .btn-error-home { display: inline-block; margin-top: 15px; background-color: var(--accent); color: white; padding: 10px 20px; border-radius: 4px; font-weight: 600; }
+        .hidden { display: none !important; }
+
+        /* =========================================
+           RESPONSIVE HEADER
+           ========================================= */
+        @media(max-width:1024px) {
+            .header-ad-slot { display: none; }
+            .branding-flex { justify-content: center; }
+            body { padding-top: 140px; }
         }
 
-        /* Status States (Loading / Error) */
-        .status-container {
-            grid-column: 1 / -1;
-            text-align: center;
-            padding: 60px 20px;
-            background-color: var(--bg-card);
-            border-radius: 8px;
-            box-shadow: var(--shadow);
-            border: 1px solid var(--border);
-        }
-        .status-title {
-            font-family: 'Playfair Display', serif;
-            font-size: 24px;
-            margin-bottom: 15px;
-        }
-        .btn-error-home {
-            display: inline-block;
-            margin-top: 15px;
-            background-color: var(--accent);
-            color: white;
-            text-decoration: none;
-            padding: 10px 20px;
-            border-radius: 4px;
-            font-weight: 600;
-        }
-        .hidden {
-            display: none !important;
+        @media(max-width:768px) {
+            .top-nav-links { display: none; }
+            .nav-flex { flex-wrap: wrap; justify-content: space-between; gap: 12px; padding: 10px 0; }
+            .logo-left-wrapper img { height: 45px !important; }
+            .theme-toggle { padding: 5px; margin-left: auto; }
+            .searchbar-wrap { width: 100%; flex: none; order: 3; margin: 0; }
+            .menu-wrapper { width: 100%; order: 4; margin: 0; padding-top: 5px; }
+            body { padding-top: 185px; }
         }
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="header-container">
-            <a href="index.html" class="logo">KJNI<span>.my.id</span></a>
-            <div class="nav-actions">
-                <a href="index.html" class="btn-home">⬅ Beranda</a>
-                <button class="theme-toggle" id="themeToggle" title="Ubah Tema">🌓</button>
+    <header class="sticky-header">
+        <div class="top-bar">
+            <div class="container top-bar-flex">
+                <div class="ticker-wrap">
+                    <span class="ticker-badge">BREAKING NEWS</span>
+                    <div class="ticker-scroll">
+                        <span class="ticker-text" id="tickerText">Memuat berita terbaru...</span>
+                    </div>
+                </div>
+                <div class="top-nav-links">
+                    <a href="#">Tentang Kami</a>
+                    <a href="#">Kontak</a>
+                    <a href="#">Redaksi</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="header-branding">
+            <div class="container branding-flex">
+                <div class="logo-left-wrapper">
+                    <a href="index.html">
+                        <img src="https://res.cloudinary.com/dc7guxgnm/image/upload/q_auto/f_auto/v1780932367/1000305521-removebg-preview_vjy4es.png" alt="KJNI">
+                    </a>
+                </div>
+                
+                <div class="header-ad-slot">
+                    </div>
+            </div>
+        </div>
+
+        <div class="main-nav">
+            <div class="container nav-flex">
+
+                <div class="searchbar-wrap">
+                    <div class="searchbar-inner">
+                        <input class="searchbar-input" id="searchbarInput" type="text" placeholder="🔍 Cari berita..." autocomplete="off">
+                        <button class="searchbar-btn" id="searchbarBtn">Cari</button>
+                        <button class="theme-toggle" id="themeBtn">🌓</button>
+                    </div>
+                </div>
+
+                <div class="menu-wrapper">
+                    <button class="scroll-arrow left" id="scrollLeft">❮</button>
+                    <ul class="menu" id="navMenu">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="index.html">Nasional</a></li>
+                        <li><a href="index.html">Tangerang Raya</a></li>
+                        <li><a href="index.html">Banten</a></li>
+                        <li><a href="index.html">Serang</a></li>
+                        <li><a href="index.html">Peristiwa</a></li>
+                        <li><a href="index.html">Politik</a></li>
+                        <li><a href="index.html">Ekonomi</a></li>
+                        <li><a href="index.html">Pendidikan</a></li>
+                        <li><a href="index.html">Olahraga</a></li>
+                        <li><a href="index.html">Teknologi</a></li>
+                        <li><a href="index.html">Hiburan</a></li>
+                        <li><a href="index.html">Lifestyle</a></li>
+                        <li><a href="index.html">Opini</a></li>
+                    </ul>
+                    <button class="scroll-arrow right" id="scrollRight">❯</button>
+                </div>
+
             </div>
         </div>
     </header>
+    <div id="adHeaderContainer" class="ad-header-wrapper hidden"></div>
 
     <div class="main-container">
-        <!-- Keadaan Memuat (Loading) -->
         <div id="loadingState" class="status-container">
             <h2 class="status-title">Memuat Artikel...</h2>
             <p style="color: var(--text-muted)">Sabar ya, sedang mengambil data dari server...</p>
         </div>
 
-        <!-- Keadaan Error / Tidak Ditemukan -->
         <div id="errorState" class="status-container hidden">
             <h2 class="status-title" id="errorTitle">Artikel Tidak Ditemukan</h2>
             <p id="errorDesc" style="color: var(--text-muted)">ID Artikel tidak valid atau telah dihapus oleh admin.</p>
             <a href="index.html" class="btn-error-home">Kembali ke Beranda</a>
         </div>
 
-        <!-- Konten Utama Berita -->
         <main id="mainContent" class="hidden">
+            <div id="searchResultsArea" style="display:none;" class="search-results-area"></div>
+
             <article>
                 <div class="article-category" id="artKategori">-</div>
                 <h1 class="article-title" id="artJudul">-</h1>
@@ -351,11 +320,10 @@
                     <img src="" alt="" class="article-img" id="artGambar">
                 </div>
 
-                <div class="article-body" id="artIsi">
-                    <!-- Isi berita akan dirender di sini via JS -->
-                </div>
+                <div class="article-body" id="artIsi"></div>
 
-                <!-- Box Berbagi Sosial Media -->
+                <div id="adTengahContainer" class="ad-tengah-wrapper hidden"></div>
+
                 <div class="share-box">
                     <div class="share-title">Bagikan Artikel Ini:</div>
                     <div class="share-buttons">
@@ -368,27 +336,159 @@
             </article>
         </main>
 
-        <!-- Sidebar Berita Lainnya -->
-        <aside class="sidebar id="sidebarSection" class="hidden">
+        <aside class="sidebar hidden" id="sidebarSection">
+            <div id="adSidebarContainer" class="sidebar-widget ad-sidebar-wrapper hidden" style="padding: 10px;"></div>
+
             <div class="sidebar-widget">
                 <h3 class="widget-title">Berita Terbaru</h3>
-                <div class="sidebar-list" id="sidebarTerbaru">
-                    <!-- List berita sampingan akan dimuat di sini -->
-                </div>
+                <div class="sidebar-list" id="sidebarTerbaru"></div>
             </div>
         </aside>
     </div>
 
-    <!-- Firebase Script SDK (Modular v10) -->
+    <footer>
+        <div class="footer-container">
+            <div id="adFooterContainer" class="ad-footer-wrapper hidden"></div>
+            <p style="font-size: 14px; color: var(--text-muted);">&copy; 2026 KJNI. All Rights Reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Pengaturan Tema (Dark/Light Mode)
+        const themeBtn = document.getElementById('themeBtn');
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+
+        themeBtn.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        });
+
+        // Pengaturan Offset Header agar tidak menimpa konten
+        function setHeaderOffset() {
+            const h = document.querySelector('.sticky-header');
+            if (h) document.body.style.paddingTop = h.offsetHeight + 'px';
+        }
+        window.addEventListener('resize', setHeaderOffset);
+        setTimeout(setHeaderOffset, 100);
+
+        // Pengaturan Scroll Navbar Arrows
+        const navMenu = document.getElementById('navMenu');
+        const scrollLeftBtn = document.getElementById('scrollLeft');
+        const scrollRightBtn = document.getElementById('scrollRight');
+
+        function updateScrollArrows() {
+            if (navMenu.scrollLeft > 0) {
+                scrollLeftBtn.classList.add('visible');
+            } else {
+                scrollLeftBtn.classList.remove('visible');
+            }
+            if (navMenu.scrollLeft < (navMenu.scrollWidth - navMenu.clientWidth - 1)) {
+                scrollRightBtn.classList.add('visible');
+            } else {
+                scrollRightBtn.classList.remove('visible');
+            }
+        }
+
+        scrollLeftBtn.addEventListener('click', () => { navMenu.scrollBy({ left: -150, behavior: 'smooth' }); });
+        scrollRightBtn.addEventListener('click', () => { navMenu.scrollBy({ left: 150, behavior: 'smooth' }); });
+
+        navMenu.addEventListener('scroll', updateScrollArrows);
+        window.addEventListener('resize', updateScrollArrows);
+        setTimeout(updateScrollArrows, 100);
+
+        // =========================================
+        // SCRIPT PENCARIAN MANDIRI DI ARTIKEL.HTML 
+        // =========================================
+        function formatTglSearch(ts) {
+            if (!ts || !ts.seconds) return '';
+            return new Date(ts.seconds * 1000).toLocaleDateString('id-ID', { day:'numeric', month:'short', year:'numeric' });
+        }
+
+        function lakukan_search() {
+            const keyword = document.getElementById('searchbarInput').value.trim().toLowerCase();
+            const area = document.getElementById('searchResultsArea');
+            const articleEl = document.querySelector('article');
+
+            if (keyword.length < 2) {
+                area.style.display = 'none';
+                articleEl.style.display = '';
+                return;
+            }
+
+            const semua = Object.values(window._beritaMap || {});
+            const hasil = semua.filter(b =>
+                (b.judul || '').toLowerCase().includes(keyword) ||
+                (b.isi || '').toLowerCase().includes(keyword) ||
+                (b.kategori || '').toLowerCase().includes(keyword) ||
+                (b.penulis || '').toLowerCase().includes(keyword)
+            );
+
+            articleEl.style.display = 'none';
+            area.style.display = 'block';
+
+            if (hasil.length === 0) {
+                area.innerHTML = `
+                    <div class="search-results-header">
+                        <span>Hasil pencarian: "<em>${document.getElementById('searchbarInput').value}</em>"</span>
+                        <button class="search-results-clear" id="clearSearch">✕ Bersihkan</button>
+                    </div>
+                    <div class="search-no-result">
+                        <div style="font-size:40px;margin-bottom:10px;">😔</div>
+                        <p>Tidak ditemukan berita untuk kata kunci tersebut.</p>
+                        <p style="font-size:12px;margin-top:6px;">Coba kata kunci lain.</p>
+                    </div>`;
+            } else {
+                area.innerHTML = `
+                    <div class="search-results-header">
+                        <span>Ditemukan <strong>${hasil.length}</strong> berita untuk "<em>${document.getElementById('searchbarInput').value}</em>"</span>
+                        <button class="search-results-clear" id="clearSearch">✕ Bersihkan</button>
+                    </div>
+                    ${hasil.map(b => `
+                        <div class="search-result-item" data-id="${b.id}">
+                            <div class="search-result-thumb">
+                                ${b.gambar ? `<img src="${b.gambar}" alt="${b.judul}">` : '📰'}
+                            </div>
+                            <div class="search-result-info">
+                                <span class="search-result-cat">${b.kategori}</span>
+                                <div class="search-result-title">${b.judul}</div>
+                                <div class="search-result-meta">✍️ ${b.penulis || 'Redaksi KJNI'} &nbsp;•&nbsp; 📅 ${formatTglSearch(b.tanggalDibuat)}</div>
+                            </div>
+                        </div>`).join('')}`;
+            }
+
+            // Aksi saat item hasil pencarian diklik, muat ulang ke artikel baru
+            area.querySelectorAll('.search-result-item').forEach(item => {
+                item.addEventListener('click', () => {
+                    window.location.href = `artikel.html?id=${item.dataset.id}`;
+                });
+            });
+
+            // Tombol Bersihkan Pencarian (Kembalikan ke artikel semula)
+            const clearBtn = document.getElementById('clearSearch');
+            if (clearBtn) {
+                clearBtn.addEventListener('click', () => {
+                    document.getElementById('searchbarInput').value = '';
+                    area.style.display = 'none';
+                    articleEl.style.display = '';
+                });
+            }
+        }
+
+        document.getElementById('searchbarBtn').addEventListener('click', lakukan_search);
+        document.getElementById('searchbarInput').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') lakukan_search();
+        });
+    </script>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, doc, getDoc, collection, query, orderBy, limit, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, collection, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        // ==========================================
-        // SILAHKAN PASTE CONFIG FIREBASE ANDA DI SINI
-        // ==========================================
         const firebaseConfig = {
-           apiKey: "AIzaSyCCOOmXPfLhbDdSoil1UHfld5731689HVw",
+            apiKey: "AIzaSyCCOOmXPfLhbDdSoil1UHfld5731689HVw",
             authDomain: "webberita-8af66.firebaseapp.com",
             projectId: "webberita-8af66",
             storageBucket: "webberita-8af66.firebasestorage.app",
@@ -397,29 +497,14 @@
             measurementId: "G-H2QS1WH9BD",
         };
 
-        // Inisialisasi Firebase & Firestore
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // Pengaturan Tema (Dark/Light Mode) agar Sinkron dengan index.html
-        const themeToggle = document.getElementById('themeToggle');
-        const savedTheme = localStorage.getItem('theme') || 'light';
-        document.documentElement.setAttribute('data-theme', savedTheme);
-
-        themeToggle.addEventListener('click', () => {
-            const currentTheme = document.documentElement.getAttribute('data-theme');
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            document.documentElement.setAttribute('data-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
-        });
-
-        // Ambil ID dari URL (?id=xxxxxxxxx)
         function getArtikelId() {
             const params = new URLSearchParams(window.location.search);
             return params.get('id');
         }
 
-        // Fungsi Menghitung Perkiraan Waktu Baca
         function hitungWaktuBaca(text) {
             const kataPerMenit = 200; 
             const jumlahKata = text.trim().split(/\s+/).length;
@@ -427,13 +512,12 @@
             return `${menit} menit baca`;
         }
 
-        // Fungsi Memuat Detail Artikel Utama
         async function muatArtikel() {
             const id = getArtikelId();
             const loadingEl = document.getElementById('loadingState');
             const errorEl = document.getElementById('errorState');
             const mainContentEl = document.getElementById('mainContent');
-            const sidebarSection = document.querySelector('.sidebar');
+            const sidebarSection = document.getElementById('sidebarSection');
 
             if (!id) {
                 loadingEl.classList.add('hidden');
@@ -450,15 +534,11 @@
                 if (docSnap.exists()) {
                     const data = docSnap.data();
 
-                    // Update Judul Halaman Web
                     document.title = `${data.judul} - KJNI`;
-
-                    // Isi Data Elemen HTML
                     document.getElementById('artKategori').innerText = data.kategori || 'Umum';
                     document.getElementById('artJudul').innerText = data.judul || 'Tanpa Judul';
                     document.getElementById('artPenulis').innerText = data.penulis || 'Redaksi KJNI';
                     
-                    // Format Tanggal
                     if (data.tanggalDibuat && data.tanggalDibuat.seconds) {
                         const tgl = new Date(data.tanggalDibuat.seconds * 1000);
                         document.getElementById('artTanggal').innerText = tgl.toLocaleDateString('id-ID', {
@@ -470,10 +550,8 @@
                         document.getElementById('artTanggal').innerText = 'Baru saja';
                     }
 
-                    // Format Waktu Baca
                     document.getElementById('artWaktuBaca').innerText = hitungWaktuBaca(data.isi || '');
 
-                    // Render Gambar Utama
                     const imgEl = document.getElementById('artGambar');
                     if (data.gambar) {
                         imgEl.src = data.gambar;
@@ -482,7 +560,6 @@
                         document.getElementById('artImgContainer').style.display = 'none';
                     }
 
-                    // Format Isi Paragraf secara Rapi (Mencegah teks menumpuk)
                     const isiFormatted = (data.isi || '')
                         .split('\n\n')
                         .filter(p => p.trim() !== '')
@@ -490,7 +567,6 @@
                         .join('');
                     document.getElementById('artIsi').innerHTML = isiFormatted;
 
-                    // Konfigurasi Tombol Share Sosial Media
                     const currentUrl = encodeURIComponent(window.location.href);
                     const currentTitle = encodeURIComponent(data.judul);
 
@@ -499,17 +575,14 @@
                     document.getElementById('shareWa').href = `https://wa.me/?text=${currentTitle}%20${currentUrl}`;
                     document.getElementById('shareTg').href = `https://t.me/share/url?url=${currentUrl}&text=${currentTitle}`;
 
-                    // Tampilkan Konten Utama & Sembunyikan Loading
                     loadingEl.classList.add('hidden');
                     mainContentEl.classList.remove('hidden');
                     if(sidebarSection) sidebarSection.classList.remove('hidden');
 
                 } else {
-                    // Jika data kosong / dokumen tidak ada di Firestore
                     loadingEl.classList.add('hidden');
                     errorEl.classList.remove('hidden');
                 }
-
             } catch (error) {
                 console.error("Gagal memuat artikel:", error);
                 loadingEl.classList.add('hidden');
@@ -519,40 +592,93 @@
             }
         }
 
-        // Fungsi Memuat Berita Terbaru Untuk di Sidebar Samping
-        async function muatSidebarTerbaru() {
-            try {
-                const q = query(collection(db, "berita"), orderBy("tanggalDibuat", "desc"), limit(5));
-                const querySnapshot = await getDocs(q);
-                const sidebarContainer = document.getElementById('sidebarTerbaru');
+        // ========================================================
+        // LISTEN DATA UNTUK MENGISI FILTER SEARCH BAR & SIDEBAR
+        // ========================================================
+        function dataBeritaListener() {
+            const q = query(collection(db, "berita"), orderBy("tanggalDibuat", "desc"));
+            onSnapshot(q, (snapshot) => {
+                const semuaBerita = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
                 
+                // Daftarkan ke global window._beritaMap agar dibaca fungsi lakukan_search() di atas
+                const beritaMap = {};
+                semuaBerita.forEach(b => beritaMap[b.id] = b);
+                window._beritaMap = beritaMap;
+
+                // Update text running ticker berita di atas header
+                if(semuaBerita.length > 0) {
+                    document.getElementById('tickerText').innerText = semuaBerita.map(b => b.judul).join('  •  ');
+                }
+
+                // Render list Berita Terbaru di Sidebar (Maksimal 5 item diluar artikel aktif)
+                const sidebarContainer = document.getElementById('sidebarTerbaru');
                 let listHtml = '';
                 let index = 0;
-                
-                querySnapshot.forEach((doc) => {
-                    const data = doc.data();
-                    // Cegah artikel yang sedang dibaca muncul kembali di peringkat teratas sidebar
-                    if (doc.id !== getArtikelId()) {
+                semuaBerita.forEach((b) => {
+                    if (b.id !== getArtikelId() && index < 5) {
                         listHtml += `
-                            <a href="artikel.html?id=${doc.id}" class="sidebar-item">
+                            <a href="artikel.html?id=${b.id}" class="sidebar-item">
                                 <div class="sidebar-num">${String(index + 1).padStart(2, '0')}</div>
-                                <div class="sidebar-item-title">${data.judul}</div>
+                                <div class="sidebar-item-title">${b.judul}</div>
                             </a>
                         `;
                         index++;
                     }
                 });
-
                 sidebarContainer.innerHTML = listHtml || '<p style="font-size:13px; color:var(--text-muted)">Belum ada berita lain.</p>';
+            }, (error) => {
+                console.error("Gagal sinkronisasi data berita global:", error);
+            });
+        }
+
+        async function muatIklan() {
+            try {
+                const adRef = doc(db, "pengaturan", "iklan");
+                const adSnap = await getDoc(adRef);
+
+                if (adSnap.exists()) {
+                    const adData = adSnap.data();
+
+                    function renderMultipleAds(adArray, containerId) {
+                        const container = document.getElementById(containerId);
+                        if (!container) return;
+
+                        if (adArray && adArray.length > 0) {
+                            container.innerHTML = '<span class="ad-label">Sponsor</span>';
+                            adArray.forEach(ad => {
+                                if (ad.img) {
+                                    const adLink = document.createElement('a');
+                                    adLink.href = ad.link || '#';
+                                    adLink.target = '_blank';
+                                    
+                                    const adImg = document.createElement('img');
+                                    adImg.src = ad.img;
+                                    adImg.alt = "Iklan Sponsor";
+                                    
+                                    adLink.appendChild(adImg);
+                                    container.appendChild(adLink);
+                                }
+                            });
+                            container.classList.remove('hidden');
+                        } else {
+                            container.classList.add('hidden');
+                        }
+                    }
+
+                    renderMultipleAds(adData.ads_header, 'adHeaderContainer');
+                    renderMultipleAds(adData.ads_sidebar, 'adSidebarContainer');
+                    renderMultipleAds(adData.ads_tengah, 'adTengahContainer');
+                    renderMultipleAds(adData.ads_footer, 'adFooterContainer');
+                }
             } catch (error) {
-                console.error("Gagal memuat sidebar:", error);
+                console.error("Gagal memuat data iklan dinamis:", error);
             }
         }
 
-        // Jalankan seluruh fungsi saat halaman di-load
         window.addEventListener('DOMContentLoaded', () => {
             muatArtikel();
-            muatSidebarTerbaru();
+            dataBeritaListener();
+            muatIklan(); 
         });
     </script>
 </body>
