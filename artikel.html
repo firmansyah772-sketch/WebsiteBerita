@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memuat Artikel... - KJNI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-body: #f4f6f8;
+            --bg-card: #ffffff;
+            --text-main: #2c3e50;
+            --text-muted: #7f8c8d;
+            --accent: #d32f2f;
+            --border: #eceff1;
+            --shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        [data-theme="dark"] {
+            --bg-body: #121212;
+            --bg-card: #1e1e1e;
+            --text-main: #e0e0e0;
+            --text-muted: #a0a0a0;
+            --border: #333333;
+            --shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Source Sans 3', sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            transition: background-color 0.3s, color 0.3s;
+            line-height: 1.6;
+        }
+
+        /* Header & Navigation */
+        header {
+            background-color: var(--bg-card);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: var(--shadow);
+        }
+        .header-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            font-weight: 900;
+            color: var(--text-main);
+            text-decoration: none;
+            letter-spacing: -0.5px;
+        }
+        .logo span {
+            color: var(--accent);
+        }
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .btn-home {
+            text-decoration: none;
+            color: var(--text-main);
+            font-weight: 600;
+            font-size: 14px;
+            padding: 6px 12px;
+            border-radius: 4px;
+            border: 1px solid var(--border);
+            transition: all 0.2s;
+        }
+        .btn-home:hover {
+            background-color: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+        .theme-toggle {
+            background: none;
+            border: none;
+            font-size: 20px;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 50%;
+        }
+
+        /* Main Layout */
+        .main-container {
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 30px;
+        }
+
+        @media (max-width: 850px) {
+            .main-container {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Article Content */
+        article {
+            background-color: var(--bg-card);
+            padding: 35px;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+        @media (max-width: 480px) {
+            article {
+                padding: 20px;
+            }
+        }
+        .article-category {
+            display: inline-block;
+            background-color: var(--accent);
+            color: white;
+            padding: 4px 10px;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            border-radius: 4px;
+            margin-bottom: 15px;
+            letter-spacing: 0.5px;
+        }
+        .article-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            font-weight: 700;
+            line-height: 1.25;
+            margin-bottom: 15px;
+            color: var(--text-main);
+        }
+        @media (max-width: 480px) {
+            .article-title {
+                font-size: 26px;
+            }
+        }
+        .article-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            font-size: 13px;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+        .article-meta span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .article-img-container {
+            width: 100%;
+            margin-bottom: 25px;
+            border-radius: 6px;
+            overflow: hidden;
+            background-color: #eaeaea;
+        }
+        .article-img {
+            width: 100%;
+            height: auto;
+            max-height: 450px;
+            object-fit: cover;
+            display: block;
+        }
+        .article-body {
+            font-size: 17px;
+            color: var(--text-main);
+            letter-spacing: 0.1px;
+        }
+        .article-body p {
+            margin-bottom: 18px;
+            text-align: justify;
+        }
+
+        /* Share Buttons */
+        .share-box {
+            margin-top: 35px;
+            padding-top: 20px;
+            border-top: 1px solid var(--border);
+        }
+        .share-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+        .share-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .share-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            border-radius: 4px;
+            color: white;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            transition: opacity 0.2s;
+        }
+        .share-btn:hover {
+            opacity: 0.9;
+        }
+        .share-fb { background-color: #1877f2; }
+        .share-tw { background-color: #1da1f2; }
+        .share-wa { background-color: #25d366; }
+        .share-tg { background-color: #0088cc; }
+
+        /* Sidebar */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+        .sidebar-widget {
+            background-color: var(--bg-card);
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+        .widget-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--accent);
+        }
+        .sidebar-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .sidebar-item {
+            display: flex;
+            gap: 12px;
+            text-decoration: none;
+            color: var(--text-main);
+            align-items: flex-start;
+            transition: color 0.2s;
+        }
+        .sidebar-item:hover {
+            color: var(--accent);
+        }
+        .sidebar-num {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            font-weight: 900;
+            color: var(--text-muted);
+            opacity: 0.4;
+            line-height: 1;
+        }
+        .sidebar-item-title {
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 1.4;
+        }
+
+        /* Status States (Loading / Error) */
+        .status-container {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 60px 20px;
+            background-color: var(--bg-card);
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+        .status-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+        .btn-error-home {
+            display: inline-block;
+            margin-top: 15px;
+            background-color: var(--accent);
+            color: white;
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-container">
+            <a href="index.html" class="logo">KJNI<span>.my.id</span></a>
+            <div class="nav-actions">
+                <a href="index.html" class="btn-home">⬅ Beranda</a>
+                <button class="theme-toggle" id="themeToggle" title="Ubah Tema">🌓</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="main-container">
+        <!-- Keadaan Memuat (Loading) -->
+        <div id="loadingState" class="status-container">
+            <h2 class="status-title">Memuat Artikel...</h2>
+            <p style="color: var(--text-muted)">Sabar ya, sedang mengambil data dari server...</p>
+        </div>
+
+        <!-- Keadaan Error / Tidak Ditemukan -->
+        <div id="errorState" class="status-container hidden">
+            <h2 class="status-title" id="errorTitle">Artikel Tidak Ditemukan</h2>
+            <p id="errorDesc" style="color: var(--text-muted)">ID Artikel tidak valid atau telah dihapus oleh admin.</p>
+            <a href="index.html" class="btn-error-home">Kembali ke Beranda</a>
+        </div>
+
+        <!-- Konten Utama Berita -->
+        <main id="mainContent" class="hidden">
+            <article>
+                <div class="article-category" id="artKategori">-</div>
+                <h1 class="article-title" id="artJudul">-</h1>
+                
+                <div class="article-meta" id="artMeta">
+                    <span>✍️ <span id="artPenulis">Redaksi KJNI</span></span>
+                    <span>📅 <span id="artTanggal">-</span></span>
+                    <span>⏱ <span id="artWaktuBaca">1 menit baca</span></span>
+                </div>
+
+                <div class="article-img-container" id="artImgContainer">
+                    <img src="" alt="" class="article-img" id="artGambar">
+                </div>
+
+                <div class="article-body" id="artIsi">
+                    <!-- Isi berita akan dirender di sini via JS -->
+                </div>
+
+                <!-- Box Berbagi Sosial Media -->
+                <div class="share-box">
+                    <div class="share-title">Bagikan Artikel Ini:</div>
+                    <div class="share-buttons">
+                        <a href="#" target="_blank" class="share-btn share-fb" id="shareFb">Facebook</a>
+                        <a href="#" target="_blank" class="share-btn share-tw" id="shareTw">Twitter / X</a>
+                        <a href="#" target="_blank" class="share-btn share-wa" id="shareWa">WhatsApp</a>
+                        <a href="#" target="_blank" class="share-btn share-tg" id="shareTg">Telegram</a>
+                    </div>
+                </div>
+            </article>
+        </main>
+
+        <!-- Sidebar Berita Lainnya -->
+        <aside class="sidebar id="sidebarSection" class="hidden">
+            <div class="sidebar-widget">
+                <h3 class="widget-title">Berita Terbaru</h3>
+                <div class="sidebar-list" id="sidebarTerbaru">
+                    <!-- List berita sampingan akan dimuat di sini -->
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Firebase Script SDK (Modular v10) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, doc, getDoc, collection, query, orderBy, limit, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        // ==========================================
+        // SILAHKAN PASTE CONFIG FIREBASE ANDA DI SINI
+        // ==========================================
+        const firebaseConfig = {
+           apiKey: "AIzaSyCCOOmXPfLhbDdSoil1UHfld5731689HVw",
+            authDomain: "webberita-8af66.firebaseapp.com",
+            projectId: "webberita-8af66",
+            storageBucket: "webberita-8af66.firebasestorage.app",
+            messagingSenderId: "752062961977",
+            appId: "1:752062961977:web:6af98cd5ebe074189c30e8",
+            measurementId: "G-H2QS1WH9BD",
+        };
+
+        // Inisialisasi Firebase & Firestore
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // Pengaturan Tema (Dark/Light Mode) agar Sinkron dengan index.html
+        const themeToggle = document.getElementById('themeToggle');
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        });
+
+        // Ambil ID dari URL (?id=xxxxxxxxx)
+        function getArtikelId() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get('id');
+        }
+
+        // Fungsi Menghitung Perkiraan Waktu Baca
+        function hitungWaktuBaca(text) {
+            const kataPerMenit = 200; 
+            const jumlahKata = text.trim().split(/\s+/).length;
+            const menit = Math.ceil(jumlahKata / kataPerMenit);
+            return `${menit} menit baca`;
+        }
+
+        // Fungsi Memuat Detail Artikel Utama
+        async function muatArtikel() {
+            const id = getArtikelId();
+            const loadingEl = document.getElementById('loadingState');
+            const errorEl = document.getElementById('errorState');
+            const mainContentEl = document.getElementById('mainContent');
+            const sidebarSection = document.querySelector('.sidebar');
+
+            if (!id) {
+                loadingEl.classList.add('hidden');
+                errorEl.classList.remove('hidden');
+                document.getElementById('errorTitle').innerText = "ID Artikel Tidak Ditemukan";
+                document.getElementById('errorDesc').innerText = "Silahkan pilih berita valid dari halaman utama.";
+                return;
+            }
+
+            try {
+                const docRef = doc(db, "berita", id);
+                const docSnap = await getDoc(docRef);
+
+                if (docSnap.exists()) {
+                    const data = docSnap.data();
+
+                    // Update Judul Halaman Web
+                    document.title = `${data.judul} - KJNI`;
+
+                    // Isi Data Elemen HTML
+                    document.getElementById('artKategori').innerText = data.kategori || 'Umum';
+                    document.getElementById('artJudul').innerText = data.judul || 'Tanpa Judul';
+                    document.getElementById('artPenulis').innerText = data.penulis || 'Redaksi KJNI';
+                    
+                    // Format Tanggal
+                    if (data.tanggalDibuat && data.tanggalDibuat.seconds) {
+                        const tgl = new Date(data.tanggalDibuat.seconds * 1000);
+                        document.getElementById('artTanggal').innerText = tgl.toLocaleDateString('id-ID', {
+                            day: 'numeric',
+                            month: 'long',
+                            year: 'numeric'
+                        });
+                    } else {
+                        document.getElementById('artTanggal').innerText = 'Baru saja';
+                    }
+
+                    // Format Waktu Baca
+                    document.getElementById('artWaktuBaca').innerText = hitungWaktuBaca(data.isi || '');
+
+                    // Render Gambar Utama
+                    const imgEl = document.getElementById('artGambar');
+                    if (data.gambar) {
+                        imgEl.src = data.gambar;
+                        imgEl.alt = data.judul;
+                    } else {
+                        document.getElementById('artImgContainer').style.display = 'none';
+                    }
+
+                    // Format Isi Paragraf secara Rapi (Mencegah teks menumpuk)
+                    const isiFormatted = (data.isi || '')
+                        .split('\n\n')
+                        .filter(p => p.trim() !== '')
+                        .map(p => `<p>${p}</p>`)
+                        .join('');
+                    document.getElementById('artIsi').innerHTML = isiFormatted;
+
+                    // Konfigurasi Tombol Share Sosial Media
+                    const currentUrl = encodeURIComponent(window.location.href);
+                    const currentTitle = encodeURIComponent(data.judul);
+
+                    document.getElementById('shareFb').href = `https://www.facebook.com/sharer.php?u=${currentUrl}`;
+                    document.getElementById('shareTw').href = `https://twitter.com/share?url=${currentUrl}&text=${currentTitle}`;
+                    document.getElementById('shareWa').href = `https://wa.me/?text=${currentTitle}%20${currentUrl}`;
+                    document.getElementById('shareTg').href = `https://t.me/share/url?url=${currentUrl}&text=${currentTitle}`;
+
+                    // Tampilkan Konten Utama & Sembunyikan Loading
+                    loadingEl.classList.add('hidden');
+                    mainContentEl.classList.remove('hidden');
+                    if(sidebarSection) sidebarSection.classList.remove('hidden');
+
+                } else {
+                    // Jika data kosong / dokumen tidak ada di Firestore
+                    loadingEl.classList.add('hidden');
+                    errorEl.classList.remove('hidden');
+                }
+
+            } catch (error) {
+                console.error("Gagal memuat artikel:", error);
+                loadingEl.classList.add('hidden');
+                errorEl.classList.remove('hidden');
+                document.getElementById('errorTitle').innerText = "Terjadi Kesalahan Sistem";
+                document.getElementById('errorDesc').innerText = "Gagal terhubung ke database Firebase. Periksa konfigurasi Anda.";
+            }
+        }
+
+        // Fungsi Memuat Berita Terbaru Untuk di Sidebar Samping
+        async function muatSidebarTerbaru() {
+            try {
+                const q = query(collection(db, "berita"), orderBy("tanggalDibuat", "desc"), limit(5));
+                const querySnapshot = await getDocs(q);
+                const sidebarContainer = document.getElementById('sidebarTerbaru');
+                
+                let listHtml = '';
+                let index = 0;
+                
+                querySnapshot.forEach((doc) => {
+                    const data = doc.data();
+                    // Cegah artikel yang sedang dibaca muncul kembali di peringkat teratas sidebar
+                    if (doc.id !== getArtikelId()) {
+                        listHtml += `
+                            <a href="artikel.html?id=${doc.id}" class="sidebar-item">
+                                <div class="sidebar-num">${String(index + 1).padStart(2, '0')}</div>
+                                <div class="sidebar-item-title">${data.judul}</div>
+                            </a>
+                        `;
+                        index++;
+                    }
+                });
+
+                sidebarContainer.innerHTML = listHtml || '<p style="font-size:13px; color:var(--text-muted)">Belum ada berita lain.</p>';
+            } catch (error) {
+                console.error("Gagal memuat sidebar:", error);
+            }
+        }
+
+        // Jalankan seluruh fungsi saat halaman di-load
+        window.addEventListener('DOMContentLoaded', () => {
+            muatArtikel();
+            muatSidebarTerbaru();
+        });
+    </script>
+</body>
+</html>

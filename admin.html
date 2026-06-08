@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Manajemen Berita - KJNI</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: #f4f6f8;
+            color: #2c3e50;
+            margin: 0;
+            padding: 20px;
+        }
+        .admin-container {
+            max-width: 800px;
+            margin: 40px auto;
+            background: #ffffff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        .hidden { display: none !important; }
+        
+        h2 { margin-top: 0; color: #d32f2f; border-bottom: 2px solid #eceff1; padding-bottom: 10px; }
+        h3 { margin-top: 30px; color: #2c3e50; }
+        
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 14px; }
+        .form-group input, .form-group textarea, .form-group select { 
+            width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-family: inherit;
+        }
+        
+        .btn { 
+            background: #d32f2f; color: white; padding: 10px 20px; border: none; border-radius: 4px; 
+            cursor: pointer; font-weight: bold; transition: 0.3s; 
+        }
+        .btn:hover { background: #b71c1c; }
+        .btn:disabled { background: #95a5a6; cursor: not-allowed; }
+        .btn-logout { background: #7f8c8d; float: right; margin-top: -50px; }
+        .btn-logout:hover { background: #34495e; }
+        .btn-cancel { background: #95a5a6; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; transition: 0.3s; margin-left: 10px; }
+        .btn-cancel:hover { background: #7f8c8d; }
+
+        /* Style untuk Daftar Berita */
+        .article-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #f9f9f9;
+            padding: 15px;
+            border: 1px solid #eceff1;
+            border-radius: 4px;
+            margin-bottom: 10px;
+        }
+        .article-info span { font-size: 12px; background: #2c3e50; color: #fff; padding: 3px 8px; border-radius: 3px; margin-right: 10px; }
+        .article-title { font-weight: bold; }
+        .article-actions { display: flex; gap: 8px; flex-shrink: 0; }
+        .btn-delete { background: #e74c3c; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; }
+        .btn-delete:hover { background: #c0392b; }
+        .btn-edit { background: #2980b9; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; }
+        .btn-edit:hover { background: #1a5276; }
+
+        /* Modal Edit */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .modal-box {
+            background: #fff;
+            border-radius: 8px;
+            padding: 30px;
+            width: 100%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        .modal-box h3 { margin-top: 0; color: #2980b9; border-bottom: 2px solid #eceff1; padding-bottom: 10px; }
+        .modal-footer { display: flex; align-items: center; margin-top: 10px; }
+
+        /* Badge Edit Mode pada form tambah */
+        .form-header { display: flex; align-items: center; gap: 10px; }
+        .badge-edit { background: #2980b9; color: white; font-size: 11px; padding: 3px 8px; border-radius: 3px; }
+    </style>
+</head>
+<body>
+
+    <div class="admin-container">
+        
+        <div id="loginSection">
+            <h2>🔑 Login Panel Redaksi</h2>
+            <p style="color: #7f8c8d; font-size: 14px; margin-bottom: 20px;">Masukkan email dan password rahasia untuk mengelola website.</p>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label>Email Admin</label>
+                    <input type="email" id="loginEmail" required placeholder="Contoh: admin@kjni.com">
+                </div>
+                <div class="form-group">
+                    <label>Password</label>
+                    <input type="password" id="loginPassword" required placeholder="Minimal 6 karakter">
+                </div>
+                <button type="submit" id="btnLogin" class="btn">Masuk Ke Panel</button>
+            </form>
+        </div>
+
+        <div id="dashboardSection" class="hidden">
+            <h2>📝 Dashboard Kelola Berita</h2>
+            <button id="btnLogout" class="btn btn-logout">Keluar (Logout)</button>
+
+            <h3>➕ Tambah Berita Baru</h3>
+            <form id="uploadForm">
+                <div class="form-group">
+                    <label>Judul Berita</label>
+                    <input type="text" id="inputJudul" required placeholder="Masukkan judul yang menarik...">
+                </div>
+                <div class="form-group">
+                    <label>Kategori</label>
+                    <select id="inputKategori">
+                        <option value="Tangerang Raya">Tangerang Raya</option>
+                        <option value="Religi">Religi</option>
+                        <option value="Berita Indonesia">Berita Indonesia</option>
+                        <option value="Berita Dunia">Berita Dunia</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Isi Berita</label>
+                    <textarea id="inputIsi" rows="8" required placeholder="Ketik atau paste isi berita di sini..."></textarea>
+                </div>
+                <button type="submit" id="btnPublish" class="btn">🚀 Publish Berita</button>
+                 <div class="form-group">
+                          <label>Gambar Berita (Opsional)</label>
+                          <input type="file" id="inputGambar" accept="image/*">
+                         <small style="color:#7f8c8d;">Max 10MB. Format: JPG, PNG, WEBP</small>
+                </div>
+            </form>
+
+            <hr style="border: 1px solid #eceff1; margin: 40px 0;">
+            <h3>📢 Pengaturan Iklan Banner (Multiple)</h3>
+            <p style="font-size: 13px; color: #7f8c8d;">Tambahkan sebanyak mungkin iklan yang Anda mau di masing-masing posisi. Iklan akan tersusun ke bawah.</p>
+            
+            <style>
+                .ad-row { display: flex; gap: 10px; align-items: center; background: #fff; padding: 15px; border: 1px solid #ddd; border-radius: 6px; margin-bottom: 10px; flex-wrap: wrap; }
+                .ad-row img { width: 60px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #eee; }
+                .btn-tambah { background: #e3f2fd; color: #1976d2; border: 1px dashed #1976d2; padding: 8px 15px; cursor: pointer; border-radius: 4px; font-weight: bold; width: 100%; margin-bottom: 20px; transition: 0.2s; }
+                .btn-tambah:hover { background: #bbdefb; }
+                .btn-hapus { background: #ffebee; color: #d32f2f; border: none; padding: 8px 12px; cursor: pointer; border-radius: 4px; font-weight: bold; }
+                .ad-section { border: 1px solid #eceff1; padding: 20px; border-radius: 8px; margin-bottom: 20px; background: #fafafa; }
+            </style>
+
+            <form id="formIklan">
+                
+
+                <div class="ad-section">
+                    <h4 style="margin-top:0; color:#d32f2f;">2. Iklan Sidebar</h4>
+                    <div id="wrapSidebar"></div>
+                    <button type="button" class="btn-tambah" onclick="tambahBaris('Sidebar')">+ Tambah Baris Iklan Sidebar</button>
+                </div>
+
+                <div class="ad-section">
+                    <h4 style="margin-top:0; color:#d32f2f;">3. Iklan Tengah Artikel</h4>
+                    <div id="wrapTengah"></div>
+                    <button type="button" class="btn-tambah" onclick="tambahBaris('Tengah')">+ Tambah Baris Iklan Tengah</button>
+                </div>
+
+                <div class="ad-section">
+                    <h4 style="margin-top:0; color:#d32f2f;">4. Iklan Footer</h4>
+                    <div id="wrapFooter"></div>
+                    <button type="button" class="btn-tambah" onclick="tambahBaris('Footer')">+ Tambah Baris Iklan Footer</button>
+                </div>
+
+                <button type="submit" id="btnSimpanIklan" class="btn" style="width:100%; font-size:16px; padding:15px;">💾 Simpan Semua Pengaturan Iklan</button>
+            </form>
+
+            <hr style="border: 1px solid #eceff1; margin: 40px 0;">
+
+            <h3>🗑️ Kelola Berita Saat Ini</h3>
+            <p style="font-size: 13px; color: #7f8c8d;">Klik <strong>Edit ✏️</strong> untuk mengubah isi berita, atau <strong>Hapus ❌</strong> untuk menghapus secara permanen.</p>
+            <div id="daftarBeritaAdmin">
+                <p>Memuat data berita...</p>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Modal Edit Berita -->
+    <div id="modalEdit" class="modal-overlay hidden">
+        <div class="modal-box">
+            <h3>✏️ Edit Berita</h3>
+            <div class="form-group">
+                <label>Judul Berita</label>
+                <input type="text" id="editJudul" required placeholder="Judul berita...">
+            </div>
+            <div class="form-group">
+                <label>Kategori</label>
+                <select id="editKategori">
+                    <option value="Tangerang Raya">Tangerang Raya</option>
+                    <option value="Religi">Religi</option>
+                    <option value="Berita Indonesia">Berita Indonesia</option>
+                    <option value="Berita Dunia">Berita Dunia</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Isi Berita</label>
+                <textarea id="editIsi" rows="10" required placeholder="Isi berita..."></textarea>
+            </div>
+            <div class="modal-footer">
+                <button id="btnSimpanEdit" class="btn">💾 Simpan Perubahan</button>
+                <button id="btnBatalEdit" class="btn-cancel">Batal</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, collection, addDoc, deleteDoc, updateDoc, doc, onSnapshot, query, orderBy, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        const firebaseConfig = {
+            apiKey: "AIzaSyCCOOmXPfLhbDdSoil1UHfld5731689HVw",
+            authDomain: "webberita-8af66.firebaseapp.com",
+            projectId: "webberita-8af66",
+            storageBucket: "webberita-8af66.firebasestorage.app",
+            messagingSenderId: "752062961977",
+            appId: "1:752062961977:web:6af98cd5ebe074189c30e8",
+            measurementId: "G-H2QS1WH9BD"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        const loginSection = document.getElementById("loginSection");
+        const dashboardSection = document.getElementById("dashboardSection");
+        const daftarBeritaAdmin = document.getElementById("daftarBeritaAdmin");
+        const modalEdit = document.getElementById("modalEdit");
+
+        // Variabel untuk menyimpan ID berita yang sedang diedit
+        let idBeritaYangDiedit = null;
+
+        // -----------------------------------------
+        // A. CEK STATUS LOGIN REALTIME
+        // -----------------------------------------
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                loginSection.classList.add("hidden");
+                dashboardSection.classList.remove("hidden");
+                muatDaftarBerita();
+            } else {
+                loginSection.classList.remove("hidden");
+                dashboardSection.classList.add("hidden");
+            }
+        });
+
+        // -----------------------------------------
+        // B. FUNGSI TOMBOL LOGIN
+        // -----------------------------------------
+        document.getElementById("loginForm").addEventListener("submit", (e) => {
+            e.preventDefault();
+            const email = document.getElementById("loginEmail").value;
+            const pass = document.getElementById("loginPassword").value;
+            const btnLogin = document.getElementById("btnLogin");
+            
+            btnLogin.innerText = "Memproses...";
+            
+            signInWithEmailAndPassword(auth, email, pass)
+                .then(() => {
+                    btnLogin.innerText = "Masuk Ke Panel";
+                    document.getElementById("loginForm").reset();
+                })
+                .catch((err) => {
+                    alert("Gagal Login! Cek email dan password. Error: " + err.message);
+                    btnLogin.innerText = "Masuk Ke Panel";
+                });
+        });
+
+        // -----------------------------------------
+        // C. FUNGSI TOMBOL LOGOUT
+        // -----------------------------------------
+        document.getElementById("btnLogout").addEventListener("click", () => {
+            signOut(auth).then(() => alert("Berhasil Logout!"));
+        });
+
+        // -----------------------------------------
+        // D. FUNGSI UPLOAD BERITA BARU (CREATE)
+        // -----------------------------------------
+        // Ganti fungsi upload berita (bagian D)
+const CLOUDINARY_CLOUD_NAME = "dc7guxgnm";
+const CLOUDINARY_UPLOAD_PRESET = "berita_upload";
+
+async function uploadKeCloudinary(file) {
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+
+    const res = await fetch(
+        `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`,
+        { method: "POST", body: formData }
+    );
+    const data = await res.json();
+    return data.secure_url; // URL gambar permanen
+}
+
+document.getElementById("uploadForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const btnPublish = document.getElementById("btnPublish");
+    btnPublish.innerText = "⏳ Mengupload...";
+    btnPublish.disabled = true;
+
+    const judul    = document.getElementById("inputJudul").value;
+    const kategori = document.getElementById("inputKategori").value;
+    const isi      = document.getElementById("inputIsi").value;
+    const fileGambar = document.getElementById("inputGambar").files[0];
+
+    try {
+        // Upload gambar dulu kalau ada
+        let urlGambar = "";
+        if (fileGambar) {
+            btnPublish.innerText = "⏳ Upload gambar...";
+            urlGambar = await uploadKeCloudinary(fileGambar);
+        }
+
+        await addDoc(collection(db, "berita"), {
+            judul, kategori, isi,
+            gambar: urlGambar, // simpan URL di Firestore
+            tanggalDibuat: new Date()
+        });
+
+        alert("✅ Berita berhasil dipublish!");
+        document.getElementById("uploadForm").reset();
+    } catch (err) {
+        alert("❌ Gagal: " + err.message);
+    } finally {
+        btnPublish.innerText = "🚀 Publish Berita";
+        btnPublish.disabled = false;
+    }
+});
+        // -----------------------------------------
+        // E. FUNGSI BUKA MODAL EDIT
+        // -----------------------------------------
+        function bukaModalEdit(id, judul, kategori, isi) {
+            idBeritaYangDiedit = id;
+            document.getElementById("editJudul").value = judul;
+            document.getElementById("editKategori").value = kategori;
+            document.getElementById("editIsi").value = isi;
+            modalEdit.classList.remove("hidden");
+        }
+
+        // -----------------------------------------
+        // F. FUNGSI TUTUP MODAL EDIT
+        // -----------------------------------------
+        function tutupModalEdit() {
+            idBeritaYangDiedit = null;
+            modalEdit.classList.add("hidden");
+        }
+
+        // Tombol Batal di Modal
+        document.getElementById("btnBatalEdit").addEventListener("click", tutupModalEdit);
+
+        // Klik di luar modal untuk menutup
+        modalEdit.addEventListener("click", (e) => {
+            if (e.target === modalEdit) tutupModalEdit();
+        });
+
+        // -----------------------------------------
+        // G. FUNGSI SIMPAN PERUBAHAN EDIT (UPDATE)
+        // -----------------------------------------
+        document.getElementById("btnSimpanEdit").addEventListener("click", async () => {
+            if (!idBeritaYangDiedit) return;
+
+            const btnSimpan = document.getElementById("btnSimpanEdit");
+            const judulBaru = document.getElementById("editJudul").value.trim();
+            const kategoriBaru = document.getElementById("editKategori").value;
+            const isiBaru = document.getElementById("editIsi").value.trim();
+
+            if (!judulBaru || !isiBaru) {
+                alert("Judul dan isi berita tidak boleh kosong!");
+                return;
+            }
+
+            btnSimpan.innerText = "⏳ Menyimpan...";
+            btnSimpan.disabled = true;
+
+            try {
+                await updateDoc(doc(db, "berita", idBeritaYangDiedit), {
+                    judul: judulBaru,
+                    kategori: kategoriBaru,
+                    isi: isiBaru,
+                    tanggalDiedit: new Date()
+                });
+
+                alert("✅ Berita berhasil diperbarui!");
+                tutupModalEdit();
+            } catch (err) {
+                alert("❌ Gagal menyimpan perubahan: " + err.message);
+            } finally {
+                btnSimpan.innerText = "💾 Simpan Perubahan";
+                btnSimpan.disabled = false;
+            }
+        });
+
+        // -----------------------------------------
+        // H. FUNGSI MENAMPILKAN, EDIT & HAPUS BERITA
+        // -----------------------------------------
+        function muatDaftarBerita() {
+            const q = query(collection(db, "berita"), orderBy("tanggalDibuat", "desc"));
+            
+            onSnapshot(q, (snapshot) => {
+                daftarBeritaAdmin.innerHTML = "";
+                
+                if (snapshot.empty) {
+                    daftarBeritaAdmin.innerHTML = "<p style='color:#7f8c8d;'>Belum ada berita yang diupload.</p>";
+                    return;
+                }
+
+                snapshot.forEach((beritaDoc) => {
+                    const data = beritaDoc.data();
+                    const idBerita = beritaDoc.id;
+
+                    const item = document.createElement("div");
+                    item.className = "article-item";
+                    item.innerHTML = `
+                        <div class="article-info">
+                            <span>${data.kategori}</span>
+                            <span class="article-title">${data.judul}</span>
+                        </div>
+                        <div class="article-actions">
+                            <button class="btn-edit" data-id="${idBerita}">Edit ✏️</button>
+                            <button class="btn-delete" data-id="${idBerita}">Hapus ❌</button>
+                        </div>
+                    `;
+
+                    // Tombol Edit
+                    item.querySelector(".btn-edit").addEventListener("click", () => {
+                        bukaModalEdit(idBerita, data.judul, data.kategori, data.isi);
+                    });
+
+                    // Tombol Hapus
+                    item.querySelector(".btn-delete").addEventListener("click", async (e) => {
+                        const targetId = e.target.getAttribute("data-id");
+                        const konfirmasi = confirm("Yakin ingin menghapus berita ini secara permanen?");
+                        
+                        if (konfirmasi) {
+                            try {
+                                await deleteDoc(doc(db, "berita", targetId));
+                            } catch (error) {
+                                alert("Gagal menghapus berita: " + error.message);
+                            }
+                        }
+                    });
+
+                    daftarBeritaAdmin.appendChild(item);
+                });
+            });
+        }
+        // -----------------------------------------
+        // I. FUNGSI LOAD & SIMPAN IKLAN (MULTIPLE)
+        // -----------------------------------------
+        
+        // Fungsi global untuk menambah form baris iklan baru
+        window.tambahBaris = function(kategori, imgUrl = '', linkUrl = '') {
+            const wrap = document.getElementById(`wrap${kategori}`);
+            const div = document.createElement('div');
+            div.className = `ad-row row-${kategori}`;
+            div.innerHTML = `
+                <img src="${imgUrl || 'https://via.placeholder.com/60x40?text=Baru'}" alt="Preview" style="display: ${imgUrl ? 'block' : 'none'}">
+                <div style="flex:1; min-width: 200px;">
+                    <input type="file" class="ad-file" accept="image/*" style="width:100%; margin-bottom:5px;">
+                    <input type="hidden" class="old-img" value="${imgUrl}">
+                    <input type="url" class="ad-link" value="${linkUrl}" placeholder="Masukkan Link Tujuan (https://...)" style="width:100%; padding:8px; box-sizing:border-box;">
+                </div>
+                <button type="button" class="btn-hapus" onclick="this.parentElement.remove()">Hapus ❌</button>
+            `;
+            wrap.appendChild(div);
+        };
+
+        // Fungsi memuat data iklan dari Firestore
+        async function muatDataIklan() {
+            try {
+                const iklanSnap = await getDoc(doc(db, "pengaturan", "iklan"));
+                if (iklanSnap.exists()) {
+                    const data = iklanSnap.data();
+                    
+                    // Bersihkan container
+                   
+                    document.getElementById("wrapSidebar").innerHTML = "";
+                    document.getElementById("wrapTengah").innerHTML = "";
+                    document.getElementById("wrapFooter").innerHTML = "";
+
+                    // Render ulang baris berdasarkan data array di Firestore
+                    if (data.ads_header) data.ads_header.forEach(ad => window.tambahBaris('Header', ad.img, ad.link));
+                    if (data.ads_sidebar) data.ads_sidebar.forEach(ad => window.tambahBaris('Sidebar', ad.img, ad.link));
+                    if (data.ads_tengah) data.ads_tengah.forEach(ad => window.tambahBaris('Tengah', ad.img, ad.link));
+                    if (data.ads_footer) data.ads_footer.forEach(ad => window.tambahBaris('Footer', ad.img, ad.link));
+                }
+            } catch (err) {
+                console.error("Gagal memuat iklan:", err);
+            }
+        }
+
+        // Helper untuk memproses loop upload setiap baris iklan
+        async function prosesUploadKategori(kategori) {
+            const rows = document.querySelectorAll(`.row-${kategori}`);
+            let hasilArray = [];
+            
+            for (let row of rows) {
+                const fileInput = row.querySelector('.ad-file');
+                const oldImg = row.querySelector('.old-img').value;
+                const link = row.querySelector('.ad-link').value;
+                
+                let finalUrl = oldImg;
+                
+                // Jika admin memilih file gambar baru di baris ini
+                if (fileInput.files.length > 0) {
+                    finalUrl = await uploadKeCloudinary(fileInput.files[0]);
+                }
+                
+                // Simpan ke array jika ada gambarnya
+                if (finalUrl) {
+                    hasilArray.push({ img: finalUrl, link: link });
+                }
+            }
+            return hasilArray;
+        }
+
+        // Event simpan seluruh iklan
+        document.getElementById("formIklan").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const btnSimpan = document.getElementById("btnSimpanIklan");
+            btnSimpan.innerText = "⏳ Sedang Mengupload & Menyimpan Semua Iklan...";
+            btnSimpan.disabled = true;
+
+            try {
+                // Proses upload dan pengumpulan data secara paralel
+                const [arrHeader, arrSidebar, arrTengah, arrFooter] = await Promise.all([
+                    prosesUploadKategori('Header'),
+                    prosesUploadKategori('Sidebar'),
+                    prosesUploadKategori('Tengah'),
+                    prosesUploadKategori('Footer')
+                ]);
+
+                // Simpan ke Firestore dalam bentuk Array
+                await setDoc(doc(db, "pengaturan", "iklan"), {
+                    ads_header: arrHeader,
+                    ads_sidebar: arrSidebar,
+                    ads_tengah: arrTengah,
+                    ads_footer: arrFooter,
+                    diupdate: new Date()
+                });
+
+                alert("✅ Semua iklan berhasil disimpan!");
+                muatDataIklan(); // Refresh UI
+
+            } catch (err) {
+                alert("❌ Gagal menyimpan iklan: " + err.message);
+            } finally {
+                btnSimpan.innerText = "💾 Simpan Semua Pengaturan Iklan";
+                btnSimpan.disabled = false;
+            }
+        });
+
+        // Panggil fungsi muat data iklan jika berhasil login
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                loginSection.classList.add("hidden");
+                dashboardSection.classList.remove("hidden");
+                muatDaftarBerita();
+                muatDataIklan(); // Memuat data iklan ke dalam form
+            } else {
+                loginSection.classList.remove("hidden");
+                dashboardSection.classList.add("hidden");
+            }
+        });
+
+        // Event simpan iklan
+        document.getElementById("formIklan").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const btnSimpan = document.getElementById("btnSimpanIklan");
+            btnSimpan.innerText = "⏳ Sedang Mengupload & Menyimpan...";
+            btnSimpan.disabled = true;
+
+            try {
+                // Ambil file yang dipilih
+                const fileHeader = document.getElementById("imgHeader").files[0];
+                const fileSidebar = document.getElementById("imgSidebar").files[0];
+                const fileTengah = document.getElementById("imgTengah").files[0];
+                const fileFooter = document.getElementById("imgFooter").files[0];
+
+                // URL Gambar awal (pakai data lama jika tidak upload baru)
+                let urlHeader = document.getElementById("oldImgHeader").value;
+                let urlSidebar = document.getElementById("oldImgSidebar").value;
+                let urlTengah = document.getElementById("oldImgTengah").value;
+                let urlFooter = document.getElementById("oldImgFooter").value;
+
+                // Proses Upload ke Cloudinary jika ada file baru
+                if (fileHeader) urlHeader = await uploadKeCloudinary(fileHeader);
+                if (fileSidebar) urlSidebar = await uploadKeCloudinary(fileSidebar);
+                if (fileTengah) urlTengah = await uploadKeCloudinary(fileTengah);
+                if (fileFooter) urlFooter = await uploadKeCloudinary(fileFooter);
+
+                // Simpan ke Firestore (Koleksi: pengaturan, Dokumen: iklan)
+                await setDoc(doc(db, "pengaturan", "iklan"), {
+                    header_img: urlHeader,
+                    header_link: document.getElementById("linkHeader").value,
+                    sidebar_img: urlSidebar,
+                    sidebar_link: document.getElementById("linkSidebar").value,
+                    tengah_img: urlTengah,
+                    tengah_link: document.getElementById("linkTengah").value,
+                    footer_img: urlFooter,
+                    footer_link: document.getElementById("linkFooter").value,
+                    diupdate: new Date()
+                }, { merge: true });
+
+                alert("✅ Pengaturan iklan berhasil disimpan!");
+                // Update hidden input dengan URL terbaru agar tidak hilang saat di-save ulang tanpa file
+                document.getElementById("oldImgHeader").value = urlHeader;
+                document.getElementById("oldImgSidebar").value = urlSidebar;
+                document.getElementById("oldImgTengah").value = urlTengah;
+                document.getElementById("oldImgFooter").value = urlFooter;
+
+            } catch (err) {
+                alert("❌ Gagal menyimpan iklan: " + err.message);
+            } finally {
+                btnSimpan.innerText = "💾 Simpan Pengaturan Iklan";
+                btnSimpan.disabled = false;
+            }
+        });
+    </script>
+</body>
+</html>
