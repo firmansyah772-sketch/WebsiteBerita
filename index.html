@@ -9,84 +9,56 @@
     <style>
         :root { --bg-body:#f4f6f8; --bg-card:#fff; --text-main:#2c3e50; --text-muted:#7f8c8d; --accent:#d32f2f; --border:#eceff1; --shadow:0 2px 8px rgba(0,0,0,0.06); }
         [data-theme="dark"] { --bg-body:#121212; --bg-card:#1e1e1e; --text-main:#e0e0e0; --text-muted:#a0a0a0; --border:#333; --shadow:0 2px 8px rgba(0,0,0,0.3); }
-        * { margin:0; padding:0; box-sizing:border-box; }
+        
+        /* OPTIMASI RESPONSIVE DASAR */
+        html, body { overflow-x: hidden; width: 100%; margin: 0; padding: 0; box-sizing: border-box; }
+        *, *::before, *::after { box-sizing: inherit; }
+        
         body { font-family:'Source Sans 3',sans-serif; background:var(--bg-body); color:var(--text-main); transition:background .3s,color .3s; }
         a { text-decoration:none; color:inherit; }
+        img { max-width: 100%; height: auto; }
+        
         .container { max-width:1200px; margin:0 auto; padding:0 20px; }
 
+        /* TOP BAR */
         .top-bar { background:#1a1a1a; color:#fff; font-size:12px; padding:8px 0; }
-        .top-bar-flex { display:flex; justify-content:space-between; align-items:center; }
+        .top-bar-flex { display:flex; justify-content:space-between; align-items:center; gap: 15px; }
         .ticker-wrap { display:flex; align-items:center; overflow:hidden; flex:1; }
         .ticker-badge { background:var(--accent); padding:2px 8px; font-weight:700; text-transform:uppercase; margin-right:12px; border-radius:2px; font-size:11px; white-space:nowrap; flex-shrink:0; }
         .ticker-scroll { overflow:hidden; flex:1; }
         .ticker-text { white-space:nowrap; animation:marquee 40s linear infinite; display:inline-block; }
         @keyframes marquee { 0%{transform:translateX(100vw)} 100%{transform:translateX(-100%)} }
-        .top-nav-links a { margin-left:15px; color:#ccc; font-size:12px; }
+        .top-nav-links { display: flex; gap: 15px; }
+        .top-nav-links a { color:#ccc; font-size:12px; white-space: nowrap; }
         .top-nav-links a:hover { color:#fff; }
 
+        /* HEADER / IKLAN ATAS */
         header { background:var(--bg-card); padding:20px 0; border-bottom:1px solid var(--border); }
         .header-flex { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:15px; }
         .logo { font-family:'Playfair Display',serif; font-size:36px; font-weight:900; letter-spacing:-1px; }
         .logo span { color:var(--accent); }
-        .ads-header { width:728px; height:90px; background:#f0f2f5; border:1px dashed #ced4da; display:flex; align-items:center; justify-content:center; color:var(--text-muted); font-size:13px; border-radius:4px; }
+        .ads-header { width:100%; max-width:728px; height:90px; background:#f0f2f5; border:1px dashed #ced4da; display:flex; align-items:center; justify-content:center; color:var(--text-muted); font-size:13px; border-radius:4px; margin: 0 auto;}
         [data-theme="dark"] .ads-header { background:#2a2a2a; border-color:#444; }
 
+        /* NAVIGASI UTAMA */
         .main-nav { background:var(--bg-card); border-bottom:3px solid var(--accent); position:sticky; top:0; z-index:1000; box-shadow:0 2px 6px rgba(0,0,0,0.05); }
-        .nav-flex { display:flex; justify-content:space-between; align-items:center; }
-        /* --- TAMBAHAN UNTUK SCROLL MENU --- */
-        .menu-wrapper {
-            position: relative;
-            flex: 1;
-            min-width: 0; /* Penting agar menu bisa menyusut dan overflow aktif */
-            margin: 0 15px;
-            display: flex;
-            align-items: center;
-        }
-        .menu { 
-            display: flex; 
-            list-style: none; 
-            overflow-x: auto; 
-            scrollbar-width: none; 
-            flex: 1; 
-            scroll-behavior: smooth; /* Efek scroll halus saat panah diklik */
-        }
+        .nav-flex { display:flex; justify-content:space-between; align-items:center; flex-wrap: wrap; gap: 10px; padding: 10px 0; }
+        
+        .menu-wrapper { position: relative; flex: 1; min-width: 0; display: flex; align-items: center; }
+        .menu { display: flex; list-style: none; overflow-x: auto; scrollbar-width: none; flex: 1; scroll-behavior: smooth; -webkit-overflow-scrolling: touch; }
         .menu::-webkit-scrollbar { display:none; }
-        .scroll-arrow {
-            background: var(--bg-card);
-            border: none;
-            font-size: 16px;
-            font-weight: bold;
-            color: var(--accent);
-            cursor: pointer;
-            height: 100%;
-            position: absolute;
-            top: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 10;
-            transition: opacity 0.2s;
-            opacity: 0;
-            pointer-events: none; /* Mati jika disembunyikan */
-        }
-        .scroll-arrow.visible {
-            opacity: 1;
-            pointer-events: auto;
-        }
-        .scroll-arrow.left { 
-            left: 0; 
-            background: linear-gradient(to right, var(--bg-card) 60%, transparent); 
-            padding: 0 20px 0 5px; 
-        }
-        .scroll-arrow.right { 
-            right: 0; 
-            background: linear-gradient(to left, var(--bg-card) 60%, transparent); 
-            padding: 0 5px 0 20px; 
-        }
-        .menu li a { display:block; padding:14px 14px; font-weight:700; font-size:12px; text-transform:uppercase; letter-spacing:.5px; transition:color .2s; white-space:nowrap; }
+        
+        .scroll-arrow { background: var(--bg-card); border: none; font-size: 16px; font-weight: bold; color: var(--accent); cursor: pointer; height: 100%; position: absolute; top: 0; display: flex; align-items: center; justify-content: center; z-index: 10; transition: opacity 0.2s; opacity: 0; pointer-events: none; }
+        .scroll-arrow.visible { opacity: 1; pointer-events: auto; }
+        .scroll-arrow.left { left: 0; background: linear-gradient(to right, var(--bg-card) 60%, transparent); padding: 0 20px 0 5px; }
+        .scroll-arrow.right { right: 0; background: linear-gradient(to left, var(--bg-card) 60%, transparent); padding: 0 5px 0 20px; }
+        
+        .menu li a { display:block; padding:10px 14px; font-weight:700; font-size:13px; text-transform:uppercase; letter-spacing:.5px; transition:color .2s; white-space:nowrap; }
         .menu li a:hover, .menu li.active a { color:var(--accent); }
-        .theme-toggle { background:none; border:none; cursor:pointer; color:var(--text-main); font-size:18px; padding:10px; }
+        
+        .theme-toggle { background:none; border:none; cursor:pointer; color:var(--text-main); font-size:18px; padding:8px; display: flex; align-items: center;}
 
+        /* KONTEN UTAMA */
         .main-wrapper { padding:30px 0; }
         .grid-layout { display:grid; grid-template-columns:2fr 1fr; gap:30px; }
         .section-title { font-family:'Playfair Display',serif; font-size:20px; font-weight:700; border-left:4px solid var(--accent); padding-left:12px; margin-bottom:20px; }
@@ -97,7 +69,7 @@
 
         .hero-card { background:var(--bg-card); border-radius:8px; overflow:hidden; box-shadow:var(--shadow); margin-bottom:24px; cursor:pointer; transition:transform .2s; }
         .hero-card:hover { transform:translateY(-2px); }
-        .hero-img-placeholder { width:100%; height:280px; background:linear-gradient(135deg,#e0e0e0,#c5c5c5); display:flex; align-items:center; justify-content:center; color:#aaa; font-size:50px; }
+        .hero-img-placeholder, .hero-card img { width:100%; height:320px; object-fit:cover; background:linear-gradient(135deg,#e0e0e0,#c5c5c5); display:flex; align-items:center; justify-content:center; color:#aaa; font-size:50px; }
         [data-theme="dark"] .hero-img-placeholder { background:linear-gradient(135deg,#2a2a2a,#222); }
         .hero-card-body { padding:20px; }
         .post-category { display:inline-block; background:var(--accent); color:#fff; font-size:11px; font-weight:700; padding:3px 10px; text-transform:uppercase; border-radius:3px; margin-bottom:10px; letter-spacing:.5px; }
@@ -109,13 +81,13 @@
         .news-grid { display:flex; flex-direction:column; gap:14px; }
         .news-card { background:var(--bg-card); border-radius:6px; overflow:hidden; box-shadow:var(--shadow); display:flex; cursor:pointer; transition:transform .2s,box-shadow .2s; }
         .news-card:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(0,0,0,.1); }
-        .news-thumb { width:110px; min-height:85px; flex-shrink:0; background:linear-gradient(135deg,#e8e8e8,#d0d0d0); display:flex; align-items:center; justify-content:center; font-size:26px; overflow:hidden; }
-        .news-thumb img { width:110px; height:85px; object-fit:cover; }
+        .news-thumb { width:130px; min-height:95px; flex-shrink:0; background:linear-gradient(135deg,#e8e8e8,#d0d0d0); display:flex; align-items:center; justify-content:center; font-size:26px; overflow:hidden; }
+        .news-thumb img { width:130px; height:100%; object-fit:cover; }
         [data-theme="dark"] .news-thumb { background:linear-gradient(135deg,#2a2a2a,#222); }
-        .news-card-body { padding:12px 15px; flex:1; }
+        .news-card-body { padding:12px 15px; flex:1; display:flex; flex-direction:column; justify-content:center; }
         .news-card-title { font-size:15px; font-weight:700; line-height:1.4; margin:5px 0 4px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
         .news-card-excerpt { font-size:13px; color:var(--text-muted); line-height:1.5; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
-        .news-card-meta { font-size:11px; color:var(--text-muted); margin-top:6px; display:flex; gap:10px; }
+        .news-card-meta { font-size:11px; color:var(--text-muted); margin-top:6px; display:flex; gap:10px; flex-wrap: wrap;}
         .news-card-meta .author { color:var(--accent); font-weight:600; }
 
         .skeleton { background:var(--bg-card); border-radius:6px; height:90px; position:relative; overflow:hidden; }
@@ -125,6 +97,7 @@
         .empty-state { text-align:center; padding:50px 20px; color:var(--text-muted); }
         .empty-state .empty-icon { font-size:48px; margin-bottom:10px; }
 
+        /* SIDEBAR */
         .sidebar { display:flex; flex-direction:column; gap:24px; }
         .widget { background:var(--bg-card); border-radius:6px; padding:20px; box-shadow:var(--shadow); }
         .widget-title { font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:1px; border-left:3px solid var(--accent); padding-left:10px; margin-bottom:16px; }
@@ -137,13 +110,12 @@
         .sidebar-num { font-size:22px; font-weight:900; color:var(--accent); opacity:.25; line-height:1; flex-shrink:0; width:28px; }
         .sidebar-item-title { font-size:13px; font-weight:700; line-height:1.4; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; }
         .sidebar-item:hover .sidebar-item-title { color:var(--accent); }
-        .ads-sidebar { width:100%; height:250px; background:#f0f2f5; border:1px dashed #ced4da; display:flex; align-items:center; justify-content:center; color:var(--text-muted); font-size:13px; border-radius:4px; }
-        [data-theme="dark"] .ads-sidebar { background:#2a2a2a; border-color:#444; }
 
         .tag-cloud { display:flex; flex-wrap:wrap; gap:8px; }
         .tag-item { background:var(--bg-body); border:1px solid var(--border); padding:4px 10px; border-radius:3px; font-size:12px; font-weight:600; cursor:pointer; transition:all .2s; }
         .tag-item:hover { background:var(--accent); border-color:var(--accent); color:#fff; }
 
+        /* MODAL */
         .modal-overlay { position:fixed; inset:0; background:rgba(0,0,0,.65); z-index:2000; display:flex; align-items:center; justify-content:center; padding:20px; opacity:0; pointer-events:none; transition:opacity .25s; }
         .modal-overlay.open { opacity:1; pointer-events:all; }
         .modal-box { background:var(--bg-card); border-radius:10px; width:100%; max-width:720px; max-height:90vh; overflow-y:auto; transform:translateY(16px); transition:transform .25s; box-shadow:0 20px 60px rgba(0,0,0,.35); }
@@ -165,11 +137,11 @@
         .btn-fb{background:#3b5998} .btn-tw{background:#1da1f2} .btn-wa{background:#25d366} .btn-tg{background:#0088cc}
 
         /* SEARCH BAR */
-        .searchbar-wrap { background:var(--bg-card); border-bottom:1px solid var(--border); padding:12px 0; }
-        .searchbar-inner { display:flex; gap:0; max-width:600px; margin:0 auto; border:2px solid var(--accent); border-radius:6px; overflow:hidden; }
-        .searchbar-input { flex:1; padding:10px 16px; border:none; outline:none; font-size:15px; font-family:inherit; background:var(--bg-card); color:var(--text-main); }
+        .searchbar-wrap { flex: 1; min-width: 250px; }
+        .searchbar-inner { display:flex; gap:0; width:100%; border:2px solid var(--accent); border-radius:6px; overflow:hidden; }
+        .searchbar-input { flex:1; padding:8px 12px; border:none; outline:none; font-size:14px; font-family:inherit; background:var(--bg-card); color:var(--text-main); width: 100%; }
         .searchbar-input::placeholder { color:var(--text-muted); }
-        .searchbar-btn { background:var(--accent); color:#fff; border:none; padding:10px 20px; font-size:14px; font-weight:700; cursor:pointer; transition:background .2s; white-space:nowrap; font-family:inherit; }
+        .searchbar-btn { background:var(--accent); color:#fff; border:none; padding:8px 15px; font-size:14px; font-weight:700; cursor:pointer; transition:background .2s; white-space:nowrap; font-family:inherit; }
         .searchbar-btn:hover { background:#b71c1c; }
 
         /* HASIL SEARCH */
@@ -188,14 +160,21 @@
         .search-result-meta { font-size:11px; color:var(--text-muted); }
         .search-no-result { text-align:center; padding:40px 20px; color:var(--text-muted); }
 
-        .wa-float { position:fixed; bottom:25px; right:25px; z-index:3000; width:56px; height:56px; background:#25d366; border-radius:50%; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 15px rgba(37,211,102,.5); text-decoration:none; transition:transform .2s,box-shadow .2s; animation:waPulse 2s infinite; }
+        /* TOMBOL WA */
+        .wa-float { position:fixed; bottom:25px; right:25px; z-index:3000; width:56px; height:56px; background:#25d366; border-radius:50%; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 15px rgba(37,211,102,.5); text-decoration:none; transition:all .2s; animation:waPulse 2s infinite; }
         .wa-float:hover { transform:scale(1.1); box-shadow:0 6px 20px rgba(37,211,102,.7); }
         .wa-float svg { width:30px; height:30px; fill:#fff; }
         @keyframes waPulse { 0%,100%{box-shadow:0 4px 15px rgba(37,211,102,.5)} 50%{box-shadow:0 4px 25px rgba(37,211,102,.8),0 0 0 8px rgba(37,211,102,.1)} }
         .wa-float-label { position:absolute; right:65px; background:#333; color:#fff; padding:5px 10px; border-radius:5px; font-size:12px; white-space:nowrap; opacity:0; transition:opacity .2s; pointer-events:none; }
         .wa-float:hover .wa-float-label { opacity:1; }
 
-        footer { background:#111; color:#fff; padding:50px 0 20px; margin-top:50px; font-size:14px; }
+        /* FOOTER & MEDIA PARTNER */
+        .media-partner-wrap { margin-top: 40px; padding: 20px 0; }
+        .media-partner-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; align-items: center;}
+        .partner-logo img { max-height: 50px; object-fit: contain; filter: grayscale(100%); transition: filter 0.3s;}
+        .partner-logo:hover img { filter: grayscale(0%); }
+
+        footer { background:#111; color:#fff; padding:50px 0 20px; margin-top:20px; font-size:14px; }
         .footer-grid { display:grid; grid-template-columns:2fr 1fr 1fr; gap:40px; margin-bottom:40px; }
         .footer-logo { font-family:'Playfair Display',serif; font-size:28px; font-weight:900; margin-bottom:12px; }
         .footer-logo span { color:var(--accent); }
@@ -221,109 +200,66 @@
         .footer-page-links a:hover { color:#fff; }
         .footer-bottom { border-top:1px solid #222; padding-top:20px; text-align:center; color:#666; font-size:13px; }
 
-        @media(max-width:1024px){.grid-layout{grid-template-columns:1fr}.ads-header{display:none}.header-flex{justify-content:center}}
-        @media(max-width:768px){
-            .footer-grid{grid-template-columns:1fr}
-            .hero-card-title{font-size:20px}
-            .modal-title{font-size:20px}
-            .modal-body{padding:18px}
-            .container{padding:0 12px}
-
-            /* Navbar mobile: susun vertikal */
-            .main-nav .container.nav-flex{
-                flex-direction:column;
-                align-items:stretch;
-                padding:0;
-            }
-            /* Baris 1: logo + theme toggle */
-            .main-nav .container.nav-flex > img{
-                display:none;
-            }
-            .nav-mobile-top{
-                display:flex;
-                align-items:center;
-                justify-content:space-between;
-                padding:6px 12px;
-                border-bottom:1px solid var(--border);
-            }
-            .nav-mobile-top img{
-                height:40px;
-                width:auto;
-            }
-            /* Search bar: full width */
-            .main-nav .searchbar-wrap{
-                width:100%;
-                padding:8px 12px;
-                border-bottom:1px solid var(--border);
-            }
-            .main-nav .searchbar-wrap .container{
-                padding:0;
-                max-width:100%;
-            }
-            .searchbar-inner{
-                max-width:100%;
-            }
-            /* Menu: full width, scroll horizontal */
-            .menu-wrapper{
-                width:100%;
-                margin:0;
-            }
-            .menu li a{
-                padding:10px 12px;
-                font-size:11px;
-            }
-            /* Sembunyikan theme toggle di posisi lama */
-            .main-nav > .container > .theme-toggle{
-                display:none;
-            }
-
-            /* Filter bar: scroll horizontal 1 baris */
-            .filter-bar{
-                flex-wrap:nowrap;
-                overflow-x:auto;
-                scrollbar-width:none;
-                padding-bottom:4px;
-            }
-            .filter-bar::-webkit-scrollbar{display:none}
-            .filter-btn{
-                white-space:nowrap;
-                flex-shrink:0;
-                padding:5px 10px;
-                font-size:12px;
-            }
-
-            /* Hero card gambar lebih kecil */
-            .hero-card img[style*="height:280px"]{height:180px !important}
-            .hero-img-placeholder{height:180px}
-
-            /* Iklan footer: batasi tinggi */
-            #dynamicAdFooter img,
-            #dynamicAdFooter a img{
-                max-height:100px !important;
-                object-fit:cover !important;
-                border-radius:4px;
-            }
-
-            /* Iklan sidebar: batasi tinggi */
-            #dynamicAdSidebar img{
-                max-height:150px !important;
-                object-fit:cover !important;
-            }
-
-            /* Footer social */
-            .footer-social-grid{grid-template-columns:1fr 1fr}
-            .news-thumb{width:90px}
-            .news-thumb img{width:90px}
+        /* =========================================
+           KODE OPTIMASI MOBILE & TABLET (RESPONSIVE) 
+           ========================================= */
+        @media(max-width:1024px) {
+            .grid-layout { grid-template-columns: 1fr; }
+            .ads-header { display: none; }
         }
-        @media(max-width:480px){
-            .footer-social-grid{grid-template-columns:1fr}
-            .share-btn{padding:6px 10px;font-size:11px}
+
+        @media(max-width:768px) {
+            .container { padding: 0 15px; }
+            .main-wrapper { padding: 15px 0; }
+            
+            .top-nav-links { display: none; }
+            
+            .nav-flex { flex-wrap: wrap; justify-content: space-between; gap: 12px; padding: 10px 0; }
+            .nav-flex > img { height: 40px !important; }
+            
+            .theme-toggle { padding: 5px; margin-left: auto; }
+            
+            .searchbar-wrap { width: 100%; flex: none; order: 3; margin: 0; }
+            .menu-wrapper { width: 100%; order: 4; margin: 0; padding-top: 5px; }
+
+            .hero-img-placeholder, .hero-card img { height: 220px !important; }
+            .hero-card-title { font-size: 20px; }
+            .hero-card-body { padding: 15px; }
+            
+            .news-thumb { width: 100px; min-height: 80px; }
+            .news-thumb img { width: 100px; }
+            .news-card-body { padding: 10px; }
+            .news-card-title { font-size: 14px; margin-bottom: 4px; }
+            .news-card-excerpt { font-size: 12px; -webkit-line-clamp: 2; }
+            
+            .filter-bar { gap: 6px; }
+            .filter-btn { padding: 6px 12px; font-size: 12px; }
+
+            .widget { padding: 15px; }
+            .footer-grid { grid-template-columns: 1fr; gap: 30px; text-align: center; }
+            .footer-social-grid { justify-content: center; }
+            .footer-widget h4 { text-align: center; }
+            footer { padding: 30px 0 15px; }
+
+            .modal-title { font-size: 20px; }
+            .modal-body { padding: 15px; }
+            .modal-featured-img { max-height: 250px; }
+
+            .wa-float { width: 45px; height: 45px; bottom: 15px; right: 15px; }
+            .wa-float svg { width: 22px; height: 22px; }
+            .wa-float-label { display: none; }
+        }
+
+        @media(max-width:480px) {
+            .news-thumb { width: 85px; min-height: 70px; }
+            .news-thumb img { width: 85px; }
+            .news-card-excerpt { display: none; }
+            .hero-card-title { font-size: 18px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- TOMBOL WA MENGAMBANG -->
     <a href="https://wa.me/6281234567890" target="_blank" class="wa-float" title="Hubungi via WhatsApp">
         <span class="wa-float-label">Hubungi Redaksi</span>
         <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -331,7 +267,6 @@
         </svg>
     </a>
 
-    <!-- TOP BAR -->
     <div class="top-bar">
         <div class="container top-bar-flex">
             <div class="ticker-wrap">
@@ -348,20 +283,19 @@
         </div>
     </div>
 
-    
-
-    <!-- NAV -->
     <div class="main-nav">
         <div class="container nav-flex">
-          <img src="https://res.cloudinary.com/dc7guxgnm/image/upload/v1780836722/1000305521-removebg-preview_xerh50.png" alt="KJNI" style="height: 60px; width:auto; object-fit:contain;">   
+            <img src="https://res.cloudinary.com/dc7guxgnm/image/upload/v1780836722/1000305521-removebg-preview_xerh50.png" alt="KJNI" style="height: 60px; width:auto; object-fit:contain;">   
+            
+            <button class="theme-toggle" id="themeBtn">🌓</button>
+
             <div class="searchbar-wrap">
-                 <div class="container">
-                      <div class="searchbar-inner">
-                           <input class="searchbar-input" id="searchbarInput" type="text" placeholder="🔍  Cari berita, topik, atau kata kunci..." autocomplete="off">
-                           <button class="searchbar-btn" id="searchbarBtn">Cari</button>
-                       </div>
-                  </div>
-             </div>
+                <div class="searchbar-inner">
+                    <input class="searchbar-input" id="searchbarInput" type="text" placeholder="🔍 Cari berita..." autocomplete="off">
+                    <button class="searchbar-btn" id="searchbarBtn">Cari</button>
+                </div>
+            </div>
+
             <div class="menu-wrapper">
                 <button class="scroll-arrow left" id="scrollLeft">❮</button>
                 <ul class="menu" id="navMenu">
@@ -382,15 +316,9 @@
                 </ul>
                 <button class="scroll-arrow right" id="scrollRight">❯</button>
             </div>
-
-            <button class="theme-toggle" id="themeBtn">🌓</button>
         </div>
     </div>
 
-    <!-- SEARCH BAR -->
-    
-
-    <!-- KONTEN -->
     <div class="container main-wrapper">
         <div class="grid-layout">
             <main>
@@ -459,12 +387,10 @@
                         <img id="imgAdSidebar" src="" alt="Advertisement" style="width:100%; max-height:300px; object-fit:contain; border-radius:4px;">
                     </a>
                 </div>
-                
             </aside>
         </div>
     </div>
 
-    <!-- MODAL BACA ARTIKEL -->
     <div class="modal-overlay" id="modalArtikel">
         <div class="modal-box">
             <div class="modal-header">
@@ -487,16 +413,14 @@
         </div>
     </div>
 
-    <!-- IKLAN BAWAH -->
-<div id="dynamicAdFooter" style="display:none; background:var(--bg-card); border-top:1px solid var(--border); padding:20px 0; text-align:center;">
+    <div id="dynamicAdFooter" style="display:none; background:var(--bg-card); border-top:1px solid var(--border); padding:20px 0; text-align:center;">
         <p style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Advertisement</p>
         <a id="linkAdFooter" href="#" target="_blank">
             <img id="imgAdFooter" src="" alt="Iklan" style="max-width:728px;width:100%;height:auto;object-fit:cover;border-radius:4px;">
         </a>
     </div>
 
-<!--Media Partners-->
-<div class="media-partner-wrap">
+    <div class="media-partner-wrap">
         <div class="container">
             <div class="section-title" style="text-align: center; border-left: none; margin-bottom: 30px;">
                 <span style="border-bottom: 3px solid var(--accent); padding-bottom: 5px;">Media Partner</span>
@@ -507,18 +431,13 @@
         </div>
     </div>
 
-
-
-    <!-- FOOTER -->
     <footer>
         <div class="container footer-grid">
-            <!-- Kolom 1: Tentang -->
             <div class="footer-widget">
-                <img src="https://res.cloudinary.com/dc7guxgnm/image/upload/q_auto/f_auto/v1780888711/1000305700_egd1r2.jpg" alt="KJNI" style="height:80px; width:auto; object-fit:contain;">   
+                <img src="https://res.cloudinary.com/dc7guxgnm/image/upload/q_auto/f_auto/v1780888711/1000305700_egd1r2.jpg" alt="KJNI" style="height:80px; width:auto; object-fit:contain; margin-bottom: 10px;">   
                 <p style="color:#999;line-height:1.6;">Portal Berita Terpercaya menyajikan informasi tercepat, aktual, dan tajam seputar daerah Tangerang, Banten, dan Indonesia.</p>
             </div>
 
-            <!-- Kolom 2: Ikuti Kami -->
             <div class="footer-widget">
                 <h4>Ikuti Kami</h4>
                 <div class="footer-social-grid">
@@ -542,12 +461,11 @@
                         <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
                         WhatsApp
                     </a>
-                   <a href="mailto:emailanda@gmail.com" target="_blank" class="footer-social-btn fsb-gm" style="background-color: #EA4335; color: #ffffff; display: flex; align-items: center; gap: 10px; padding: 10px 15px; border-radius: 6px; text-decoration: none; font-family: sans-serif; font-size: 14px; font-weight: bold;">
-                     <svg viewBox="0 0 24 24"  fill: #ffffff;>
+                   <a href="mailto:emailanda@gmail.com" target="_blank" class="footer-social-btn fsb-gm" style="background-color: #EA4335;">
+                     <svg viewBox="0 0 24 24" fill="#ffffff">
                        <path d="M22 5.5H2c-1.1 0-2 .9-2 2v9c0 1.1.9 2 2 2h20c1.1 0 2-.9 2-2v-9c0-1.1-.9-2-2-2zm0 3.5l-10 6-10-6V7.5l10 6 10-6V9z"/>
-                          </svg>
+                     </svg>
                         Gmail
-                    
                     </a>
                     <a href="#" target="_blank" class="footer-social-btn fsb-li">
                         <svg viewBox="0 0 24 24"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
@@ -560,7 +478,6 @@
                 </div>
             </div>
 
-            <!-- Kolom 3: Halaman -->
             <div class="footer-widget">
                 <h4>Halaman</h4>
                 <div class="footer-page-links">
@@ -609,7 +526,6 @@
                 (b.penulis || '').toLowerCase().includes(keyword)
             );
 
-            // Sembunyikan konten utama saat search aktif
             heroArea.style.display = 'none';
             newsGrid.style.display = 'none';
             sectionTitle.style.display = 'none';
@@ -646,14 +562,12 @@
                         </div>`).join('')}`;
             }
 
-            // Klik hasil → buka artikel
             area.querySelectorAll('.search-result-item').forEach(item => {
                 item.addEventListener('click', () => {
                     window.location.href = `artikel.html?id=${item.dataset.id}`;
                 });
             });
 
-            // Tombol bersihkan
             const clearBtn = document.getElementById('clearSearch');
             if (clearBtn) {
                 clearBtn.addEventListener('click', () => {
@@ -736,21 +650,19 @@
             if (window._renderBerita) window._renderBerita();
             window.scrollTo({ top: 0, behavior: 'smooth' });
         });
+
         // ── SCROLL NAVBAR ARROWS ──
         const navMenu = document.getElementById('navMenu');
         const scrollLeftBtn = document.getElementById('scrollLeft');
         const scrollRightBtn = document.getElementById('scrollRight');
 
         function updateScrollArrows() {
-            // Tampilkan panah kiri jika tidak berada di posisi paling awal
             if (navMenu.scrollLeft > 0) {
                 scrollLeftBtn.classList.add('visible');
             } else {
                 scrollLeftBtn.classList.remove('visible');
             }
 
-            // Tampilkan panah kanan jika tidak berada di posisi paling akhir
-            // Dikurangi 1 untuk menoleransi pembulatan piksel pada browser tertentu
             if (navMenu.scrollLeft < (navMenu.scrollWidth - navMenu.clientWidth - 1)) {
                 scrollRightBtn.classList.add('visible');
             } else {
@@ -758,25 +670,26 @@
             }
         }
 
-        // Event listener saat panah diklik
-        scrollLeftBtn.addEventListener('click', () => {
-            navMenu.scrollBy({ left: -150, behavior: 'smooth' });
-        });
-        scrollRightBtn.addEventListener('click', () => {
-            navMenu.scrollBy({ left: 150, behavior: 'smooth' });
-        });
+        scrollLeftBtn.addEventListener('click', () => { navMenu.scrollBy({ left: -150, behavior: 'smooth' }); });
+        scrollRightBtn.addEventListener('click', () => { navMenu.scrollBy({ left: 150, behavior: 'smooth' }); });
 
-        // Pantau pergerakan scroll dan ukuran layar
         navMenu.addEventListener('scroll', updateScrollArrows);
         window.addEventListener('resize', updateScrollArrows);
-        
-        // Panggil fungsi sekali saat web pertama kali dimuat
         setTimeout(updateScrollArrows, 100);
+
+        document.addEventListener('click', (e) => {
+            const card = e.target.closest('[data-id]');
+            if (!card) return;
+            if (e.target.classList.contains('filter-btn') || e.target.closest('.menu')) return;
+            const id = card.dataset.id;
+            window.location.href = `artikel.html?id=${id}`;
+        });
     </script>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, query, orderBy, onSnapshot, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, query, orderBy, onSnapshot, doc, getDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        
         const firebaseConfig = {
             apiKey: "AIzaSyCCOOmXPfLhbDdSoil1UHfld5731689HVw",
             authDomain: "webberita-8af66.firebaseapp.com",
@@ -815,16 +728,13 @@
                     <p style="font-size:12px;margin-top:8px;">${err.message}</p>
                 </div>`;
         });
-        // Fungsi Memuat Iklan Dinamis
+
         async function muatIklanDepan() {
             try {
                 const docSnap = await getDoc(doc(db, "pengaturan", "iklan"));
                 if (docSnap.exists()) {
                     const data = docSnap.data();
 
-                    
-
-                    // 1. Render Multiple Sidebar
                     const wrapSidebar = document.getElementById("dynamicAdSidebar");
                     if (data.ads_sidebar && data.ads_sidebar.length > 0) {
                         wrapSidebar.style.display = "block";
@@ -835,11 +745,8 @@
                                 <img src="${ad.img}" alt="Ad" style="width:100%; height:auto; max-height:300px; object-fit:contain; border-radius:4px;">
                             </a>
                         `).join('');
-                    } else {
-                        wrapSidebar.style.display = "none";
-                    }
+                    } else { wrapSidebar.style.display = "none"; }
 
-                    // 2. Render Multiple Footer
                     const wrapFooter = document.getElementById("dynamicAdFooter");
                     if (data.ads_footer && data.ads_footer.length > 0) {
                         wrapFooter.style.display = "block";
@@ -850,60 +757,36 @@
                                 <img src="${ad.img}" alt="Ad" style="max-width:728px; width:100%; height:auto; object-fit:cover; border-radius:4px;">
                             </a>
                         `).join('');
-                    } else {
-                        wrapFooter.style.display = "none";
-                    }
+                    } else { wrapFooter.style.display = "none"; }
                 }
-            } catch (err) {
-                console.error("Gagal muat iklan:", err);
-            }
+            } catch (err) { console.error("Gagal muat iklan:", err); }
         }
-
-        // Panggil fungsi saat halaman diload
         muatIklanDepan();
 
-
-        // ── KODE UNTUK MENAMPILKAN MEDIA PARTNER SECARA DINAMIS ──
         async function renderMediaPartner() {
             const gridContainer = document.getElementById('mediaPartnerGrid');
             if (!gridContainer) return;
-
             try {
-                // Mengambil data dari koleksi bernama 'media_partners' di Firestore
-                // Jika Anda menggunakan Firebase v9+ Modular, ganti baris bawah ini dengan getDocs() sesuai struktur berita Anda
-                const snapshot = await db.collection('media_partners').get(); 
+                const snapshot = await getDocs(collection(db, 'media_partners')); 
                 
                 let htmlContent = '';
-                
                 if (snapshot.empty) {
                     gridContainer.innerHTML = '<p style="color: var(--text-muted); text-align: center; width:100%;">Belum ada media partner.</p>';
                     return;
                 }
-
                 snapshot.forEach(doc => {
                     const data = doc.data();
-                    
-                    // Mengambil field: nama, logo (url gambar), dan link (url website partner)
                     const nama = data.nama || 'Partner';
                     const logoUrl = data.logo || 'https://via.placeholder.com/150x50';
                     const linkUrl = data.link || '#';
-
-                    htmlContent += `
-                        <a href="${linkUrl}" class="partner-logo" target="_blank" title="${nama}">
-                            <img src="${logoUrl}" alt="${nama}">
-                        </a>
-                    `;
+                    htmlContent += `<a href="${linkUrl}" class="partner-logo" target="_blank" title="${nama}"><img src="${logoUrl}" alt="${nama}"></a>`;
                 });
-
-                // Masukkan semua logo yang berhasil diambil ke dalam HTML
                 gridContainer.innerHTML = htmlContent;
             } catch (error) {
                 console.error("Gagal memuat media partner:", error);
                 gridContainer.innerHTML = '<p style="color: var(--text-muted); text-align: center; width:100%;">Gagal memuat media partner.</p>';
             }
         }
-
-        // Panggil fungsi ini agar berjalan saat halaman web dibuka
         renderMediaPartner();
 
         function renderBerita() {
@@ -922,7 +805,7 @@
             heroArea.innerHTML = `
                 <div class="hero-card" data-id="${hero.id}">
                     ${hero.gambar
-                        ? `<img src="${hero.gambar}" style="width:100%;height:280px;object-fit:cover;" alt="${hero.judul}">`
+                        ? `<img src="${hero.gambar}" alt="${hero.judul}">`
                         : `<div class="hero-img-placeholder">📰</div>`}
                     <div class="hero-card-body">
                         <span class="post-category">${hero.kategori}</span>
@@ -992,20 +875,6 @@
                 window.scrollTo({ top: 0, behavior: 'smooth' });
             });
         });
-
-       document.addEventListener('click', (e) => {
-    // Cari elemen terdekat yang memiliki atribut data-id (kartu berita)
-    const card = e.target.closest('[data-id]');
-    if (!card) return;
-    
-    // Antisipasi agar klik pada tombol filter kategori tidak ikut mengalihkan halaman
-    if (e.target.classList.contains('filter-btn') || e.target.closest('.menu')) return;
-
-    const id = card.dataset.id;
-    
-    // Alihkan navigasi langsung ke halaman artikel.html dengan membawa ID Firestore
-    window.location.href = `artikel.html?id=${id}`;
-});
     </script>
 </body>
 </html>
