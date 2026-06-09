@@ -171,10 +171,20 @@
         .soc-fb { background: #3b5998; } .soc-tw { background: #1da1f2; } .soc-yt { background: #ff0000; } .soc-ig { background: #e1306c; }
 
         /* MEDIA PARTNER */
-        .media-partner { background: var(--white); padding: 16px 14px; margin-top: 14px; border-radius: 6px; box-shadow: var(--shadow); }
+        .media-partner { background: var(--white); padding: 16px 14px 14px; margin-top: 14px; border-radius: 6px; box-shadow: var(--shadow); overflow: hidden; }
+        .mp-marquee-wrap { width: 100%; overflow: hidden; position: relative; margin-top: 10px; }
+        .mp-marquee-wrap::before,
+        .mp-marquee-wrap::after { content: ''; position: absolute; top: 0; bottom: 0; width: 40px; z-index: 2; pointer-events: none; }
+        .mp-marquee-wrap::before { left: 0; background: linear-gradient(to right, var(--white), transparent); }
+        .mp-marquee-wrap::after  { right: 0; background: linear-gradient(to left, var(--white), transparent); }
+        .mp-track { display: flex; gap: 28px; align-items: center; width: max-content; animation: mpScroll 28s linear infinite; }
+        .mp-track:hover { animation-play-state: paused; }
+        @keyframes mpScroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        .partner-logo { display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .partner-logo img { max-height: 38px; max-width: 110px; object-fit: contain; filter: grayscale(1) opacity(.65); transition: filter .3s, transform .3s; }
+        .partner-logo:hover img { filter: grayscale(0) opacity(1); transform: scale(1.08); }
+        /* fallback grid jika JS gagal */
         .mp-grid { display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; align-items: center; margin-top: 10px; }
-        .partner-logo img { max-height: 40px; object-fit: contain; filter: grayscale(1); transition: filter .3s; }
-        .partner-logo:hover img { filter: grayscale(0); }
 
         /* AD */
         #dynamicAdFooter { text-align: center; padding: 14px 0; }
@@ -185,7 +195,7 @@
         .footer-inner { max-width: 1100px; margin: 0 auto; padding: 0 16px; }
         .footer-grid { display: grid; grid-template-columns: 1fr; gap: 24px; margin-bottom: 22px; }
         @media(min-width: 640px) { .footer-grid { grid-template-columns: 2fr 1fr 1fr; } }
-        .footer-logo-img { height: 150px; width: auto; object-fit: contain; margin-bottom: 10px; }
+        .footer-logo-img { height: 90px; width: auto; object-fit: contain; margin-bottom: 10px; }
         .footer-desc { color: #999; line-height: 1.6; }
         .footer-widget h4 { font-size: 11.5px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 13px; padding-bottom: 7px; border-bottom: 1px solid #2a2a2a; color: #ccc; }
         .footer-links { list-style: none; }
@@ -360,9 +370,11 @@
             
             <div class="media-partner">
                 <div class="sec-label" style="margin:0 0 4px;">Media Partner</div>
-                <div class="mp-grid" id="mediaPartnerGrid">
-                    <p style="color:var(--text-muted);font-size:13px;width:100%;text-align:center;">Memuat...</p>
+                <div class="mp-marquee-wrap" id="mediaPartnerMarquee">
+                    <p style="color:var(--text-muted);font-size:13px;text-align:center;padding:8px 0;">Memuat...</p>
                 </div>
+                <!-- fallback jika JS marquee gagal -->
+                <div class="mp-grid" id="mediaPartnerGrid" style="display:none;"></div>
             </div>
         </main>
         
@@ -708,12 +720,30 @@
     muatIklan();
 
     async function renderMediaPartner() {
-        const grid=document.getElementById('mediaPartnerGrid'); if(!grid) return;
+        const marqueeWrap = document.getElementById('mediaPartnerMarquee');
+        const fallbackGrid = document.getElementById('mediaPartnerGrid');
+        if (!marqueeWrap) return;
         try {
-            const snap=await getDocs(collection(db,'media_partners'));
-            if(snap.empty){grid.innerHTML='<p style="color:var(--text-muted);font-size:13px;text-align:center;width:100%;">Belum ada media partner.</p>';return;}
-            grid.innerHTML=''; snap.forEach(d=>{const dt=d.data();grid.innerHTML+=`<a href="${dt.link||'#'}" class="partner-logo" target="_blank" title="${dt.nama||'Partner'}"><img src="${dt.logo||''}" alt="${dt.nama||'Partner'}"></a>`;});
-        } catch(e){grid.innerHTML='<p style="color:var(--text-muted);font-size:13px;text-align:center;width:100%;">Gagal memuat media partner.</p>';}
+            const snap = await getDocs(collection(db, 'media_partners'));
+            if (snap.empty) {
+                marqueeWrap.innerHTML = '<p style="color:var(--text-muted);font-size:13px;text-align:center;padding:8px 0;">Belum ada media partner.</p>';
+                return;
+            }
+            const partners = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+            // Untuk efek scroll tanpa henti, duplikasi item
+            const buatItem = (dt) => `<a href="${dt.link || '#'}" class="partner-logo" target="_blank" title="${dt.nama || 'Partner'}"><img src="${dt.logo || ''}" alt="${dt.nama || 'Partner'}" loading="lazy"></a>`;
+            const semuaItem = partners.map(buatItem).join('');
+            // Jika partner sedikit (<4), duplikasi lebih banyak agar marquee mulus
+            const ulang = partners.length < 4 ? 4 : 2;
+            let trackHTML = '';
+            for (let i = 0; i < ulang; i++) trackHTML += semuaItem;
+            marqueeWrap.innerHTML = `<div class="mp-track">${trackHTML}</div>`;
+            // Sesuaikan kecepatan animasi berdasarkan jumlah item
+            const durasi = Math.max(18, partners.length * 4);
+            marqueeWrap.querySelector('.mp-track').style.animationDuration = durasi + 's';
+        } catch(e) {
+            marqueeWrap.innerHTML = '<p style="color:var(--text-muted);font-size:13px;text-align:center;padding:8px 0;">Gagal memuat media partner.</p>';
+        }
     }
     renderMediaPartner();
     function renderBerita() {
@@ -733,6 +763,29 @@
         document.getElementById('sidebarNews').innerHTML=!top5.length?'<p style="color:var(--text-muted);font-size:13px;padding:6px 0;">Belum ada berita.</p>':top5.map((b,i)=>`<div class="pop-item" data-id="${b.id}"><div class="pop-num">${String(i+1).padStart(2,'0')}</div><div class="pop-title">${b.judul}</div></div>`).join('');
     }
     function updateTicker() { document.getElementById('tickerText').textContent=semuaBerita.map(b=>b.judul).join('  \u2022  '); }
+
+    // Tambahkan fungsi ini di script index.html Anda ///////// TAMBAHANNNNNNNN KE BAWAHHH////////
+async function muatMediaPartner() {
+    const mpTrack = document.querySelector('.mp-track');
+    if (!mpTrack) return;
+
+    // Ambil data dari firestore
+    const snapshot = await getDocs(collection(db, 'media_partners'));
+    
+    mpTrack.innerHTML = ''; // Bersihkan kontainer
+    
+    snapshot.forEach(doc => {
+        const data = doc.data();
+        const item = `
+            <a href="${data.link}" target="_blank" class="partner-logo">
+                <img src="${data.logo}" alt="${data.nama}" loading="lazy">
+            </a>`;
+        mpTrack.insertAdjacentHTML('beforeend', item);
+    });
+}
+
+// Panggil fungsi saat halaman dimuat
+window.addEventListener('DOMContentLoaded', muatMediaPartner);
 </script>
 </body>
 </html>
