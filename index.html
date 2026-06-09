@@ -29,8 +29,10 @@
             --shadow: 0 1px 4px rgba(0,0,0,0.4);
         }
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        html, body {  width: 100%; }
-        body { font-family: 'Source Sans 3', sans-serif; background: var(--gray-light); color: var(--text); transition: background .3s, color .3s; }
+        /* PERBAIKAN: Tambahkan overflow-x: hidden agar halaman tidak bisa digeser ke samping akibat teks bocor */ /*AI nya salah kaprah, overflow-x hidden itu untuk mencegah horizontal scroll, bukan untuk mencegah bocornya elemen. Untuk mencegah bocornya elemen, kita harus memastikan semua elemen memiliki max-width: 100% dan word-break yang tepat. */
+        html, body { width: 100%; }
+        /* PERBAIKAN: Tambahkan sistem pemecah kata untuk string panjang (seperti link atau text ngasal) */
+        body { font-family: 'Source Sans 3', sans-serif; background: var(--gray-light); color: var(--text); transition: background .3s, color .3s; overflow-wrap: break-word; word-wrap: break-word; }
         a { text-decoration: none; color: inherit; }
         img { max-width: 100%; height: auto; display: block; }
 
@@ -43,10 +45,12 @@
         @keyframes marquee { 0%{transform:translateX(100vw)} 100%{transform:translateX(-100%)} }
 
         /* HEADER */
-        .site-header { background: var(--white); position: sticky; top: 0; z-index: 500; box-shadow: 0 2px 8px rgba(0,0,0,.25); }
+        /* PERBAIKAN: Tambahkan width: 100% agar saat ada elemen bocor, header tetap full layout */
+        .site-header { background: var(--white); position: sticky; top: 0; z-index: 500; box-shadow: 0 2px 8px rgba(0,0,0,.25); width: 100%; }
         .header-inner { display: flex; align-items: center; justify-content: space-between; padding: 0 1px; height: 60px; max-width: 1100px; margin: 0 auto; }
         .header-logo { flex: 1; display: flex; justify-content: center; }
-        .header-logo img { height: 90px; width: auto; object-fit: contain; filter;}
+        /* PERBAIKAN: Menghapus atribut "filter;" yang merupakan sintaks error */
+        .header-logo img { height: 90px; width: auto; object-fit: contain; }
         .header-left, .header-right { display: flex; align-items: center; gap: 6px; min-width: 80px; }
         .header-right { justify-content: flex-end; }
         .hdr-btn { background: rgba(255,255,255,.18); border: none; border-radius: 4px; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: red; font-size: 16px; transition: background .2s; }
@@ -93,8 +97,9 @@
         [data-theme="dark"] .hero-card-img-placeholder { background: linear-gradient(135deg,#2a2a2a,#1a1a1a); }
         .hero-card-body { padding: 13px 14px 15px; }
         .cat-badge { display: inline-block; background: var(--red); color: #fff; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 2px; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 7px; }
-        .hero-title { font-family: 'Playfair Display', serif; font-size: 19px; font-weight: 700; line-height: 1.35; margin-bottom: 8px; }
-        .hero-excerpt { font-size: 13px; color: var(--text-muted); line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 9px; }
+        /* PERBAIKAN: Penambahan word-break */
+        .hero-title { font-family: 'Playfair Display', serif; font-size: 19px; font-weight: 700; line-height: 1.35; margin-bottom: 8px; word-break: break-word; overflow-wrap: break-word; }
+        .hero-excerpt { font-size: 13px; color: var(--text-muted); line-height: 1.6; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; margin-bottom: 9px; word-break: break-word; overflow-wrap: break-word; }
         .card-meta { font-size: 11px; color: var(--text-muted); display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
         .card-meta .author { color: var(--red); font-weight: 700; }
 
@@ -111,7 +116,8 @@
         .news-thumb img { width: 110px; height: 100%; object-fit: cover; }
         .news-body { flex: 1; padding: 10px 12px; display: flex; flex-direction: column; justify-content: center; border-bottom: 1px solid var(--border); }
         .news-item:last-child .news-body { border-bottom: none; }
-        .news-title { font-size: 13.5px; font-weight: 700; line-height: 1.4; margin-bottom: 5px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+        /* PERBAIKAN: Penambahan word-break */
+        .news-title { font-size: 13.5px; font-weight: 700; line-height: 1.4; margin-bottom: 5px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; word-break: break-word; overflow-wrap: break-word; }
         .news-meta { font-size: 11px; color: var(--text-muted); display: flex; gap: 8px; flex-wrap: wrap; }
         .news-meta .author { color: var(--red); font-weight: 700; }
 
@@ -137,7 +143,7 @@
         .sr-item:hover { background: var(--gray-light); }
         .sr-thumb { width: 68px; height: 52px; flex-shrink: 0; background: var(--border); border-radius: 4px; overflow: hidden; display: flex; align-items: center; justify-content: center; font-size: 20px; }
         .sr-thumb img { width: 68px; height: 52px; object-fit: cover; }
-        .sr-title { font-size: 13px; font-weight: 700; line-height: 1.4; margin-bottom: 3px; }
+        .sr-title { font-size: 13px; font-weight: 700; line-height: 1.4; margin-bottom: 3px; word-break: break-word; overflow-wrap: break-word;}
         .sr-meta { font-size: 11px; color: var(--text-muted); }
         .sr-none { text-align: center; padding: 30px 20px; color: var(--text-muted); }
 
@@ -148,7 +154,7 @@
         .pop-item { display: flex; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--border); cursor: pointer; align-items: flex-start; }
         .pop-item:last-child { border-bottom: none; padding-bottom: 0; }
         .pop-num { font-size: 20px; font-weight: 900; color: var(--red); opacity: .25; line-height: 1; flex-shrink: 0; min-width: 26px; }
-        .pop-title { font-size: 13px; font-weight: 700; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+        .pop-title { font-size: 13px; font-weight: 700; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; word-break: break-word; overflow-wrap: break-word;}
         .pop-item:hover .pop-title { color: var(--red); }
         .cat-cloud { display: flex; flex-wrap: wrap; gap: 7px; }
         .cat-tag { background: var(--gray-light); border: 1px solid var(--border); color: var(--text-muted); font-size: 12px; font-weight: 600; padding: 4px 11px; border-radius: 3px; cursor: pointer; transition: all .2s; }
@@ -197,11 +203,11 @@
         .modal-close-btn { background: none; border: none; font-size: 20px; cursor: pointer; color: var(--text-muted); padding: 4px 8px; border-radius: 4px; }
         .modal-close-btn:hover { background: var(--border); }
         .modal-cwrap { padding: 18px 18px 22px; }
-        .modal-title { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; line-height: 1.3; margin-bottom: 10px; }
+        .modal-title { font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; line-height: 1.3; margin-bottom: 10px; word-break: break-word; overflow-wrap: break-word;}
         .modal-meta { font-size: 12px; color: var(--text-muted); display: flex; gap: 14px; flex-wrap: wrap; padding-bottom: 13px; border-bottom: 1px solid var(--border); margin-bottom: 14px; }
         .modal-meta .author { color: var(--red); font-weight: 700; }
         .modal-img { width: 100%; max-height: 360px; object-fit: cover; border-radius: 5px; margin-bottom: 15px; }
-        .modal-text { font-size: 15px; line-height: 1.85; }
+        .modal-text { font-size: 15px; line-height: 1.85; word-break: break-word; overflow-wrap: break-word;}
         .modal-text p { margin-bottom: 14px; text-align: justify; }
         .share-row { display: flex; gap: 7px; margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--border); flex-wrap: wrap; align-items: center; }
         .share-btn { padding: 7px 13px; color: #fff; font-size: 12px; font-weight: 600; border-radius: 4px; transition: opacity .2s; }
@@ -349,7 +355,7 @@
                 <div style="height:12px;"></div>
                 <div class="widget">
                     <div class="widget-head">Sosial Media</div>
-                    <div class="widget-body">
+                     <div class="widget-body">
                         <div class="soc-grid">
                             <div class="soc-card soc-fb"><span>Facebook</span><span class="cnt">3.5K</span></div>
                             <div class="soc-card soc-tw"><span>Twitter</span><span class="cnt">1.7K</span></div>
@@ -430,7 +436,6 @@
     </div>
 </footer>
 
-<!-- Modal -->
 <div class="modal-bg" id="modalArtikel">
     <div class="modal-box">
         <div class="modal-hdr">
@@ -453,7 +458,6 @@
     </div>
 </div>
 
-<!-- Hamburger Panel -->
 <div class="hpanel-overlay" id="hpanelOverlay"></div>
 <div class="hpanel" id="hpanel">
     <div class="hpanel-top">
