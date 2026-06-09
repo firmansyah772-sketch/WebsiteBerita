@@ -264,6 +264,21 @@
         .f-success .f-icon { font-size: 44px; margin-bottom: 10px; }
         .f-success p { font-size: 13px; color: var(--text-muted); margin-top: 6px; line-height: 1.6; }
         .f-reset-btn { margin-top: 14px; padding: 9px 22px; background: var(--red); color: #fff; border: none; border-radius: 5px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; }
+
+        /* MEDIA PARTNER */
+        .media-partner { background: var(--white); padding: 16px 14px 14px; margin-top: 14px; border-radius: 6px; box-shadow: var(--shadow); overflow: hidden; border: 1px solid var(--border); }
+        .mp-marquee-wrap { width: 100%; overflow: hidden; position: relative; margin-top: 10px; }
+        .mp-marquee-wrap::before,
+        .mp-marquee-wrap::after { content: ''; position: absolute; top: 0; bottom: 0; width: 40px; z-index: 2; pointer-events: none; }
+        .mp-marquee-wrap::before { left: 0; background: linear-gradient(to right, var(--white), transparent); }
+        .mp-marquee-wrap::after  { right: 0; background: linear-gradient(to left, var(--white), transparent); }
+        .mp-track { display: flex; gap: 28px; align-items: center; width: max-content; animation: mpScroll 28s linear infinite; }
+        .mp-track:hover { animation-play-state: paused; }
+        @keyframes mpScroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+        .partner-logo { display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .partner-logo img { max-height: 38px; max-width: 110px; object-fit: contain; filter: grayscale(1) opacity(.65); transition: filter .3s, transform .3s; }
+        .partner-logo:hover img { filter: grayscale(0) opacity(1); transform: scale(1.08); }
+        .mp-grid { display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; align-items: center; margin-top: 10px; }
     </style>
 </head>
 <body>
@@ -372,6 +387,16 @@
                     </article>
                                 <div id="dynamicAdFooter" style="display:none;"></div>
 
+                </div>
+
+                <!-- MEDIA PARTNER -->
+                <div class="media-partner">
+                    <div class="sec-label" style="margin:0 0 4px;">Media Partner</div>
+                    <div class="mp-marquee-wrap" id="mediaPartnerMarquee">
+                        <p style="color:var(--text-muted);font-size:13px;text-align:center;padding:8px 0;">Memuat...</p>
+                    </div>
+                    <!-- fallback jika JS marquee gagal -->
+                    <div class="mp-grid" id="mediaPartnerGrid" style="display:none;"></div>
                 </div>
             </main>
 
@@ -670,7 +695,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, doc, getDoc, collection, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, getDocs, collection, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCCOOmXPfLhbDdSoil1UHfld5731689HVw",
@@ -854,10 +879,34 @@
             }
         }
 
+        async function renderMediaPartner() {
+            const marqueeWrap = document.getElementById('mediaPartnerMarquee');
+            if (!marqueeWrap) return;
+            try {
+                const snap = await getDocs(collection(db, 'media_partners'));
+                if (snap.empty) {
+                    marqueeWrap.innerHTML = '<p style="color:var(--text-muted);font-size:13px;text-align:center;padding:8px 0;">Belum ada media partner.</p>';
+                    return;
+                }
+                const partners = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+                const buatItem = (dt) => `<a href="${dt.link || '#'}" class="partner-logo" target="_blank" title="${dt.nama || 'Partner'}"><img src="${dt.logo || ''}" alt="${dt.nama || 'Partner'}" loading="lazy"></a>`;
+                const semuaItem = partners.map(buatItem).join('');
+                const ulang = partners.length < 4 ? 4 : 2;
+                let trackHTML = '';
+                for (let i = 0; i < ulang; i++) trackHTML += semuaItem;
+                marqueeWrap.innerHTML = `<div class="mp-track">${trackHTML}</div>`;
+                const durasi = Math.max(18, partners.length * 4);
+                marqueeWrap.querySelector('.mp-track').style.animationDuration = durasi + 's';
+            } catch(e) {
+                marqueeWrap.innerHTML = '<p style="color:var(--text-muted);font-size:13px;text-align:center;padding:8px 0;">Gagal memuat media partner.</p>';
+            }
+        }
+
         window.addEventListener('DOMContentLoaded', () => {
             muatArtikel();
             dataBeritaListener();
-            muatIklan(); 
+            muatIklan();
+            renderMediaPartner();
         });
     </script>
 </body>
