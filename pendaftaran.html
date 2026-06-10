@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pendaftaran - KJNI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --red: #cc0000;
+            --red-dark: #990000;
+            --black: #111111;
+            --gray-dark: #222222;
+            --gray-mid: #444444;
+            --gray-light: #f3f3f3;
+            --white: #ffffff;
+            --border: #e0e0e0;
+            --text: #1a1a1a;
+            --text-muted: #777777;
+            --shadow: 0 1px 4px rgba(0,0,0,0.10);
+        }
+        [data-theme="dark"] {
+            --gray-light: #181818;
+            --white: #1e1e1e;
+            --border: #2e2e2e;
+            --text: #e8e8e8;
+            --text-muted: #999999;
+            --shadow: 0 1px 4px rgba(0,0,0,0.4);
+        }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        html, body { width: 100%;  }
+        body { font-family: 'Source Sans 3', sans-serif; background: var(--gray-light); color: var(--text); transition: background .3s, color .3s; line-height: 1.6; }
+        a { text-decoration: none; color: inherit; }
+        img { max-width: 100%; height: auto; display: block; }
+
+        /* TICKER */
+        .ticker-bar { background: var(--black); color: #fff; font-size: 11.5px; padding: 6px 0; overflow: hidden; }
+        .ticker-inner { display: flex; align-items: center; max-width: 1100px; margin: 0 auto; padding: 0 12px; }
+        .ticker-label { background: var(--red); color: #fff; font-weight: 700; font-size: 10px; padding: 3px 9px; text-transform: uppercase; letter-spacing: .8px; flex-shrink: 0; margin-right: 10px; }
+        .ticker-scroll { overflow: hidden; flex: 1; }
+        .ticker-text { white-space: nowrap; animation: marquee 45s linear infinite; display: inline-block; }
+        @keyframes marquee { 0%{transform:translateX(100vw)} 100%{transform:translateX(-100%)} }
+
+        /* HEADER */
+        .site-header { background: var(--white); position: sticky; top: 0; z-index: 500; box-shadow: 0 2px 8px rgba(0,0,0,.25); width: 100%; }
+        .header-inner { display: flex; align-items: center; justify-content: space-between; padding: 0 1px; height: 60px; max-width: 1100px; margin: 0 auto; }
+        .header-logo { flex: 1; display: flex; justify-content: center; }
+        .header-logo img { height: 90px; width: auto; object-fit: contain; }
+        .header-left, .header-right { display: flex; align-items: center; gap: 6px; min-width: 80px; }
+        .header-right { justify-content: flex-end; }
+        .hdr-btn { background: rgba(255,255,255,.18); border: none; border-radius: 4px; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: red; font-size: 16px; transition: background .2s; }
+        .hdr-btn:hover { background: rgba(255,255,255,.3); }
+        .hamburger-lines { display: flex; flex-direction: column; gap: 5px; width: 20px; }
+        .hamburger-lines span { display: block; width: 100%; height: 2px; background: currentColor; border-radius: 2px; transition: all .3s; }
+        [data-theme="dark"] .hamburger-lines span { background: var(--text); }
+
+        /* FORM STYLES */
+        .f-group { margin-bottom: 16px; color: var(--text); }
+        .f-label { display: block; font-size: 13px; font-weight: 700; margin-bottom: 6px; }
+        .f-label em { color: var(--red); font-style: normal; }
+        .f-input, .f-textarea { width: 100%; padding: 10px 12px; border: 1.5px solid var(--border); border-radius: 5px; font-size: 14px; font-family: inherit; background: var(--gray-light); color: var(--text); outline: none; transition: border-color .2s; }
+        .f-input:focus, .f-textarea:focus { border-color: var(--red); }
+        .f-textarea { resize: vertical; min-height: 90px; }
+        .f-submit { width: 100%; padding: 12px; background: var(--red); color: #fff; border: none; border-radius: 5px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit; transition: background .2s; margin-top: 10px; }
+        .f-submit:hover { background: var(--red-dark); }
+        .f-submit:disabled { background: #95a5a6; cursor: not-allowed; }
+
+        /* LAYOUT & ADS */
+        .page-body { padding: 16px 0 24px; }
+        .layout { display: grid; grid-template-columns: 1fr; gap: 16px; max-width: 1100px; margin: 0 auto; padding: 0 12px; transition: max-width .3s; }
+        @media(min-width: 900px) { .layout { grid-template-columns: 1fr 290px; gap: 18px; padding: 0 16px; } }
+        
+        .layout.has-left-ad { max-width: 1300px; }
+        @media(min-width: 1024px) { 
+            .layout.has-left-ad { grid-template-columns: 160px 1fr 290px; gap: 20px; }
+        }
+        @media(max-width: 1023px) { #dynamicAdLeft { display: none !important; } }
+        #dynamicAdTop { text-align: center; margin: 0 auto 15px auto; max-width: 1100px; padding: 0 12px; }
+        .layout.has-left-ad #dynamicAdTop { max-width: 1300px; }
+        
+        article { background: var(--white); padding: 24px; border-radius: 6px; box-shadow: var(--shadow); border: 1px solid var(--border); max-width: 100%; overflow: hidden; }
+        @media (max-width: 480px) { article { padding: 16px; } }
+        .article-title { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 700; line-height: 1.3; margin-bottom: 8px; color: var(--text); }
+
+        /* WIDGET STYLES */
+        .widget { background: var(--white); border-radius: 6px; overflow: hidden; margin-bottom: 16px; box-shadow: var(--shadow); border: 1px solid var(--border); }
+        .widget-head { background: var(--black); color: #fff; font-size: 11.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .8px; padding: 9px 14px; }
+        .widget-body { padding: 12px 14px; }
+        .pop-item { display: flex; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--border); cursor: pointer; align-items: flex-start; text-decoration: none; color: var(--text); }
+        .pop-item:last-child { border-bottom: none; padding-bottom: 0; }
+        .pop-num { font-size: 20px; font-weight: 900; color: var(--red); opacity: .25; line-height: 1; flex-shrink: 0; min-width: 26px; }
+        .pop-title { font-size: 13px; font-weight: 700; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+        .pop-item:hover .pop-title { color: var(--red); }
+        .cat-cloud { display: flex; flex-wrap: wrap; gap: 7px; }
+        .cat-tag { background: var(--gray-light); border: 1px solid var(--border); color: var(--text-muted); font-size: 12px; font-weight: 600; padding: 4px 11px; border-radius: 3px; cursor: pointer; transition: all .2s; text-decoration: none; }
+        .cat-tag:hover { background: var(--red); border-color: var(--red); color: #fff; }
+
+        /* FOOTER */
+        footer { background: var(--black); color: #fff; padding: 30px 0 16px; margin-top: 20px; font-size: 13px; text-align: center; }
+        .footer-inner { max-width: 1100px; margin: 0 auto; padding: 0 16px; overflow: hidden; }
+        .footer-grid { display: grid; grid-template-columns: 1fr; gap: 24px; margin-bottom: 22px; text-align: left; }
+        @media(min-width: 640px) { .footer-grid { grid-template-columns: 2fr 1fr 1fr; } }
+        .footer-logo-img { height: 90px; width: auto; object-fit: contain; margin-bottom: 10px; max-width: 100%; }
+        .footer-desc { color: #999; line-height: 1.6; }
+        .footer-widget h4 { font-size: 11.5px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 13px; padding-bottom: 7px; border-bottom: 1px solid #2a2a2a; color: #ccc; }
+        .footer-links { list-style: none; }
+        .footer-links li { margin-bottom: 8px; }
+        .footer-links a { color: #999; transition: color .2s; }
+        .footer-links a:hover { color: #fff; }
+        .footer-bottom { border-top: 1px solid #1e1e1e; padding-top: 16px; text-align: center; color: #555; font-size: 12px; }
+    </style>
+</head>
+<body>
+
+    <header class="site-header">
+        <div class="ticker-bar">
+            <div class="ticker-inner">
+                <span class="ticker-label">Breaking</span>
+                <div class="ticker-scroll"><span class="ticker-text" id="tickerText">Memuat berita terbaru...</span></div>
+            </div>
+        </div>
+        <div class="header-inner">
+            <div class="header-left">
+                <button class="hdr-btn" id="themeBtn" title="Ganti Tema">🌓</button>
+            </div>
+            <div class="header-logo">
+                <a href="index.html">
+                    <img src="https://res.cloudinary.com/dc7guxgnm/image/upload/q_auto/f_auto/v1780978628/1000305972_ynq9xo.png" alt="KJNI">
+                </a>
+            </div>
+            <div class="header-right">
+                <a href="index.html" class="hdr-btn" title="Home">🏠</a>
+            </div>
+        </div>
+    </header>
+
+    <div class="page-body">
+        <div id="dynamicAdTop" style="display:none;"></div>
+
+        <div class="layout" id="mainLayout">
+            <aside class="sidebar-left" id="dynamicAdLeft" style="display:none;"></aside>
+
+            <main style="max-width: 100%; overflow: hidden;">
+                <div id="mainContent">
+                    <article>
+                        <h1 class="article-title">Formulir Pendaftaran KJNI</h1>
+                        <p style="color: var(--text-muted); margin-bottom: 24px; border-bottom: 1px solid var(--border); padding-bottom: 16px;">
+                            Silakan lengkapi formulir di bawah ini dengan data yang valid. Tim kami akan segera menghubungi Anda setelah data diverifikasi.
+                        </p>
+                        
+                        <form id="formPendaftaranHalaman">
+                            <div class="f-group">
+                                <label class="f-label">Nama Lengkap <em>*</em></label>
+                                <input type="text" id="regNama" class="f-input" required placeholder="Masukkan nama lengkap Anda">
+                            </div>
+                            
+                            <div class="f-group">
+                                <label class="f-label">Tempat, Tanggal Lahir <em>*</em></label>
+                                <input type="text" id="regTTL" class="f-input" required placeholder="Contoh: Tangerang, 17 Agustus 1990">
+                            </div>
+
+                            <div class="f-group">
+                                <label class="f-label">Nomor WhatsApp <em>*</em></label>
+                                <input type="tel" id="regWa" class="f-input" required placeholder="Contoh: 081234567890">
+                            </div>
+
+                            <div class="f-group">
+                                <label class="f-label">Email <em>*</em></label>
+                                <input type="email" id="regEmail" class="f-input" required placeholder="contoh@email.com">
+                            </div>
+
+                            <div class="f-group">
+                                <label class="f-label">Alamat Lengkap <em>*</em></label>
+                                <textarea id="regAlamat" class="f-textarea" required placeholder="Alamat domisili saat ini..."></textarea>
+                            </div>
+                            
+                            <button type="submit" id="btnKirimPendaftaran" class="f-submit">Kirim Pendaftaran 🚀</button>
+                        </form>
+                        
+                        <div id="pesanSukses" style="display:none; text-align:center; padding: 40px 10px;">
+                            <div style="font-size: 50px; margin-bottom:15px;">🎉</div>
+                            <h2 style="font-family: 'Playfair Display', serif; font-size: 24px; color: var(--text);">Pendaftaran Berhasil!</h2>
+                            <p style="color: var(--text-muted); margin-top: 10px; font-size: 15px;">Terima kasih, data Anda telah tersimpan di sistem kami dengan aman.</p>
+                            <button onclick="location.reload()" style="margin-top: 20px; background: var(--red); color: white; border: none; padding: 10px 20px; border-radius: 4px; font-weight: bold; cursor: pointer;">Daftar Lagi</button>
+                        </div>
+                    </article>
+                    
+                    <div id="dynamicAdFooter" style="display:none; margin-top: 20px;"></div>
+                </div>
+            </main>
+
+            <aside id="sidebarSection" style="max-width: 100%;">
+                <div style="position:sticky;top:80px;">
+                    <div class="widget">
+                        <div class="widget-head">Berita Populer</div>
+                        <div class="widget-body" style="padding:4px 14px 12px;">
+                            <div id="sidebarNews"><p style="color:var(--text-muted);font-size:13px;padding:8px 0;">Memuat...</p></div>
+                        </div>
+                    </div>
+                    <div class="widget">
+                        <div class="widget-head">Kategori</div>
+                        <div class="widget-body">
+                            <div class="cat-cloud" id="tagCloud">
+                                <a href="index.html" class="cat-tag">Nasional</a>
+                                <a href="index.html" class="cat-tag">Tangerang Raya</a>
+                                <a href="index.html" class="cat-tag">Banten</a>
+                                <a href="index.html" class="cat-tag">Politik</a>
+                                <a href="index.html" class="cat-tag">Ekonomi</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="dynamicAdSidebar" style="display:none; overflow: hidden; max-width: 100%;"></div>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-inner">
+            <div class="footer-grid">
+                <div>
+                    <img class="footer-logo-img" src="https://res.cloudinary.com/dc7guxgnm/image/upload/q_auto/f_auto/v1780932379/1000305700_b9k0wb.jpg" alt="KJNI">
+                    <p class="footer-desc">Portal berita terpercaya menyajikan informasi aktual seputar Tangerang, Banten, dan Indonesia.</p>
+                </div>
+                <div class="footer-widget">
+                    <h4>Halaman</h4>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Beranda</a></li>
+                        <li><a href="tentangkami.html">Tentang Kami</a></li>
+                        <li><a href="kontak.html">Kontak Kami</a></li>
+                    </ul>
+                </div>
+                <div class="footer-widget">
+                    <h4>Kategori</h4>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Nasional</a></li>
+                        <li><a href="index.html">Tangerang Raya</a></li>
+                        <li><a href="index.html">Banten</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom"><p>&copy; 2026 KJNI.my.id &mdash; Portal Berita Tangerang, Banten &amp; Indonesia.</p></div>
+        </div>
+    </footer>
+
+    <script>
+        // Tema Terang/Gelap
+        const themeBtn = document.getElementById('themeBtn');
+        if(localStorage.getItem('theme') === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+        }
+        themeBtn.addEventListener('click', () => {
+            const h = document.documentElement;
+            if(h.getAttribute('data-theme') === 'dark') {
+                h.removeAttribute('data-theme'); localStorage.setItem('theme', 'light');
+            } else {
+                h.setAttribute('data-theme', 'dark'); localStorage.setItem('theme', 'dark');
+            }
+        });
+    </script>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCCOOmXPfLhbDdSoil1UHfld5731689HVw",
+            authDomain: "webberita-8af66.firebaseapp.com",
+            projectId: "webberita-8af66",
+            storageBucket: "webberita-8af66.firebasestorage.app",
+            messagingSenderId: "752062961977",
+            appId: "1:752062961977:web:6af98cd5ebe074189c30e8"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // 1. Fungsi Mengirim Data Form Pendaftaran ke Firestore
+        document.getElementById('formPendaftaranHalaman').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btnKirimPendaftaran');
+            btn.innerText = 'Mengirim Data... ⏳';
+            btn.disabled = true;
+
+            try {
+                await addDoc(collection(db, "pendaftar"), {
+                    nama: document.getElementById('regNama').value.trim(),
+                    ttl: document.getElementById('regTTL').value.trim(),
+                    wa: document.getElementById('regWa').value.trim(),
+                    email: document.getElementById('regEmail').value.trim(),
+                    alamat: document.getElementById('regAlamat').value.trim(),
+                    tanggalDaftar: new Date()
+                });
+
+                document.getElementById('formPendaftaranHalaman').style.display = 'none';
+                document.getElementById('pesanSukses').style.display = 'block';
+                window.scrollTo({top:0, behavior:'smooth'});
+
+            } catch (error) {
+                alert('Gagal mengirim data pendaftaran. Error: ' + error.message);
+                btn.innerText = 'Kirim Pendaftaran 🚀';
+                btn.disabled = false;
+            }
+        });
+
+        // 2. Load Berita Populer (Sidebar) & Ticker
+        const q = query(collection(db, "berita"), orderBy("tanggalDibuat", "desc"));
+        onSnapshot(q, (snapshot) => {
+            const semuaBerita = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+            if(semuaBerita.length > 0) {
+                document.getElementById('tickerText').innerText = semuaBerita.map(b => b.judul).join('  •  ');
+            }
+            const sidebarContainer = document.getElementById('sidebarNews');
+            let listHtml = '';
+            semuaBerita.slice(0, 5).forEach((b, index) => {
+                listHtml += `
+                    <a href="artikel.html?id=${b.id}" class="pop-item">
+                        <div class="pop-num">${String(index + 1).padStart(2, '0')}</div>
+                        <div class="pop-title">${b.judul}</div>
+                    </a>
+                `;
+            });
+            sidebarContainer.innerHTML = listHtml || '<p style="font-size:13px; color:var(--text-muted)">Belum ada berita.</p>';
+        });
+
+        // 3. Load Iklan Dinamis
+        async function muatIklan() {
+            try {
+                const adSnap = await getDoc(doc(db, "pengaturan", "iklan"));
+                if (adSnap.exists()) {
+                    const data = adSnap.data();
+
+                    const ws=document.getElementById("dynamicAdSidebar");
+                    if(data.ads_sidebar&&data.ads_sidebar.length>0){
+                        ws.style.display="block";
+                        ws.innerHTML=`<p style="font-size:10px;color:var(--text-muted);text-transform:uppercase;text-align:center;margin-bottom:6px;">Advertisement</p>`+data.ads_sidebar.map(ad=>`<a href="${ad.link||'#'}" target="_blank" style="display:block;margin-bottom:10px;"><img src="${ad.img}" alt="Ad" style="max-width:100%;border-radius:4px;"></a>`).join('');
+                    }
+                    
+                    const wf=document.getElementById("dynamicAdFooter");
+                    if(data.ads_footer&&data.ads_footer.length>0){
+                        wf.style.display="block";
+                        wf.innerHTML=`<p style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;">Advertisement</p>`+data.ads_footer.map(ad=>`<a href="${ad.link||'#'}" target="_blank"><img src="${ad.img}" alt="Ad" style="max-width:100%;border-radius:4px; margin: 0 auto;"></a>`).join('');
+                    }
+
+                    const wt=document.getElementById("dynamicAdTop");
+                    if(data.ads_top&&data.ads_top.length>0){
+                        wt.style.display="block";
+                        wt.innerHTML=`<p style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;">Advertisement</p>`+data.ads_top.map(ad=>`<a href="${ad.link||'#'}" target="_blank" style="display:block;margin-bottom:10px;"><img src="${ad.img}" alt="Ad" style="max-width:100%;border-radius:4px; margin: 0 auto; max-height:250px; object-fit:contain;"></a>`).join('');
+                    }
+
+                    const wl=document.getElementById("dynamicAdLeft");
+                    if(data.ads_left&&data.ads_left.length>0){
+                        wl.style.display="block";
+                        document.getElementById('mainLayout').classList.add('has-left-ad');
+                        wl.innerHTML=`<div style="position:sticky;top:80px;"><p style="font-size:10px;color:var(--text-muted);text-transform:uppercase;text-align:center;margin-bottom:6px;">Advertisement</p>`+data.ads_left.map(ad=>`<a href="${ad.link||'#'}" target="_blank" style="display:block;margin-bottom:10px;"><img src="${ad.img}" alt="Ad" style="max-width:100%;border-radius:4px;"></a>`).join('')+`</div>`;
+                    }
+                }
+            } catch (error) { console.error("Gagal memuat iklan dinamis:", error); }
+        }
+        muatIklan();
+    </script>
+</body>
+</html>
