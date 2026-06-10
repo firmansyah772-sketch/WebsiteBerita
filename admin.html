@@ -135,10 +135,19 @@
                 <div class="form-group">
                     <label>Kategori</label>
                     <select id="inputKategori">
+                        <option value="Nasional">Nasional</option>
                         <option value="Tangerang Raya">Tangerang Raya</option>
-                        <option value="Religi">Religi</option>
-                        <option value="Berita Indonesia">Berita Indonesia</option>
-                        <option value="Berita Dunia">Berita Dunia</option>
+                        <option value="Banten">Banten</option>
+                        <option value="Serang">Serang</option>
+                        <option value="Peristiwa">Peristiwa</option>
+                        <option value="Politik">Politik</option>
+                        <option value="Ekonomi">Ekonomi</option>
+                        <option value="Pendidikan">Pendidikan</option>
+                        <option value="Olahraga">Olahraga</option>
+                        <option value="Teknologi">Teknologi</option>
+                        <option value="Hiburan">Hiburan</option>
+                        <option value="Lifestyle">Lifestyle</option>
+                        <option value="Opini">Opini</option>
                     </select>
                 </div>
                 <div class="form-group">
@@ -149,27 +158,27 @@
                 <div class="form-group" style="margin-top:15px;">
                     <label>Gambar Berita (Opsional)</label>
                     <input type="file" id="inputGambar" accept="image/*">
-                    <small style="color:#7f8c8d;">Max 10MB. Format: JPG, PNG, WEBP</small>
+                    <small style="color:#7f8c8d;">Max 2MB. Format: JPG, PNG, WEBP</small>
                 </div>
             </form>
 
             <hr style="border: 1px solid #eceff1; margin: 40px 0;">
             <h3>📢 Pengaturan Iklan Banner (Multiple)</h3>
-            <p style="font-size: 13px; color: #7f8c8d;">Tambahkan sebanyak mungkin iklan di masing-masing posisi. Iklan akan tersusun ke bawah.</p>
+            <p style="font-size: 13px; color: #7f8c8d;">Tambahkan sebanyak mungkin iklan di masing-masing posisi. Iklan akan tersusun ke bawah.(Max 2MB)</p>
 
             <form id="formIklan">
                 <div class="ad-section">
-                    <h4 style="margin-top:0; color:#d32f2f;">1. 🔝 Iklan Atas (Top Banner)</h4>
+                    <h4 style="margin-top:0; color:#d32f2f;">1. 🔝 Iklan Atas (Top Banner) 728×90px</h4>
                     <div id="wrapAtas"></div>
                     <button type="button" class="btn-tambah" onclick="tambahBaris('Atas')">+ Tambah Baris Iklan Atas</button>
                 </div>
                 <div class="ad-section">
-                    <h4 style="margin-top:0; color:#d32f2f;">2. ⬅️ Iklan Kiri (Left Sidebar)</h4>
+                    <h4 style="margin-top:0; color:#d32f2f;">2. ⬅️ Iklan Kiri (Left Sidebar) 160×600px</h4>
                     <div id="wrapKiri"></div>
                     <button type="button" class="btn-tambah" onclick="tambahBaris('Kiri')">+ Tambah Baris Iklan Kiri</button>
                 </div>
                 <div class="ad-section">
-                    <h4 style="margin-top:0; color:#d32f2f;">3. ➡️ Iklan Sidebar Kanan</h4>
+                    <h4 style="margin-top:0; color:#d32f2f;">3. ➡️ Iklan Sidebar Kanan 300×250px</h4>
                     <div id="wrapSidebar"></div>
                     <button type="button" class="btn-tambah" onclick="tambahBaris('Sidebar')">+ Tambah Baris Iklan Sidebar</button>
                 </div>
@@ -179,7 +188,7 @@
                     <button type="button" class="btn-tambah" onclick="tambahBaris('Tengah')">+ Tambah Baris Iklan Tengah</button>
                 </div>
                 <div class="ad-section">
-                    <h4 style="margin-top:0; color:#d32f2f;">5. 🔻 Iklan Footer</h4>
+                    <h4 style="margin-top:0; color:#d32f2f;">5. 🔻 Iklan Footer (Bawah) 728×90px</h4>
                     <div id="wrapFooter"></div>
                     <button type="button" class="btn-tambah" onclick="tambahBaris('Footer')">+ Tambah Baris Iklan Footer</button>
                 </div>
@@ -197,7 +206,7 @@
             <hr style="border: 1px solid #eceff1; margin: 40px 0;">
 
             <h3>🤝 Pengaturan Media Partner</h3>
-            <p style="font-size: 13px; color: #7f8c8d;">Tambahkan logo dan link media partner. Logo akan ditampilkan dalam slider otomatis di halaman utama.</p>
+            <p style="font-size: 13px; color: #7f8c8d;">Tambahkan foto dan link media partner. Foto akan ditampilkan dalam slider otomatis di halaman utama.(Max 2MB)</p>
 
             <div class="ad-section">
                 <h4 style="margin-top:0; color:#d32f2f;">Daftar Media Partner</h4>
@@ -229,10 +238,19 @@
             <div class="form-group">
                 <label>Kategori</label>
                 <select id="editKategori">
+                    <option value="Nasional">Nasional</option>
                     <option value="Tangerang Raya">Tangerang Raya</option>
-                    <option value="Religi">Religi</option>
-                    <option value="Berita Indonesia">Berita Indonesia</option>
-                    <option value="Berita Dunia">Berita Dunia</option>
+                    <option value="Banten">Banten</option>
+                    <option value="Serang">Serang</option>
+                    <option value="Peristiwa">Peristiwa</option>
+                    <option value="Politik">Politik</option>
+                    <option value="Ekonomi">Ekonomi</option>
+                    <option value="Pendidikan">Pendidikan</option>
+                    <option value="Olahraga">Olahraga</option>
+                    <option value="Teknologi">Teknologi</option>
+                    <option value="Hiburan">Hiburan</option>
+                    <option value="Lifestyle">Lifestyle</option>
+                    <option value="Opini">Opini</option>
                 </select>
             </div>
             <div class="form-group">
@@ -314,7 +332,12 @@
         const CLOUDINARY_CLOUD_NAME = "dc7guxgnm";
         const CLOUDINARY_UPLOAD_PRESET = "berita_upload";
 
+        const MAX_FILE_SIZE = 2 * 1024 * 1024; // 2MB
+
         async function uploadKeCloudinary(file) {
+            if (file.size > MAX_FILE_SIZE) {
+                throw new Error(`Ukuran file "${file.name}" melebihi batas 2MB (ukuran: ${(file.size/1024/1024).toFixed(1)}MB). Kompres dulu sebelum upload.`);
+            }
             const formData = new FormData();
             formData.append("file", file);
             formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
@@ -573,16 +596,30 @@
             const btn = document.getElementById('btnSimpanPartner');
             btn.innerText = '⏳ Menyimpan...'; btn.disabled = true;
             try {
-                for (let row of document.querySelectorAll('.mp-admin-row')) {
-                    const nama = row.querySelector('.mp-nama').value.trim(), link = row.querySelector('.mp-link').value.trim(), file = row.querySelector('.mp-file').files[0];
-                    if (!nama) continue;
+                const rows = Array.from(document.querySelectorAll('.mp-admin-row'));
+                if (rows.length === 0) { alert('Belum ada media partner yang ditambahkan.'); return; }
+                for (let row of rows) {
+                    const nama = row.querySelector('.mp-nama').value.trim();
+                    const link = row.querySelector('.mp-link').value.trim();
+                    const file = row.querySelector('.mp-file').files[0];
+                    if (!nama) { alert('Nama media partner tidak boleh kosong!'); return; }
                     let logoUrl = row.querySelector('.mp-logo-url').value;
-                    if (file) { btn.innerText = `⏳ Upload logo "${nama}"...`; logoUrl = await uploadKeCloudinary(file); }
+                    if (file) {
+                        btn.innerText = `⏳ Upload logo "${nama}"...`;
+                        logoUrl = await uploadKeCloudinary(file);
+                        row.querySelector('.mp-logo-url').value = logoUrl;
+                    }
+                    if (!logoUrl) { alert(`Logo untuk "${nama}" belum diupload!`); return; }
                     const payload = { nama, logo: logoUrl, link };
-                    if (row.dataset.mpId) await updateDoc(doc(db, 'media_partners', row.dataset.mpId), payload);
-                    else { const newDoc = await addDoc(collection(db, 'media_partners'), { ...payload, urutan: Date.now() }); row.dataset.mpId = newDoc.id; }
+                    if (row.dataset.mpId) {
+                        await updateDoc(doc(db, 'media_partners', row.dataset.mpId), payload);
+                    } else {
+                        const newDoc = await addDoc(collection(db, 'media_partners'), { ...payload, urutan: Date.now() });
+                        row.dataset.mpId = newDoc.id;
+                    }
                 }
-                alert('✅ Media partner disimpan!'); muatMediaPartner();
+                alert('✅ Media partner berhasil disimpan!');
+                await muatMediaPartner();
             } catch (e) { alert('❌ Gagal: ' + e.message); } 
             finally { btn.innerText = '💾 Simpan Semua Media Partner'; btn.disabled = false; }
         });
