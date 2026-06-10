@@ -57,6 +57,8 @@
         .article-actions { display: flex; gap: 8px; flex-shrink: 0; }
         .btn-delete { background: #e74c3c; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; }
         .btn-delete:hover { background: #c0392b; }
+        .btn-approve { background: #27ae60; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; }
+        .btn-approve:hover { background: #2ecc71; }
         .btn-edit { background: #2980b9; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; }
         .btn-edit:hover { background: #1a5276; }
 
@@ -100,6 +102,33 @@
         .mp-admin-row input[type="text"], .mp-admin-row input[type="url"] { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-family: inherit; font-size: 13px; }
         .mp-list-wrap { margin-bottom: 6px; }
         .mp-empty { font-size: 13px; color: #95a5a6; text-align: center; padding: 14px 0; }
+
+        /* ===== KONTEN BLOK (foto + artikel dinamis) ===== */
+        .blok-section { border: 1px solid #e0e0e0; border-radius: 8px; padding: 18px; margin-bottom: 16px; background: #fafafa; }
+        .blok-section h4 { margin: 0 0 4px; color: #d32f2f; font-size: 14px; }
+        .blok-item { background: #fff; border: 1.5px solid #ddd; border-radius: 6px; padding: 14px; margin-bottom: 10px; position: relative; }
+        .blok-item-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; font-size: 13px; font-weight: bold; color: #2c3e50; }
+        .blok-item-header .blok-type-label { background: #2c3e50; color: #fff; padding: 2px 10px; border-radius: 12px; font-size: 11px; }
+        .blok-item-header .blok-type-label.foto { background: #1976d2; }
+        .blok-item-header .blok-type-label.teks { background: #388e3c; }
+        .blok-item textarea { width: 100%; box-sizing: border-box; padding: 9px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit; font-size: 13px; min-height: 100px; resize: vertical; }
+        .blok-item .blok-img-preview { width: 80px; height: 55px; object-fit: cover; border-radius: 4px; border: 1px solid #ddd; display: none; }
+        .blok-item .blok-img-preview.visible { display: block; }
+        .blok-item .blok-img-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+        .blok-item input[type="file"] { flex: 1; font-size: 12px; }
+        .blok-item .blok-caption { width: 100%; box-sizing: border-box; padding: 7px 9px; border: 1px solid #ccc; border-radius: 4px; font-size: 12px; font-family: inherit; margin-top: 8px; }
+        .btn-hapus-blok { background: #ffebee; color: #d32f2f; border: none; padding: 5px 10px; cursor: pointer; border-radius: 4px; font-size: 12px; font-weight: bold; }
+        .btn-hapus-blok:hover { background: #ffcdd2; }
+        .blok-add-row { display: flex; gap: 8px; margin-top: 8px; }
+        .btn-add-blok { flex: 1; padding: 9px; cursor: pointer; border-radius: 4px; font-weight: bold; font-size: 13px; transition: .2s; border: 1.5px dashed; }
+        .btn-add-foto { background: #e3f2fd; color: #1565c0; border-color: #1565c0; }
+        .btn-add-foto:hover { background: #bbdefb; }
+        .btn-add-teks { background: #e8f5e9; color: #2e7d32; border-color: #2e7d32; }
+        .btn-add-teks:hover { background: #c8e6c9; }
+        .blok-order-btns { display: flex; gap: 4px; }
+        .btn-blok-up, .btn-blok-down { background: #f0f0f0; border: 1px solid #ddd; padding: 3px 8px; border-radius: 4px; cursor: pointer; font-size: 13px; }
+        .btn-blok-up:hover, .btn-blok-down:hover { background: #e0e0e0; }
+        .blok-info { font-size: 12px; color: #7f8c8d; background: #fff8e1; border-left: 3px solid #ffc107; padding: 8px 12px; border-radius: 0 4px 4px 0; margin-bottom: 10px; line-height: 1.6; }
     </style>
 </head>
 <body>
@@ -151,15 +180,30 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>Isi Berita</label>
-                    <textarea id="inputIsi" rows="8" required placeholder="Ketik atau paste isi berita di sini..."></textarea>
+                    <label>Isi Berita (teks singkat / pembuka — opsional)</label>
+                    <textarea id="inputIsi" rows="3" placeholder="Paragraf pembuka singkat (opsional). Konten utama pakai Blok Konten di bawah..."></textarea>
                 </div>
-                <button type="submit" id="btnPublish" class="btn">🚀 Publish Berita</button>
-                <div class="form-group" style="margin-top:15px;">
-                    <label>Gambar Berita (Opsional)</label>
+
+                <div class="blok-section" id="blokBuilderSection">
+                    <h4>📦 Blok Konten Artikel (Foto + Teks Dinamis)</h4>
+                    <p class="blok-info">
+                        Susun isi artikel dengan blok <strong>Foto</strong> dan <strong>Teks</strong> secara bergantian dan bebas. 
+                        Urutan blok di sini = urutan tampil di artikel.<br>
+                        Contoh: <em>Foto → Teks → Foto → Teks → ...</em>
+                    </p>
+                    <div id="blokList"></div>
+                    <div class="blok-add-row">
+                        <button type="button" class="btn-add-blok btn-add-foto" onclick="tambahBlok('foto', 'blokList')">🖼️ + Tambah Blok Foto</button>
+                        <button type="button" class="btn-add-blok btn-add-teks" onclick="tambahBlok('teks', 'blokList')">📝 + Tambah Blok Teks</button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Gambar Utama / Cover </label>
                     <input type="file" id="inputGambar" accept="image/*">
                     <small style="color:#7f8c8d;">Max 2MB. Format: JPG, PNG, WEBP</small>
                 </div>
+                <button type="submit" id="btnPublish" class="btn">🚀 Publish Berita</button>
             </form>
 
             <hr style="border: 1px solid #eceff1; margin: 40px 0;">
@@ -254,8 +298,27 @@
                 </select>
             </div>
             <div class="form-group">
-                <label>Isi Berita</label>
-                <textarea id="editIsi" rows="10" required placeholder="Isi berita..."></textarea>
+                <label>Isi Berita (Pembuka)</label>
+                <textarea id="editIsi" rows="4" required placeholder="Isi berita..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label>Gambar Utama / Cover (Biarkan kosong jika tidak ingin mengubah)</label>
+                <div style="margin-bottom: 10px;">
+                    <img id="editPreviewGambar" src="" style="max-width: 150px; border-radius: 4px; display: none; border: 1px solid #ddd;">
+                </div>
+                <input type="file" id="editGambar" accept="image/*">
+                <input type="hidden" id="editGambarLama">
+            </div>
+
+            <div class="blok-section">
+                <h4>📦 Blok Konten Artikel</h4>
+                <p class="blok-info">Edit blok foto dan teks. Blok kosong akan diabaikan saat disimpan.</p>
+                <div id="blokListEdit"></div>
+                <div class="blok-add-row">
+                    <button type="button" class="btn-add-blok btn-add-foto" onclick="tambahBlok('foto', 'blokListEdit')">🖼️ + Blok Foto</button>
+                    <button type="button" class="btn-add-blok btn-add-teks" onclick="tambahBlok('teks', 'blokListEdit')">📝 + Blok Teks</button>
+                </div>
             </div>
             <div class="modal-footer">
                 <button id="btnSimpanEdit" class="btn">💾 Simpan Perubahan</button>
@@ -290,6 +353,20 @@
 
         let idBeritaYangDiedit = null;
 
+        // Event Listener untuk preview gambar baru di Modal Edit
+        document.getElementById("editGambar").addEventListener("change", function(e) {
+            const file = e.target.files[0];
+            if(file) {
+                const reader = new FileReader();
+                reader.onload = function(ev) {
+                    const imgPreview = document.getElementById("editPreviewGambar");
+                    imgPreview.src = ev.target.result;
+                    imgPreview.style.display = "block";
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
         // A. CEK STATUS LOGIN REALTIME
         onAuthStateChanged(auth, (user) => {
             if (user) {
@@ -298,7 +375,7 @@
                 muatDaftarBerita();
                 muatDataIklan();
                 muatMediaPartner();
-                muatDaftarPendaftar(); // Panggil fungsi pendaftar di sini
+                muatDaftarPendaftar();
             } else {
                 loginSection.classList.remove("hidden");
                 dashboardSection.classList.add("hidden");
@@ -359,23 +436,56 @@
             try {
                 let urlGambar = "";
                 if (fileGambar) { urlGambar = await uploadKeCloudinary(fileGambar); }
+
+                // Kumpulkan & upload blok konten
+                const blokData = await kumpulkanBlok('blokList', btnPublish);
+
                 await addDoc(collection(db, "berita"), {
-                    judul, kategori, isi, gambar: urlGambar, tanggalDibuat: new Date()
+                    judul, kategori, isi, gambar: urlGambar, 
+                    blok_konten: blokData,
+                    tanggalDibuat: new Date()
                 });
                 alert("✅ Berita berhasil dipublish!");
                 document.getElementById("uploadForm").reset();
+                document.getElementById("blokList").innerHTML = "";
             } catch (err) { alert("❌ Gagal: " + err.message); } 
             finally { btnPublish.innerText = "🚀 Publish Berita"; btnPublish.disabled = false; }
         });
 
         // E. MODAL EDIT BERITA
-        function bukaModalEdit(id, judul, kategori, isi) {
+        function bukaModalEdit(id, judul, kategori, isi, blokKonten, gambarLama) {
             idBeritaYangDiedit = id;
             document.getElementById("editJudul").value = judul;
             document.getElementById("editKategori").value = kategori;
             document.getElementById("editIsi").value = isi;
+            
+            // Atur gambar lama
+            const imgPreview = document.getElementById("editPreviewGambar");
+            if (gambarLama) {
+                imgPreview.src = gambarLama;
+                imgPreview.style.display = "block";
+                document.getElementById("editGambarLama").value = gambarLama;
+            } else {
+                imgPreview.style.display = "none";
+                document.getElementById("editGambarLama").value = "";
+            }
+            document.getElementById("editGambar").value = ""; // Reset input file
+
+            // Reset dan isi blok edit
+            const blokListEdit = document.getElementById("blokListEdit");
+            blokListEdit.innerHTML = "";
+            if (blokKonten && Array.isArray(blokKonten)) {
+                blokKonten.forEach(blok => {
+                    if (blok.tipe === 'foto') {
+                        tambahBlok('foto', 'blokListEdit', { imgUrl: blok.url, caption: blok.caption || '' });
+                    } else if (blok.tipe === 'teks') {
+                        tambahBlok('teks', 'blokListEdit', { teks: blok.teks });
+                    }
+                });
+            }
             modalEdit.classList.remove("hidden");
         }
+
         function tutupModalEdit() { idBeritaYangDiedit = null; modalEdit.classList.add("hidden"); }
         document.getElementById("btnBatalEdit").addEventListener("click", tutupModalEdit);
         modalEdit.addEventListener("click", (e) => { if (e.target === modalEdit) tutupModalEdit(); });
@@ -386,17 +496,34 @@
             const judulBaru = document.getElementById("editJudul").value.trim();
             const kategoriBaru = document.getElementById("editKategori").value;
             const isiBaru = document.getElementById("editIsi").value.trim();
+            
+            const fileGambarBaru = document.getElementById("editGambar").files[0];
+            const urlGambarLama = document.getElementById("editGambarLama").value;
 
             if (!judulBaru || !isiBaru) return alert("Judul dan isi tidak boleh kosong!");
             btnSimpan.innerText = "⏳ Menyimpan..."; btnSimpan.disabled = true;
             try {
+                // Cek jika admin upload gambar cover baru
+                let urlGambarAkhir = urlGambarLama;
+                if (fileGambarBaru) {
+                    btnSimpan.innerText = "⏳ Mengupload Cover...";
+                    urlGambarAkhir = await uploadKeCloudinary(fileGambarBaru);
+                }
+
+                const blokData = await kumpulkanBlok('blokListEdit', btnSimpan);
                 await updateDoc(doc(db, "berita", idBeritaYangDiedit), {
-                    judul: judulBaru, kategori: kategoriBaru, isi: isiBaru, tanggalDiedit: new Date()
+                    judul: judulBaru, 
+                    kategori: kategoriBaru, 
+                    isi: isiBaru,
+                    gambar: urlGambarAkhir, // Simpan cover baru atau cover lama
+                    blok_konten: blokData,
+                    tanggalDiedit: new Date()
                 });
                 alert("✅ Berita diperbarui!"); tutupModalEdit();
             } catch (err) { alert("❌ Gagal menyimpan: " + err.message); } 
             finally { btnSimpan.innerText = "💾 Simpan Perubahan"; btnSimpan.disabled = false; }
         });
+
 
         // F. MENAMPILKAN & HAPUS BERITA
         function muatDaftarBerita() {
@@ -415,7 +542,9 @@
                             <button class="btn-delete" data-id="${beritaDoc.id}">Hapus ❌</button>
                         </div>
                     `;
-                    item.querySelector(".btn-edit").addEventListener("click", () => bukaModalEdit(beritaDoc.id, data.judul, data.kategori, data.isi));
+                    // Edit Cover Update: pastikan data.gambar dikirim ke bukaModalEdit
+                    item.querySelector(".btn-edit").addEventListener("click", () => bukaModalEdit(beritaDoc.id, data.judul, data.kategori, data.isi, data.blok_konten || [], data.gambar));
+                    
                     item.querySelector(".btn-delete").addEventListener("click", async (e) => {
                         if (confirm("Yakin ingin menghapus berita ini permanen?")) await deleteDoc(doc(db, "berita", e.target.getAttribute("data-id")));
                     });
@@ -425,7 +554,7 @@
         }
 
         // ===============================================
-        // FUNGSI BARU: MENAMPILKAN & HAPUS DATA PENDAFTAR
+        // MENAMPILKAN & HAPUS DATA PENDAFTAR DENGAN FITUR APPROVE
         // ===============================================
         function muatDaftarPendaftar() {
             const q = query(collection(db, "pendaftar"), orderBy("tanggalDaftar", "desc"));
@@ -439,6 +568,7 @@
                 snapshot.forEach((docSnap) => {
                     const data = docSnap.data();
                     const id = docSnap.id;
+                    const isApproved = data.status === 'approved'; // Cek status disetujui
                     
                     let tglDaftar = 'Baru saja';
                     if(data.tanggalDaftar) {
@@ -449,9 +579,14 @@
                     item.className = "article-item";
                     item.style.alignItems = "flex-start";
                     
+                    // Render label status
+                    const statusLabel = isApproved 
+                        ? `<span style="background: #27ae60;">Disetujui ✅</span>` 
+                        : `<span style="background: #f39c12;">Menunggu ⏳</span>`;
+
                     item.innerHTML = `
                         <div class="article-info" style="line-height: 1.6;">
-                            <span style="background: #27ae60;">Pendaftar</span>
+                            ${statusLabel}
                             <span style="background: #34495e; font-size:10px;">🕒 ${tglDaftar}</span>
                             <div class="article-title" style="margin-top: 8px; font-size: 16px;">${data.nama}</div>
                             <div style="font-size: 13px; color: #555; margin-top: 6px;">
@@ -462,19 +597,31 @@
                             </div>
                         </div>
                         <div class="article-actions">
+                            ${!isApproved ? `<button class="btn-approve" data-id="${id}">Setujui ✅</button>` : ''}
                             <button class="btn-delete" data-id="${id}">Hapus ❌</button>
                         </div>
                     `;
                     
-                    item.querySelector(".btn-delete").addEventListener("click", async (e) => {
+                    // Event listener untuk Approve
+                    if (!isApproved) {
+                        item.querySelector(".btn-approve").addEventListener("click", async () => {
+                            if (confirm(`Setujui pendaftar atas nama ${data.nama}?`)) {
+                                try {
+                                    await updateDoc(doc(db, "pendaftar", id), { status: 'approved' });
+                                } catch (error) { alert("Gagal menyetujui: " + error.message); }
+                            }
+                        });
+                    }
+
+                    // Event listener untuk Hapus
+                    item.querySelector(".btn-delete").addEventListener("click", async () => {
                         if (confirm("Yakin ingin menghapus data pendaftar ini?")) {
                             try {
                                 await deleteDoc(doc(db, "pendaftar", id));
-                            } catch (error) {
-                                alert("Gagal menghapus data: " + error.message);
-                            }
+                            } catch (error) { alert("Gagal menghapus data: " + error.message); }
                         }
                     });
+
                     daftarPendaftarAdmin.appendChild(item);
                 });
             });
@@ -545,6 +692,105 @@
             } catch (err) { alert("❌ Gagal menyimpan iklan: " + err.message); } 
             finally { btnSimpan.innerText = "💾 Simpan Semua Pengaturan Iklan"; btnSimpan.disabled = false; }
         });
+
+        // ===============================================
+        // BLOCK BUILDER — FOTO & TEKS DINAMIS
+        // ===============================================
+        window.tambahBlok = function(tipe, listId, data = {}) {
+            const list = document.getElementById(listId);
+            const blok = document.createElement('div');
+            blok.className = 'blok-item';
+            blok.dataset.tipe = tipe;
+
+            if (tipe === 'foto') {
+                const imgSrc = data.imgUrl || '';
+                const caption = data.caption || '';
+                blok.innerHTML = `
+                    <div class="blok-item-header">
+                        <div>
+                            <span class="blok-type-label foto">🖼️ FOTO</span>
+                            <span style="font-size:12px; color:#7f8c8d; margin-left:8px;">Upload foto, tambahkan keterangan (opsional)</span>
+                        </div>
+                        <div class="blok-order-btns">
+                            <button type="button" class="btn-blok-up" title="Naikkan">▲</button>
+                            <button type="button" class="btn-blok-down" title="Turunkan">▼</button>
+                            <button type="button" class="btn-hapus-blok">Hapus ❌</button>
+                        </div>
+                    </div>
+                    <div class="blok-img-row">
+                        <img class="blok-img-preview ${imgSrc ? 'visible' : ''}" src="${imgSrc || ''}" alt="preview">
+                        <input type="file" class="blok-file" accept="image/*">
+                        <input type="hidden" class="blok-old-url" value="${imgSrc}">
+                    </div>
+                    <input type="text" class="blok-caption" placeholder="Keterangan foto (opsional)..." value="${caption}">
+                `;
+                blok.querySelector('.blok-file').addEventListener('change', (e) => {
+                    const f = e.target.files[0];
+                    if (!f) return;
+                    const r = new FileReader();
+                    r.onload = ev => {
+                        const img = blok.querySelector('.blok-img-preview');
+                        img.src = ev.target.result;
+                        img.classList.add('visible');
+                    };
+                    r.readAsDataURL(f);
+                });
+            } else {
+                const teks = data.teks || '';
+                blok.innerHTML = `
+                    <div class="blok-item-header">
+                        <div>
+                            <span class="blok-type-label teks">📝 TEKS</span>
+                            <span style="font-size:12px; color:#7f8c8d; margin-left:8px;">Paragraf atau konten teks</span>
+                        </div>
+                        <div class="blok-order-btns">
+                            <button type="button" class="btn-blok-up" title="Naikkan">▲</button>
+                            <button type="button" class="btn-blok-down" title="Turunkan">▼</button>
+                            <button type="button" class="btn-hapus-blok">Hapus ❌</button>
+                        </div>
+                    </div>
+                    <textarea class="blok-teks" placeholder="Ketik isi teks artikel di sini...">${teks}</textarea>
+                `;
+            }
+
+            blok.querySelector('.btn-hapus-blok').addEventListener('click', () => blok.remove());
+            blok.querySelector('.btn-blok-up').addEventListener('click', () => {
+                const prev = blok.previousElementSibling;
+                if (prev) list.insertBefore(blok, prev);
+            });
+            blok.querySelector('.btn-blok-down').addEventListener('click', () => {
+                const next = blok.nextElementSibling;
+                if (next) list.insertBefore(next, blok);
+            });
+
+            list.appendChild(blok);
+        };
+
+        async function kumpulkanBlok(listId, btnRef) {
+            const list = document.getElementById(listId);
+            const items = list.querySelectorAll('.blok-item');
+            const hasil = [];
+            let fotoIdx = 0;
+            for (let item of items) {
+                const tipe = item.dataset.tipe;
+                if (tipe === 'foto') {
+                    const fileInput = item.querySelector('.blok-file');
+                    const oldUrl = item.querySelector('.blok-old-url').value;
+                    const caption = item.querySelector('.blok-caption').value.trim();
+                    let url = oldUrl;
+                    if (fileInput.files.length > 0) {
+                        fotoIdx++;
+                        if (btnRef) btnRef.innerText = `⏳ Upload foto blok ${fotoIdx}...`;
+                        url = await uploadKeCloudinary(fileInput.files[0]);
+                    }
+                    if (url) hasil.push({ tipe: 'foto', url, caption });
+                } else if (tipe === 'teks') {
+                    const teks = item.querySelector('.blok-teks').value.trim();
+                    if (teks) hasil.push({ tipe: 'teks', teks });
+                }
+            }
+            return hasil;
+        }
 
         // MEDIA PARTNER
         function buatBarisPartner(data = {}) {
