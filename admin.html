@@ -61,6 +61,12 @@
         .btn-approve:hover { background: #2ecc71; }
         .btn-edit { background: #2980b9; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; }
         .btn-edit:hover { background: #1a5276; }
+        .btn-toggle-aktif { background: #27ae60; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; }
+        .btn-toggle-aktif:hover { background: #1e8449; }
+        .btn-toggle-nonaktif { background: #f39c12; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; }
+        .btn-toggle-nonaktif:hover { background: #d68910; }
+        .badge-aktif { background: #27ae60 !important; }
+        .badge-nonaktif { background: #e74c3c !important; }
 
         .modal-overlay {
             position: fixed;
@@ -183,11 +189,16 @@
                     <label>Isi Berita (teks singkat / pembuka — opsional)</label>
                     <textarea id="inputIsi" rows="3" placeholder="Paragraf pembuka singkat (opsional). Konten utama pakai Blok Konten di bawah..."></textarea>
                 </div>
+                
+                <div class="form-group">
+                    <label>Hashtags (Pisahkan dengan koma, contoh: pilkada, banten, viral)</label>
+                    <input type="text" id="inputHashtags" placeholder="Masukkan hashtags untuk berita ini...">
+                </div>
 
                 <div class="blok-section" id="blokBuilderSection">
                     <h4>📦 Blok Konten Artikel (Foto + Teks Dinamis)</h4>
                     <p class="blok-info">
-                        Susun isi artikel dengan blok <strong>Foto</strong> dan <strong>Teks</strong> secara bergantian dan bebas. 
+                        Susun isi artikel dengan blok <strong>Foto</strong> dan <strong> Teks</strong> secara bergantian dan bebas. 
                         Urutan blok di sini = urutan tampil di artikel.<br>
                         Contoh: <em>Foto → Teks → Foto → Teks → ...</em>
                     </p>
@@ -300,6 +311,11 @@
             <div class="form-group">
                 <label>Isi Berita (Pembuka)</label>
                 <textarea id="editIsi" rows="4" required placeholder="Isi berita..."></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label>Hashtags (Pisahkan dengan koma)</label>
+                <input type="text" id="editHashtags" placeholder="Contoh: pilkada, banten, viral">
             </div>
 
             <div class="form-group">
@@ -431,6 +447,7 @@
             const judul     = document.getElementById("inputJudul").value;
             const kategori  = document.getElementById("inputKategori").value;
             const isi       = document.getElementById("inputIsi").value;
+            const hashtags  = document.getElementById("inputHashtags").value; // Ambil nilai hashtags
             const fileGambar = document.getElementById("inputGambar").files[0];
 
             try {
@@ -441,23 +458,26 @@
                 const blokData = await kumpulkanBlok('blokList', btnPublish);
 
                 await addDoc(collection(db, "berita"), {
-                    judul, kategori, isi, gambar: urlGambar, 
+                    judul, kategori, isi, hashtags, gambar: urlGambar, 
                     blok_konten: blokData,
+                    status: 'aktif',
                     tanggalDibuat: new Date()
                 });
                 alert("✅ Berita berhasil dipublish!");
                 document.getElementById("uploadForm").reset();
                 document.getElementById("blokList").innerHTML = "";
+                document.getElementById("inputHashtags").value = ""; // Reset input hashtags
             } catch (err) { alert("❌ Gagal: " + err.message); } 
             finally { btnPublish.innerText = "🚀 Publish Berita"; btnPublish.disabled = false; }
         });
 
         // E. MODAL EDIT BERITA
-        function bukaModalEdit(id, judul, kategori, isi, blokKonten, gambarLama) {
+        function bukaModalEdit(id, judul, kategori, isi, blokKonten, gambarLama, hashtags) {
             idBeritaYangDiedit = id;
             document.getElementById("editJudul").value = judul;
             document.getElementById("editKategori").value = kategori;
             document.getElementById("editIsi").value = isi;
+            document.getElementById("editHashtags").value = hashtags || ""; // Set nilai hashtags lama
             
             // Atur gambar lama
             const imgPreview = document.getElementById("editPreviewGambar");
@@ -496,6 +516,7 @@
             const judulBaru = document.getElementById("editJudul").value.trim();
             const kategoriBaru = document.getElementById("editKategori").value;
             const isiBaru = document.getElementById("editIsi").value.trim();
+            const hashtagsBaru = document.getElementById("editHashtags").value.trim(); // Ambil nilai hashtags baru
             
             const fileGambarBaru = document.getElementById("editGambar").files[0];
             const urlGambarLama = document.getElementById("editGambarLama").value;
@@ -515,6 +536,7 @@
                     judul: judulBaru, 
                     kategori: kategoriBaru, 
                     isi: isiBaru,
+                    hashtags: hashtagsBaru, // Update field hashtags
                     gambar: urlGambarAkhir, // Simpan cover baru atau cover lama
                     blok_konten: blokData,
                     tanggalDiedit: new Date()
@@ -533,17 +555,33 @@
                 if (snapshot.empty) return daftarBeritaAdmin.innerHTML = "<p style='color:#7f8c8d;'>Belum ada berita.</p>";
                 snapshot.forEach((beritaDoc) => {
                     const data = beritaDoc.data();
+                    const isAktif = data.status !== 'nonaktif';
                     const item = document.createElement("div");
                     item.className = "article-item";
+                    item.style.opacity = isAktif ? '1' : '0.6';
                     item.innerHTML = `
-                        <div class="article-info"><span>${data.kategori}</span><span class="article-title">${data.judul}</span></div>
+                        <div class="article-info">
+                            <span>${data.kategori}</span>
+                            <span class="${isAktif ? 'badge-aktif' : 'badge-nonaktif'}" style="padding:3px 8px;border-radius:3px;color:#fff;font-size:11px;display:inline-block;margin-right:4px;">${isAktif ? '🟢 Aktif' : '🔴 Nonaktif'}</span>
+                            <span class="article-title">${data.judul}</span>
+                        </div>
                         <div class="article-actions">
+                            <button class="btn-toggle-${isAktif ? 'nonaktif' : 'aktif'}" data-id="${beritaDoc.id}" data-status="${isAktif ? 'aktif' : 'nonaktif'}">${isAktif ? '⏸️ Nonaktifkan' : '▶️ Aktifkan'}</button>
                             <button class="btn-edit" data-id="${beritaDoc.id}">Edit ✏️</button>
                             <button class="btn-delete" data-id="${beritaDoc.id}">Hapus ❌</button>
                         </div>
                     `;
-                    // Edit Cover Update: pastikan data.gambar dikirim ke bukaModalEdit
-                    item.querySelector(".btn-edit").addEventListener("click", () => bukaModalEdit(beritaDoc.id, data.judul, data.kategori, data.isi, data.blok_konten || [], data.gambar));
+                    item.querySelector(".btn-toggle-" + (isAktif ? 'nonaktif' : 'aktif')).addEventListener("click", async (e) => {
+                        const idnya = e.target.getAttribute("data-id");
+                        const statusSekarang = e.target.getAttribute("data-status");
+                        const statusBaru = statusSekarang === 'aktif' ? 'nonaktif' : 'aktif';
+                        try {
+                            await updateDoc(doc(db, "berita", idnya), { status: statusBaru });
+                        } catch(err) { alert("Gagal mengubah status: " + err.message); }
+                    });
+
+                    // Edit Cover & Hashtags Update: pastikan data.gambar dan data.hashtags dihantar ke bukaModalEdit
+                    item.querySelector(".btn-edit").addEventListener("click", () => bukaModalEdit(beritaDoc.id, data.judul, data.kategori, data.isi, data.blok_konten || [], data.gambar, data.hashtags || ""));
                     
                     item.querySelector(".btn-delete").addEventListener("click", async (e) => {
                         if (confirm("Yakin ingin menghapus berita ini permanen?")) await deleteDoc(doc(db, "berita", e.target.getAttribute("data-id")));
