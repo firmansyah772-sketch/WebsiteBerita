@@ -49,7 +49,7 @@
         .header-logo { flex: 1; display: flex; justify-content: center; }
         .header-logo img { height: 90px; width: auto; object-fit: contain; }
         .header-left, .header-right { display: flex; align-items: center; gap: 6px; min-width: 80px; }
-        .header-right { justify-content: flex-end; }
+        .header-right { justify-content: flex-end; position: relative; }
         .hdr-btn { background: rgba(255,255,255,.18); border: none; border-radius: 4px; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: red; font-size: 16px; transition: background .2s; }
         .hdr-btn:hover { background: rgba(255,255,255,.3); }
         .hamburger-lines { display: flex; flex-direction: column; gap: 5px; width: 20px; }
@@ -57,6 +57,15 @@
         .hdr-btn.open .hamburger-lines span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
         .hdr-btn.open .hamburger-lines span:nth-child(2) { opacity: 0; }
         .hdr-btn.open .hamburger-lines span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+        /* DROPDOWN HAMBURGER */
+        .h-dropdown-overlay { position: fixed; inset: 0; background: transparent; z-index: 800; display: none; }
+        .h-dropdown-overlay.open { display: block; }
+        .h-dropdown { position: absolute; top: 50px; right: 0; background: var(--white); width: 180px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border-radius: 6px; z-index: 900; opacity: 0; pointer-events: none; transform: translateY(-10px); transition: all .2s ease; border: 1px solid var(--border); overflow: hidden; }
+        .h-dropdown.open { opacity: 1; pointer-events: all; transform: translateY(0); }
+        .h-drop-link { display: block; padding: 12px 16px; font-size: 13.5px; font-weight: 600; color: var(--text); border-bottom: 1px solid var(--border); transition: background .2s, color .2s; }
+        .h-drop-link:last-child { border-bottom: none; }
+        .h-drop-link:hover { background: var(--red); color: #fff; }
 
         /* SEARCH DROP */
         .search-bar-drop { background: var(--red-dark); padding: 10px 12px; display: none; }
@@ -76,7 +85,6 @@
         .layout { display: grid; grid-template-columns: 1fr; gap: 0; max-width: 1100px; margin: 0 auto; padding: 0 12px; transition: max-width .3s; }
         @media(min-width: 900px) { .layout { grid-template-columns: 1fr 290px; gap: 18px; padding: 0 16px; } }
         
-        /* Modifikasi untuk mengakomodasi Iklan Kiri (Left Sidebar Ad) */
         .layout.has-left-ad { max-width: 1300px; }
         @media(min-width: 1024px) { 
             .layout.has-left-ad { grid-template-columns: 160px 1fr 290px; gap: 20px; }
@@ -171,20 +179,10 @@
         .soc-fb { background: #3b5998; } .soc-tw { background: #1da1f2; } .soc-yt { background: #ff0000; } .soc-ig { background: #e1306c; }
 
         /* MEDIA PARTNER */
-        .media-partner { background: var(--white); padding: 16px 14px 14px; margin-top: 14px; border-radius: 6px; box-shadow: var(--shadow); overflow: hidden; }
-        .mp-marquee-wrap { width: 100%; overflow: hidden; position: relative; margin-top: 10px; }
-        .mp-marquee-wrap::before,
-        .mp-marquee-wrap::after { content: ''; position: absolute; top: 0; bottom: 0; width: 40px; z-index: 2; pointer-events: none; }
-        .mp-marquee-wrap::before { left: 0; background: linear-gradient(to right, var(--white), transparent); }
-        .mp-marquee-wrap::after  { right: 0; background: linear-gradient(to left, var(--white), transparent); }
-        .mp-track { display: flex; gap: 28px; align-items: center; width: max-content; animation: mpScroll 28s linear infinite; }
-        .mp-track:hover { animation-play-state: paused; }
-        @keyframes mpScroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
-        .partner-logo { display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-        .partner-logo img { max-height: 38px; max-width: 110px; object-fit: contain; filter: grayscale(1) opacity(.65); transition: filter .3s, transform .3s; }
-        .partner-logo:hover img { filter: grayscale(0) opacity(1); transform: scale(1.08); }
-        /* fallback grid jika JS gagal */
+        .media-partner { background: var(--white); padding: 16px 14px; margin-top: 14px; border-radius: 6px; box-shadow: var(--shadow); }
         .mp-grid { display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; align-items: center; margin-top: 10px; }
+        .partner-logo img { max-height: 40px; object-fit: contain; filter: grayscale(1); transition: filter .3s; }
+        .partner-logo:hover img { filter: grayscale(0); }
 
         /* AD */
         #dynamicAdFooter { text-align: center; padding: 14px 0; }
@@ -236,49 +234,6 @@
         .wa-float svg { width: 26px; height: 26px; fill: #fff; }
         @keyframes waPulse { 0%,100%{box-shadow:0 3px 12px rgba(37,211,102,.5)} 50%{box-shadow:0 3px 22px rgba(37,211,102,.8),0 0 0 8px rgba(37,211,102,.12)} }
 
-        /* HAMBURGER PANEL */
-        .hpanel-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.55); z-index: 800; opacity: 0; pointer-events: none; transition: opacity .3s; }
-        .hpanel-overlay.open { opacity: 1; pointer-events: all; }
-        .hpanel { position: fixed; top: 0; right: -340px; width: 320px; max-width: 88vw; height: 100vh; background: var(--white); z-index: 900; box-shadow: -3px 0 20px rgba(0,0,0,.2); transition: right .35s cubic-bezier(.4,0,.2,1); overflow-y: auto; display: flex; flex-direction: column; }
-        .hpanel.open { right: 0; }
-        .hpanel-top { background: var(--red); padding: 14px 16px; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
-        .hpanel-logo-text { font-family: 'Playfair Display', serif; font-size: 18px; font-weight: 900; color: #fff; }
-        .hpanel-close-btn { background: rgba(255,255,255,.2); border: none; color: #fff; font-size: 18px; width: 32px; height: 32px; border-radius: 4px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-        .hpanel-tabs { display: flex; background: var(--black); }
-        .hpanel-tab { flex: 1; padding: 11px 6px; background: none; border: none; font-family: inherit; font-size: 11.5px; font-weight: 700; color: #888; text-transform: uppercase; letter-spacing: .4px; cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: color .2s; }
-        .hpanel-tab.active { color: #fff; border-bottom-color: var(--red); }
-        .hpanel-pane { display: none; padding: 18px 16px; flex: 1; }
-        .hpanel-pane.active { display: block; }
-        .about-img-wrap { text-align: center; margin-bottom: 14px; }
-        .about-img-wrap img { height: 56px; width: auto; margin: 0 auto; }
-        .about-h { font-family: 'Playfair Display', serif; font-size: 16px; font-weight: 700; margin-bottom: 8px; }
-        .about-p { font-size: 13px; color: var(--text-muted); line-height: 1.7; margin-bottom: 10px; }
-        .about-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 14px; }
-        .about-stat { background: var(--gray-light); border-radius: 6px; padding: 12px; text-align: center; }
-        .about-stat .n { font-size: 20px; font-weight: 900; color: var(--red); }
-        .about-stat .l { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
-        .kontak-row { display: flex; gap: 12px; align-items: flex-start; padding: 12px 0; border-bottom: 1px solid var(--border); }
-        .kontak-row:last-of-type { border-bottom: none; }
-        .kontak-ico { width: 36px; height: 36px; background: var(--red); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
-        .kontak-lbl { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: var(--text-muted); margin-bottom: 2px; }
-        .kontak-val { font-size: 13px; font-weight: 600; }
-        .kontak-val a { color: var(--red); }
-        .kontak-soc { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
-        .ks-btn { display: flex; align-items: center; gap: 5px; padding: 7px 12px; border-radius: 5px; font-size: 11.5px; font-weight: 700; color: #fff; }
-        .ks-btn svg { width: 13px; height: 13px; fill: #fff; flex-shrink: 0; }
-        .f-group { margin-bottom: 13px; }
-        .f-label { display: block; font-size: 12px; font-weight: 700; margin-bottom: 5px; }
-        .f-label em { color: var(--red); font-style: normal; }
-        .f-input, .f-select, .f-textarea { width: 100%; padding: 9px 11px; border: 1.5px solid var(--border); border-radius: 5px; font-size: 13px; font-family: inherit; background: var(--gray-light); color: var(--text); outline: none; transition: border-color .2s; }
-        .f-input:focus, .f-select:focus, .f-textarea:focus { border-color: var(--red); }
-        .f-textarea { resize: vertical; min-height: 75px; }
-        .f-submit { width: 100%; padding: 11px; background: var(--red); color: #fff; border: none; border-radius: 5px; font-size: 14px; font-weight: 700; cursor: pointer; font-family: inherit; transition: background .2s; }
-        .f-submit:hover { background: var(--red-dark); }
-        .f-success { display: none; text-align: center; padding: 24px 10px; }
-        .f-success .f-icon { font-size: 44px; margin-bottom: 10px; }
-        .f-success p { font-size: 13px; color: var(--text-muted); margin-top: 6px; line-height: 1.6; }
-        .f-reset-btn { margin-top: 14px; padding: 9px 22px; background: var(--red); color: #fff; border: none; border-radius: 5px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; }
-
         @media(max-width: 480px) {
             .news-thumb { width: 90px; min-height: 70px; }
             .news-thumb img { width: 90px; }
@@ -316,6 +271,13 @@
             <button class="hdr-btn" id="hamburgerBtn" title="Menu">
                 <div class="hamburger-lines"><span></span><span></span><span></span></div>
             </button>
+            
+            <div class="h-dropdown" id="hamburgerDropdown">
+                <a href="index.html" class="h-drop-link">Beranda</a>
+                <a href="tentangkami.html" class="h-drop-link">Tentang Kami</a>
+                <a href="kontak.html" class="h-drop-link">Kontak</a>
+                <a href="pendaftaran.html" class="h-drop-link">Pendaftaran</a>
+            </div>
         </div>
     </div>
     <div class="search-bar-drop" id="searchDrop">
@@ -344,12 +306,10 @@
 
 <div class="page-body">
     
-    <!-- IKLAN ATAS (TOP) -->
     <div id="dynamicAdTop" style="display:none;"></div>
 
     <div class="layout" id="mainLayout">
         
-        <!-- IKLAN KIRI (LEFT) -->
         <aside class="sidebar-left" id="dynamicAdLeft" style="display:none;"></aside>
 
         <main>
@@ -365,20 +325,16 @@
                 <div class="skel"><div class="skel-img"></div><div class="skel-body"><div class="skel-line"></div><div class="skel-line s"></div></div></div>
             </div>
             
-            <!-- IKLAN BAWAH (FOOTER) -->
             <div id="dynamicAdFooter" style="display:none;"></div>
             
             <div class="media-partner">
                 <div class="sec-label" style="margin:0 0 4px;">Media Partner</div>
-                <div class="mp-marquee-wrap" id="mediaPartnerMarquee">
-                    <p style="color:var(--text-muted);font-size:13px;text-align:center;padding:8px 0;">Memuat...</p>
+                <div class="mp-grid" id="mediaPartnerGrid">
+                    <p style="color:var(--text-muted);font-size:13px;width:100%;text-align:center;">Memuat...</p>
                 </div>
-                <!-- fallback jika JS marquee gagal -->
-                <div class="mp-grid" id="mediaPartnerGrid" style="display:none;"></div>
             </div>
         </main>
         
-        <!-- SIDEBAR KANAN (RIGHT) -->
         <aside>
             <div style="position:sticky;top:112px;">
                 <div style="height:12px;"></div>
@@ -420,7 +376,6 @@
                     </div>
                 </div>
                 
-                <!-- IKLAN KANAN (SIDEBAR) -->
                 <div id="dynamicAdSidebar" style="display:none;"></div>
             </div>
         </aside>
@@ -489,83 +444,47 @@
     </div>
 </div>
 
-<div class="hpanel-overlay" id="hpanelOverlay"></div>
-<div class="hpanel" id="hpanel">
-    <div class="hpanel-top">
-        <div class="hpanel-logo-text">KJNI</div>
-        <button class="hpanel-close-btn" id="hpanelClose">&#x2715;</button>
-    </div>
-    <div class="hpanel-tabs">
-        <button class="hpanel-tab active" data-tab="tentang">Tentang Kami</button>
-        <button class="hpanel-tab" data-tab="kontak">Kontak</button>
-        <button class="hpanel-tab" data-tab="daftar">Pendaftaran</button>
-    </div>
-    <div class="hpanel-pane active" id="tab-tentang">
-        <div class="about-img-wrap"><img src="https://res.cloudinary.com/dc7guxgnm/image/upload/q_auto/f_auto/v1780932367/1000305521-removebg-preview_vjy4es.png" alt="KJNI"></div>
-        <div class="about-h">Kabar Jabodetabek &amp; Nusantara Indonesia</div>
-        <p class="about-p">KJNI adalah portal berita digital yang menyajikan informasi terkini, akurat, dan terpercaya seputar Tangerang Raya, Banten, dan seluruh Indonesia.</p>
-        <p class="about-p">Berdiri sejak 2020, KJNI telah dipercaya ratusan ribu pembaca dengan pendekatan jurnalisme yang bertanggung jawab.</p>
-        <div class="about-stats">
-            <div class="about-stat"><div class="n">500K+</div><div class="l">Pembaca Bulanan</div></div>
-            <div class="about-stat"><div class="n">15+</div><div class="l">Jurnalis Aktif</div></div>
-            <div class="about-stat"><div class="n">10K+</div><div class="l">Artikel</div></div>
-            <div class="about-stat"><div class="n">2020</div><div class="l">Tahun Berdiri</div></div>
-        </div>
-    </div>
-    <div class="hpanel-pane" id="tab-kontak">
-        <div class="kontak-row"><div class="kontak-ico">&#x1F4CD;</div><div><div class="kontak-lbl">Alamat</div><div class="kontak-val">Jl. Pahlawan Seribu No.10, Tangerang Selatan, Banten 15311</div></div></div>
-        <div class="kontak-row"><div class="kontak-ico">&#x1F4E7;</div><div><div class="kontak-lbl">Email Redaksi</div><div class="kontak-val"><a href="mailto:redaksi@kjni.id">redaksi@kjni.id</a></div></div></div>
-        <div class="kontak-row"><div class="kontak-ico">&#x1F4DE;</div><div><div class="kontak-lbl">WhatsApp</div><div class="kontak-val"><a href="https://wa.me/6281234567890">+62 812-3456-7890</a></div></div></div>
-        <div class="kontak-row"><div class="kontak-ico">&#x1F550;</div><div><div class="kontak-lbl">Jam Operasional</div><div class="kontak-val">Senin&ndash;Jumat, 08.00&ndash;17.00 WIB</div></div></div>
-        <div class="kontak-row"><div class="kontak-ico">&#x1F4E2;</div><div><div class="kontak-lbl">Iklan &amp; Kerjasama</div><div class="kontak-val"><a href="mailto:iklan@kjni.id">iklan@kjni.id</a></div></div></div>
-        <div class="kontak-soc">
-            <a class="ks-btn fsb-fb" href="#"><svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg> Facebook</a>
-            <a class="ks-btn fsb-ig" href="#"><svg viewBox="0 0 24 24"><path d="M12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8z"/></svg> Instagram</a>
-            <a class="ks-btn fsb-wa" href="https://wa.me/6281234567890"><svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg> WhatsApp</a>
-        </div>
-    </div>
-    <div class="hpanel-pane" id="tab-daftar">
-        <div id="daftarForm">
-            <p style="font-size:13px;color:var(--text-muted);margin-bottom:16px;line-height:1.6;">Daftarkan diri Anda sebagai kontributor, mitra, atau langganan newsletter KJNI.</p>
-            <div class="f-group"><label class="f-label">Nama Lengkap <em>*</em></label><input class="f-input" id="daftarNama" type="text" placeholder="Nama lengkap Anda"></div>
-            <div class="f-group"><label class="f-label">Email <em>*</em></label><input class="f-input" id="daftarEmail" type="email" placeholder="contoh@email.com"></div>
-            <div class="f-group"><label class="f-label">Nomor WhatsApp <em>*</em></label><input class="f-input" id="daftarWa" type="tel" placeholder="08xxxxxxxxxx"></div>
-            <div class="f-group"><label class="f-label">Kategori <em>*</em></label>
-                <select class="f-select" id="daftarKategori">
-                    <option value=""> Pilih </option>
-                    <option value="kontributor">Kontributor / Jurnalis</option>
-                    <option value="mitra">Mitra Media</option>
-                    <option value="newsletter">Langganan Newsletter</option>
-                    <option value="iklan">Pemasang Iklan</option>
-                    <option value="lainnya">Lainnya</option>
-                </select>
-            </div>
-            <div class="f-group"><label class="f-label">Pesan</label><textarea class="f-textarea" id="daftarPesan" placeholder="Ceritakan tentang diri Anda..."></textarea></div>
-            <button class="f-submit" onclick="submitDaftar()">Kirim Pendaftaran &#x1F680;</button>
-        </div>
-        <div class="f-success" id="daftarSuccess">
-            <div class="f-icon">&#x1F389;</div>
-            <strong style="font-size:17px;">Pendaftaran Berhasil!</strong>
-            <p>Terima kasih, <strong id="successNama"></strong>! Tim KJNI akan segera menghubungi Anda.</p>
-            <button class="f-reset-btn" onclick="resetDaftar()">Daftar Lagi</button>
-        </div>
-    </div>
-</div>
+
 
 <script>
     document.getElementById('themeBtn').addEventListener('click', () => {
         const h = document.documentElement;
         h.getAttribute('data-theme') === 'dark' ? h.removeAttribute('data-theme') : h.setAttribute('data-theme','dark');
     });
+    
+    /* LOGIKA MENU DROPDOWN HAMBURGER */
+    const hamburgerBtn = document.getElementById('hamburgerBtn'), 
+          hDropdown = document.getElementById('hamburgerDropdown');
+
+    function toggleDropdown() {
+        hamburgerBtn.classList.toggle('open');
+        hDropdown.classList.toggle('open');
+    }
+
+    hamburgerBtn.addEventListener('click', e => {
+        e.stopPropagation();
+        toggleDropdown();
+    });
+
+    document.addEventListener('click', e => {
+        if (!hDropdown.contains(e.target) && !hamburgerBtn.contains(e.target)) {
+            hamburgerBtn.classList.remove('open');
+            hDropdown.classList.remove('open');
+        }
+    });
+    /* AKHIR LOGIKA DROPDOWN */
+
     const searchDrop = document.getElementById('searchDrop');
     document.getElementById('searchToggleBtn').addEventListener('click', () => {
         searchDrop.classList.toggle('open');
         if (searchDrop.classList.contains('open')) document.getElementById('searchInput').focus();
     });
+
     function formatTglS(ts) {
         if (!ts || !ts.seconds) return '';
         return new Date(ts.seconds*1000).toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'});
     }
+
     function lakukan_search() {
         const kw = document.getElementById('searchInput').value.trim().toLowerCase();
         const area = document.getElementById('searchResultsArea');
@@ -582,6 +501,7 @@
             area.querySelectorAll('.sr-item').forEach(el => el.addEventListener('click', () => { window.location.href=`artikel.html?id=${el.dataset.id}`; }));
         }
     }
+
     function clearSearch() {
         document.getElementById('searchInput').value='';
         const area=document.getElementById('searchResultsArea');
@@ -591,8 +511,10 @@
         document.getElementById('secLabel').style.display='';
         document.getElementById('filterBar').style.display='';
     }
+
     document.getElementById('searchBtn').addEventListener('click', lakukan_search);
     document.getElementById('searchInput').addEventListener('keydown', e => { if(e.key==='Enter') lakukan_search(); });
+    
     function syncFilters(kat) {
         window._filterAktif = kat;
         document.querySelectorAll('.filter-pill').forEach(p => p.classList.toggle('active', p.dataset.kat===kat));
@@ -600,12 +522,15 @@
         if (window._renderBerita) window._renderBerita();
         window.scrollTo({top:0,behavior:'smooth'});
     }
+
     document.querySelectorAll('.cat-nav-inner a').forEach(a => a.addEventListener('click', e => { e.preventDefault(); syncFilters(a.dataset.kat); }));
     document.getElementById('filterBar').addEventListener('click', e => { if(e.target.classList.contains('filter-pill')) syncFilters(e.target.dataset.kat); });
     document.getElementById('tagCloud').addEventListener('click', e => { if(e.target.classList.contains('cat-tag')) syncFilters(e.target.dataset.kat); });
+    
     const modal = document.getElementById('modalArtikel');
     document.getElementById('modalClose').addEventListener('click', () => modal.classList.remove('open'));
     modal.addEventListener('click', e => { if(e.target===modal) modal.classList.remove('open'); });
+
     function bukaArtikel(data) {
         document.getElementById('modalKategori').textContent = data.kategori;
         document.getElementById('modalJudul').textContent = data.judul;
@@ -625,39 +550,13 @@
         modal.classList.add('open');
         modal.querySelector('.modal-box').scrollTop=0;
     }
+
     document.addEventListener('click', e => {
         const card=e.target.closest('[data-id]');
         if(!card) return;
         if(e.target.closest('.filter-pill')||e.target.closest('.cat-nav-inner')||e.target.closest('.cat-tag')) return;
         window.location.href=`artikel.html?id=${card.dataset.id}`;
     });
-    const hpanel=document.getElementById('hpanel'), hpanelOverlay=document.getElementById('hpanelOverlay'), hamburgerBtn=document.getElementById('hamburgerBtn');
-    function openPanel(){hamburgerBtn.classList.add('open');hpanel.classList.add('open');hpanelOverlay.classList.add('open');document.body.style.overflow='hidden';}
-    function closePanel(){hamburgerBtn.classList.remove('open');hpanel.classList.remove('open');hpanelOverlay.classList.remove('open');document.body.style.overflow='';}
-    hamburgerBtn.addEventListener('click', () => hpanel.classList.contains('open')?closePanel():openPanel());
-    document.getElementById('hpanelClose').addEventListener('click', closePanel);
-    hpanelOverlay.addEventListener('click', closePanel);
-    document.querySelectorAll('.hpanel-tab').forEach(tab => {
-        tab.addEventListener('click', () => {
-            document.querySelectorAll('.hpanel-tab').forEach(t=>t.classList.remove('active'));
-            document.querySelectorAll('.hpanel-pane').forEach(p=>p.classList.remove('active'));
-            tab.classList.add('active');
-            document.getElementById('tab-'+tab.dataset.tab).classList.add('active');
-        });
-    });
-    function submitDaftar(){
-        const nama=document.getElementById('daftarNama').value.trim(), email=document.getElementById('daftarEmail').value.trim(), wa=document.getElementById('daftarWa').value.trim(), kat=document.getElementById('daftarKategori').value;
-        if(!nama||!email||!wa||!kat){alert('Mohon lengkapi semua field wajib (*).');return;}
-        if(!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)){alert('Format email tidak valid.');return;}
-        document.getElementById('successNama').textContent=nama;
-        document.getElementById('daftarForm').style.display='none';
-        document.getElementById('daftarSuccess').style.display='block';
-    }
-    function resetDaftar(){
-        ['daftarNama','daftarEmail','daftarWa','daftarKategori','daftarPesan'].forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
-        document.getElementById('daftarForm').style.display='block';
-        document.getElementById('daftarSuccess').style.display='none';
-    }
 </script>
 
 <script type="module">
@@ -668,7 +567,9 @@
     const db = getFirestore(app);
     let semuaBerita=[], beritaMap={};
     window._filterAktif='Semua';
+    
     function formatTgl(ts) { if(!ts||!ts.seconds) return ''; return new Date(ts.seconds*1000).toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'}); }
+    
     const q = query(collection(db,"berita"),orderBy("tanggalDibuat","desc"));
     onSnapshot(q, snapshot => {
         semuaBerita=snapshot.docs.map(d=>({id:d.id,...d.data()}));
@@ -698,20 +599,18 @@
                 wf.innerHTML=`<p class="ad-lbl">Advertisement</p>`+data.ads_footer.map(ad=>`<a href="${ad.link||'#'}" target="_blank"><img src="${ad.img}" alt="Ad" style="max-width:728px;width:100%;border-radius:4px; margin: 0 auto;"></a>`).join('');
             }
 
-            // Top (Atas) - BARU
+            // Top (Atas)
             const wt=document.getElementById("dynamicAdTop");
             if(data.ads_top&&data.ads_top.length>0){
                 wt.style.display="block";
                 wt.innerHTML=`<p class="ad-lbl">Advertisement</p>`+data.ads_top.map(ad=>`<a href="${ad.link||'#'}" target="_blank" style="display:block;margin-bottom:10px;"><img src="${ad.img}" alt="Ad" style="max-width:970px;width:100%;border-radius:4px; margin: 0 auto; max-height:250px; object-fit:contain;"></a>`).join('');
             }
 
-            // Sidebar Kiri (Left) - BARU
+            // Sidebar Kiri (Left)
             const wl=document.getElementById("dynamicAdLeft");
             if(data.ads_left&&data.ads_left.length>0){
                 wl.style.display="block";
-                // Menambahkan styling pada container layout agar membentuk grid 3 kolom jika iklan kiri ada
                 document.getElementById('mainLayout').classList.add('has-left-ad');
-                
                 wl.innerHTML=`<div style="position:sticky;top:112px;"><p style="font-size:10px;color:var(--text-muted);text-transform:uppercase;text-align:center;margin-bottom:6px;">Advertisement</p>`+data.ads_left.map(ad=>`<a href="${ad.link||'#'}" target="_blank" style="display:block;margin-bottom:10px;"><img src="${ad.img}" alt="Ad" style="width:100%;border-radius:4px;"></a>`).join('')+`</div>`;
             }
 
@@ -720,32 +619,15 @@
     muatIklan();
 
     async function renderMediaPartner() {
-        const marqueeWrap = document.getElementById('mediaPartnerMarquee');
-        const fallbackGrid = document.getElementById('mediaPartnerGrid');
-        if (!marqueeWrap) return;
+        const grid=document.getElementById('mediaPartnerGrid'); if(!grid) return;
         try {
-            const snap = await getDocs(collection(db, 'media_partners'));
-            if (snap.empty) {
-                marqueeWrap.innerHTML = '<p style="color:var(--text-muted);font-size:13px;text-align:center;padding:8px 0;">Belum ada media partner.</p>';
-                return;
-            }
-            const partners = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-            // Untuk efek scroll tanpa henti, duplikasi item
-            const buatItem = (dt) => `<a href="${dt.link || '#'}" class="partner-logo" target="_blank" title="${dt.nama || 'Partner'}"><img src="${dt.logo || ''}" alt="${dt.nama || 'Partner'}" loading="lazy"></a>`;
-            const semuaItem = partners.map(buatItem).join('');
-            // Jika partner sedikit (<4), duplikasi lebih banyak agar marquee mulus
-            const ulang = partners.length < 4 ? 4 : 2;
-            let trackHTML = '';
-            for (let i = 0; i < ulang; i++) trackHTML += semuaItem;
-            marqueeWrap.innerHTML = `<div class="mp-track">${trackHTML}</div>`;
-            // Sesuaikan kecepatan animasi berdasarkan jumlah item
-            const durasi = Math.max(18, partners.length * 4);
-            marqueeWrap.querySelector('.mp-track').style.animationDuration = durasi + 's';
-        } catch(e) {
-            marqueeWrap.innerHTML = '<p style="color:var(--text-muted);font-size:13px;text-align:center;padding:8px 0;">Gagal memuat media partner.</p>';
-        }
+            const snap=await getDocs(collection(db,'media_partners'));
+            if(snap.empty){grid.innerHTML='<p style="color:var(--text-muted);font-size:13px;text-align:center;width:100%;">Belum ada media partner.</p>';return;}
+            grid.innerHTML=''; snap.forEach(d=>{const dt=d.data();grid.innerHTML+=`<a href="${dt.link||'#'}" class="partner-logo" target="_blank" title="${dt.nama||'Partner'}"><img src="${dt.logo||''}" alt="${dt.nama||'Partner'}"></a>`;});
+        } catch(e){grid.innerHTML='<p style="color:var(--text-muted);font-size:13px;text-align:center;width:100%;">Gagal memuat media partner.</p>';}
     }
     renderMediaPartner();
+    
     function renderBerita() {
         const fa=window._filterAktif;
         const list=fa==='Semua'?semuaBerita:semuaBerita.filter(b=>b.kategori===fa);
@@ -758,34 +640,13 @@
         newsGrid.innerHTML=`<div class="news-list">${sisa.map(b=>`<div class="news-item" data-id="${b.id}"><div class="news-thumb">${b.gambar?`<img src="${b.gambar}" alt="${b.judul}" loading="lazy">`:'&#x1F4F0;'}</div><div class="news-body"><span class="cat-badge" style="font-size:9px;padding:2px 6px;">${b.kategori}</span><div class="news-title">${b.judul}</div><div class="news-meta"><span class="author">&#x270D;&#xFE0F; ${b.penulis||'Redaksi KJNI'}</span><span>&#x1F4C5; ${formatTgl(b.tanggalDibuat)}</span></div></div></div>`).join('')}</div>`;
     }
     window._renderBerita=renderBerita;
+    
     function renderSidebar() {
         const top5=semuaBerita.slice(0,5);
         document.getElementById('sidebarNews').innerHTML=!top5.length?'<p style="color:var(--text-muted);font-size:13px;padding:6px 0;">Belum ada berita.</p>':top5.map((b,i)=>`<div class="pop-item" data-id="${b.id}"><div class="pop-num">${String(i+1).padStart(2,'0')}</div><div class="pop-title">${b.judul}</div></div>`).join('');
     }
+    
     function updateTicker() { document.getElementById('tickerText').textContent=semuaBerita.map(b=>b.judul).join('  \u2022  '); }
-
-    // Tambahkan fungsi ini di script index.html Anda ///////// TAMBAHANNNNNNNN KE BAWAHHH////////
-async function muatMediaPartner() {
-    const mpTrack = document.querySelector('.mp-track');
-    if (!mpTrack) return;
-
-    // Ambil data dari firestore
-    const snapshot = await getDocs(collection(db, 'media_partners'));
-    
-    mpTrack.innerHTML = ''; // Bersihkan kontainer
-    
-    snapshot.forEach(doc => {
-        const data = doc.data();
-        const item = `
-            <a href="${data.link}" target="_blank" class="partner-logo">
-                <img src="${data.logo}" alt="${data.nama}" loading="lazy">
-            </a>`;
-        mpTrack.insertAdjacentHTML('beforeend', item);
-    });
-}
-
-// Panggil fungsi saat halaman dimuat
-window.addEventListener('DOMContentLoaded', muatMediaPartner);
 </script>
 </body>
 </html>
