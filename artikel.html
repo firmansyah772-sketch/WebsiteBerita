@@ -150,6 +150,23 @@
         .ad-tengah-wrapper { margin: 24px 0; text-align: center; border-top: 1px dashed var(--border); border-bottom: 1px dashed var(--border); padding: 12px 0; overflow: hidden; }
         .ad-lbl { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; display: block; text-align: center; }
 
+        /* BLOK KONTEN DINAMIS */
+        #blokKontenContainer { margin-top: 8px; }
+        .blok-foto-wrap { margin: 22px 0; }
+        .blok-figure { margin: 0; }
+        .blok-foto-img { 
+            width: 100%; height: auto; max-height: 500px; object-fit: cover;
+            border-radius: 6px; display: block;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+        }
+        .blok-caption-txt {
+            font-size: 12px; color: var(--text-muted); text-align: center;
+            margin-top: 7px; font-style: italic; line-height: 1.5;
+            padding: 0 8px;
+        }
+        .blok-teks-wrap { margin: 16px 0; }
+        .blok-teks-wrap p { margin-bottom: 14px; text-align: justify; font-size: 15px; color: var(--text); line-height: 1.8; word-wrap: break-word; overflow-wrap: break-word; }
+
         /* SHARE ROW */
         .share-row { display: flex; gap: 7px; margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--border); flex-wrap: wrap; align-items: center; }
         .share-btn { padding: 7px 13px; color: #fff; font-size: 12px; font-weight: 600; border-radius: 4px; transition: opacity .2s; text-decoration: none; }
@@ -374,6 +391,9 @@
                         </div>
 
                         <div class="article-body" id="artIsi"></div>
+
+                        <!-- Blok konten dinamis: foto + teks bergantian -->
+                        <div id="blokKontenContainer" class="hidden"></div>
 
                         <div id="adTengahContainer" class="ad-tengah-wrapper hidden"></div>
 
@@ -776,6 +796,35 @@
                         .map(p => `<p>${p}</p>`)
                         .join('');
                     document.getElementById('artIsi').innerHTML = isiFormatted;
+
+                    // Render blok konten dinamis (foto + teks)
+                    const blokContainer = document.getElementById('blokKontenContainer');
+                    if (data.blok_konten && Array.isArray(data.blok_konten) && data.blok_konten.length > 0) {
+                        blokContainer.classList.remove('hidden');
+                        blokContainer.innerHTML = '';
+                        data.blok_konten.forEach(blok => {
+                            if (blok.tipe === 'foto' && blok.url) {
+                                const wrapper = document.createElement('div');
+                                wrapper.className = 'blok-foto-wrap';
+                                wrapper.innerHTML = `
+                                    <figure class="blok-figure">
+                                        <img src="${blok.url}" alt="${blok.caption || ''}" class="blok-foto-img" loading="lazy">
+                                        ${blok.caption ? `<figcaption class="blok-caption-txt">${blok.caption}</figcaption>` : ''}
+                                    </figure>
+                                `;
+                                blokContainer.appendChild(wrapper);
+                            } else if (blok.tipe === 'teks' && blok.teks) {
+                                const wrapper = document.createElement('div');
+                                wrapper.className = 'blok-teks-wrap article-body';
+                                const paragraf = blok.teks.split('\n\n')
+                                    .filter(p => p.trim())
+                                    .map(p => `<p>${p.replace(/\n/g, '<br>')}</p>`)
+                                    .join('');
+                                wrapper.innerHTML = paragraf || `<p>${blok.teks}</p>`;
+                                blokContainer.appendChild(wrapper);
+                            }
+                        });
+                    }
 
                     const currentUrl = encodeURIComponent(window.location.href);
                     const currentTitle = encodeURIComponent(data.judul);
