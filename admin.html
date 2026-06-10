@@ -37,8 +37,60 @@
         }
         .btn:hover { background: #b71c1c; }
         .btn:disabled { background: #95a5a6; cursor: not-allowed; }
-        .btn-logout { background: #7f8c8d; float: right; margin-top: -50px; }
-        .btn-logout:hover { background: #34495e; }
+        /* --- PERBAIKAN CSS DAFTAR BERITA --- */
+
+.article-item {
+    display: flex;
+    flex-direction: column; /* Bawaan HP: Menyusun ke bawah */
+    gap: 15px; /* Beri jarak antara teks berita dan tombol di bawahnya */
+    background: #f9f9f9;
+    padding: 15px;
+    border: 1px solid #eceff1;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+/* Memastikan teks berita mengambil ruang penuh dan tidak menggulung vertikal */
+.article-info {
+    width: 100%;
+    word-break: break-word; /* Mengantisipasi judul yang terlalu panjang tanpa spasi */
+}
+
+.article-title {
+    font-weight: bold;
+    display: block;
+    margin-top: 8px;
+    color: #2c3e50;
+    font-size: 14px;
+}
+
+/* Memastikan tombol-tombol berjejer rapi ke samping dan bisa membungkus (wrap) jika layar terlalu ekstrem */
+.article-actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap; 
+    width: 100%;
+    justify-content: flex-start; /* Di HP tombol rata kiri */
+}
+/*DI BAWAH ADALAH IDE GEMINI AI AI AI AI AI AI AI AI AI AI AI*/
+
+/* --- MEDIA QUERY: UNTUK TAMPILAN LAPTOP / PC --- */
+@media (min-width: 600px) {
+    .article-item {
+        flex-direction: row; /* Di laptop: Kembali berjejer kiri-kanan */
+        justify-content: space-between;
+        align-items: center;
+    }
+    .article-info {
+        width: auto; /* Kembalikan ke otomatis di layar lebar */
+        padding-right: 20px;
+    }
+    .article-actions {
+        width: auto;
+        flex-shrink: 0; /* Tombol tidak boleh mengecil */
+        justify-content: flex-end; /* Di laptop tombol rata kanan */
+    }
+}
         .btn-cancel { background: #95a5a6; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; transition: 0.3s; margin-left: 10px; }
         .btn-cancel:hover { background: #7f8c8d; }
 
@@ -158,8 +210,10 @@
         </div>
 
         <div id="dashboardSection" class="hidden">
+            <div class="dashboard-header">
             <h2>📝 Dashboard Kelola Berita</h2>
             <button id="btnLogout" class="btn btn-logout">Keluar (Logout)</button>
+            </div>
 
             <h3>➕ Tambah Berita Baru</h3>
             <form id="uploadForm">
@@ -280,7 +334,6 @@
                 <p>Memuat data berita...</p>
             </div>
         </div>
-
     </div>
 
     <div id="modalEdit" class="modal-overlay hidden">
