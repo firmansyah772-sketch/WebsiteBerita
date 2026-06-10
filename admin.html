@@ -42,7 +42,6 @@
         .btn-cancel { background: #95a5a6; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; transition: 0.3s; margin-left: 10px; }
         .btn-cancel:hover { background: #7f8c8d; }
 
-        /* Style untuk Daftar Berita */
         .article-item {
             display: flex;
             justify-content: space-between;
@@ -53,7 +52,7 @@
             border-radius: 4px;
             margin-bottom: 10px;
         }
-        .article-info span { font-size: 12px; background: #2c3e50; color: #fff; padding: 3px 8px; border-radius: 3px; margin-right: 10px; }
+        .article-info span { font-size: 12px; background: #2c3e50; color: #fff; padding: 3px 8px; border-radius: 3px; margin-right: 10px; display: inline-block; }
         .article-title { font-weight: bold; }
         .article-actions { display: flex; gap: 8px; flex-shrink: 0; }
         .btn-delete { background: #e74c3c; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; }
@@ -61,7 +60,6 @@
         .btn-edit { background: #2980b9; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; }
         .btn-edit:hover { background: #1a5276; }
 
-        /* Modal Edit */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; right: 0; bottom: 0;
@@ -86,9 +84,22 @@
         .modal-box h3 { margin-top: 0; color: #2980b9; border-bottom: 2px solid #eceff1; padding-bottom: 10px; }
         .modal-footer { display: flex; align-items: center; margin-top: 10px; }
 
-        /* Badge Edit Mode pada form tambah */
-        .form-header { display: flex; align-items: center; gap: 10px; }
-        .badge-edit { background: #2980b9; color: white; font-size: 11px; padding: 3px 8px; border-radius: 3px; }
+        .ad-row { display: flex; gap: 10px; align-items: center; background: #fff; padding: 15px; border: 1px solid #ddd; border-radius: 6px; margin-bottom: 10px; flex-wrap: wrap; }
+        .ad-row img { width: 60px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #eee; }
+        .btn-tambah { background: #e3f2fd; color: #1976d2; border: 1px dashed #1976d2; padding: 8px 15px; cursor: pointer; border-radius: 4px; font-weight: bold; width: 100%; margin-bottom: 20px; transition: 0.2s; }
+        .btn-tambah:hover { background: #bbdefb; }
+        .btn-hapus { background: #ffebee; color: #d32f2f; border: none; padding: 8px 12px; cursor: pointer; border-radius: 4px; font-weight: bold; }
+        .ad-section { border: 1px solid #eceff1; padding: 20px; border-radius: 8px; margin-bottom: 20px; background: #fafafa; }
+        .ad-section-info { font-size: 12px; color: #7f8c8d; margin: -10px 0 14px; padding: 8px 12px; background: #fff8e1; border-left: 3px solid #ffc107; border-radius: 0 4px 4px 0; line-height: 1.6; }
+        .ad-section-info code { background: #eee; padding: 1px 5px; border-radius: 3px; font-size: 11px; }
+
+        /* ===== MEDIA PARTNER ===== */
+        .mp-admin-row { display: flex; gap: 10px; align-items: center; background: #fff; padding: 14px; border: 1px solid #ddd; border-radius: 6px; margin-bottom: 10px; flex-wrap: wrap; }
+        .mp-admin-row img.mp-preview { width: 70px; height: 42px; object-fit: contain; border-radius: 4px; border: 1px solid #eee; background: #f5f5f5; }
+        .mp-admin-row .mp-fields { flex: 1; min-width: 220px; display: flex; flex-direction: column; gap: 6px; }
+        .mp-admin-row input[type="text"], .mp-admin-row input[type="url"] { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-family: inherit; font-size: 13px; }
+        .mp-list-wrap { margin-bottom: 6px; }
+        .mp-empty { font-size: 13px; color: #95a5a6; text-align: center; padding: 14px 0; }
     </style>
 </head>
 <body>
@@ -135,49 +146,67 @@
                     <textarea id="inputIsi" rows="8" required placeholder="Ketik atau paste isi berita di sini..."></textarea>
                 </div>
                 <button type="submit" id="btnPublish" class="btn">🚀 Publish Berita</button>
-                 <div class="form-group">
-                          <label>Gambar Berita (Opsional)</label>
-                          <input type="file" id="inputGambar" accept="image/*">
-                         <small style="color:#7f8c8d;">Max 10MB. Format: JPG, PNG, WEBP</small>
+                <div class="form-group" style="margin-top:15px;">
+                    <label>Gambar Berita (Opsional)</label>
+                    <input type="file" id="inputGambar" accept="image/*">
+                    <small style="color:#7f8c8d;">Max 10MB. Format: JPG, PNG, WEBP</small>
                 </div>
             </form>
 
             <hr style="border: 1px solid #eceff1; margin: 40px 0;">
             <h3>📢 Pengaturan Iklan Banner (Multiple)</h3>
-            <p style="font-size: 13px; color: #7f8c8d;">Tambahkan sebanyak mungkin iklan yang Anda mau di masing-masing posisi. Iklan akan tersusun ke bawah.</p>
-            
-            <style>
-                .ad-row { display: flex; gap: 10px; align-items: center; background: #fff; padding: 15px; border: 1px solid #ddd; border-radius: 6px; margin-bottom: 10px; flex-wrap: wrap; }
-                .ad-row img { width: 60px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #eee; }
-                .btn-tambah { background: #e3f2fd; color: #1976d2; border: 1px dashed #1976d2; padding: 8px 15px; cursor: pointer; border-radius: 4px; font-weight: bold; width: 100%; margin-bottom: 20px; transition: 0.2s; }
-                .btn-tambah:hover { background: #bbdefb; }
-                .btn-hapus { background: #ffebee; color: #d32f2f; border: none; padding: 8px 12px; cursor: pointer; border-radius: 4px; font-weight: bold; }
-                .ad-section { border: 1px solid #eceff1; padding: 20px; border-radius: 8px; margin-bottom: 20px; background: #fafafa; }
-            </style>
+            <p style="font-size: 13px; color: #7f8c8d;">Tambahkan sebanyak mungkin iklan di masing-masing posisi. Iklan akan tersusun ke bawah.</p>
 
             <form id="formIklan">
-                
-
                 <div class="ad-section">
-                    <h4 style="margin-top:0; color:#d32f2f;">2. Iklan Sidebar</h4>
+                    <h4 style="margin-top:0; color:#d32f2f;">1. 🔝 Iklan Atas (Top Banner)</h4>
+                    <div id="wrapAtas"></div>
+                    <button type="button" class="btn-tambah" onclick="tambahBaris('Atas')">+ Tambah Baris Iklan Atas</button>
+                </div>
+                <div class="ad-section">
+                    <h4 style="margin-top:0; color:#d32f2f;">2. ⬅️ Iklan Kiri (Left Sidebar)</h4>
+                    <div id="wrapKiri"></div>
+                    <button type="button" class="btn-tambah" onclick="tambahBaris('Kiri')">+ Tambah Baris Iklan Kiri</button>
+                </div>
+                <div class="ad-section">
+                    <h4 style="margin-top:0; color:#d32f2f;">3. ➡️ Iklan Sidebar Kanan</h4>
                     <div id="wrapSidebar"></div>
                     <button type="button" class="btn-tambah" onclick="tambahBaris('Sidebar')">+ Tambah Baris Iklan Sidebar</button>
                 </div>
-
                 <div class="ad-section">
-                    <h4 style="margin-top:0; color:#d32f2f;">3. Iklan Tengah Artikel</h4>
+                    <h4 style="margin-top:0; color:#d32f2f;">4. 📰 Iklan Tengah Artikel</h4>
                     <div id="wrapTengah"></div>
                     <button type="button" class="btn-tambah" onclick="tambahBaris('Tengah')">+ Tambah Baris Iklan Tengah</button>
                 </div>
-
                 <div class="ad-section">
-                    <h4 style="margin-top:0; color:#d32f2f;">4. Iklan Footer</h4>
+                    <h4 style="margin-top:0; color:#d32f2f;">5. 🔻 Iklan Footer</h4>
                     <div id="wrapFooter"></div>
                     <button type="button" class="btn-tambah" onclick="tambahBaris('Footer')">+ Tambah Baris Iklan Footer</button>
                 </div>
-
                 <button type="submit" id="btnSimpanIklan" class="btn" style="width:100%; font-size:16px; padding:15px;">💾 Simpan Semua Pengaturan Iklan</button>
             </form>
+
+            <hr style="border: 1px solid #eceff1; margin: 40px 0;">
+
+            <h3>📋 Data Pendaftar</h3>
+            <p style="font-size: 13px; color: #7f8c8d;">Data orang yang mengisi formulir di halaman Pendaftaran.</p>
+            <div id="daftarPendaftarAdmin">
+                <p>Memuat data pendaftar...</p>
+            </div>
+
+            <hr style="border: 1px solid #eceff1; margin: 40px 0;">
+
+            <h3>🤝 Pengaturan Media Partner</h3>
+            <p style="font-size: 13px; color: #7f8c8d;">Tambahkan logo dan link media partner. Logo akan ditampilkan dalam slider otomatis di halaman utama.</p>
+
+            <div class="ad-section">
+                <h4 style="margin-top:0; color:#d32f2f;">Daftar Media Partner</h4>
+                <div id="mpListWrap" class="mp-list-wrap">
+                    <p class="mp-empty" id="mpEmpty">Memuat data media partner...</p>
+                </div>
+                <button type="button" class="btn-tambah" id="btnTambahPartner">+ Tambah Media Partner</button>
+                <button type="button" class="btn" id="btnSimpanPartner" style="width:100%; font-size:15px; padding:13px; margin-top:4px;">💾 Simpan Semua Media Partner</button>
+            </div>
 
             <hr style="border: 1px solid #eceff1; margin: 40px 0;">
 
@@ -190,7 +219,6 @@
 
     </div>
 
-    <!-- Modal Edit Berita -->
     <div id="modalEdit" class="modal-overlay hidden">
         <div class="modal-box">
             <h3>✏️ Edit Berita</h3>
@@ -221,15 +249,15 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, collection, addDoc, deleteDoc, updateDoc, doc, onSnapshot, query, orderBy, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, deleteDoc, updateDoc, doc, onSnapshot, query, orderBy, setDoc, getDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
         const firebaseConfig = {
             apiKey: "AIzaSyCCOOmXPfLhbDdSoil1UHfld5731689HVw",
             authDomain: "webberita-8af66.firebaseapp.com",
             projectId: "webberita-8af66",
             storageBucket: "webberita-8af66.firebasestorage.app",
             messagingSenderId: "752062961977",
-            appId: "1:752062961977:web:6af98cd5ebe074189c30e8",
-            measurementId: "G-H2QS1WH9BD"
+            appId: "1:752062961977:web:6af98cd5ebe074189c30e8"
         };
 
         const app = initializeApp(firebaseConfig);
@@ -239,36 +267,33 @@
         const loginSection = document.getElementById("loginSection");
         const dashboardSection = document.getElementById("dashboardSection");
         const daftarBeritaAdmin = document.getElementById("daftarBeritaAdmin");
+        const daftarPendaftarAdmin = document.getElementById("daftarPendaftarAdmin");
         const modalEdit = document.getElementById("modalEdit");
 
-        // Variabel untuk menyimpan ID berita yang sedang diedit
         let idBeritaYangDiedit = null;
 
-        // -----------------------------------------
         // A. CEK STATUS LOGIN REALTIME
-        // -----------------------------------------
         onAuthStateChanged(auth, (user) => {
             if (user) {
                 loginSection.classList.add("hidden");
                 dashboardSection.classList.remove("hidden");
                 muatDaftarBerita();
+                muatDataIklan();
+                muatMediaPartner();
+                muatDaftarPendaftar(); // Panggil fungsi pendaftar di sini
             } else {
                 loginSection.classList.remove("hidden");
                 dashboardSection.classList.add("hidden");
             }
         });
 
-        // -----------------------------------------
         // B. FUNGSI TOMBOL LOGIN
-        // -----------------------------------------
         document.getElementById("loginForm").addEventListener("submit", (e) => {
             e.preventDefault();
             const email = document.getElementById("loginEmail").value;
             const pass = document.getElementById("loginPassword").value;
             const btnLogin = document.getElementById("btnLogin");
-            
             btnLogin.innerText = "Memproses...";
-            
             signInWithEmailAndPassword(auth, email, pass)
                 .then(() => {
                     btnLogin.innerText = "Masuk Ke Panel";
@@ -280,70 +305,47 @@
                 });
         });
 
-        // -----------------------------------------
         // C. FUNGSI TOMBOL LOGOUT
-        // -----------------------------------------
         document.getElementById("btnLogout").addEventListener("click", () => {
             signOut(auth).then(() => alert("Berhasil Logout!"));
         });
 
-        // -----------------------------------------
-        // D. FUNGSI UPLOAD BERITA BARU (CREATE)
-        // -----------------------------------------
-        // Ganti fungsi upload berita (bagian D)
-const CLOUDINARY_CLOUD_NAME = "dc7guxgnm";
-const CLOUDINARY_UPLOAD_PRESET = "berita_upload";
+        // D. CLOUDINARY UPLOAD & PUBLISH BERITA
+        const CLOUDINARY_CLOUD_NAME = "dc7guxgnm";
+        const CLOUDINARY_UPLOAD_PRESET = "berita_upload";
 
-async function uploadKeCloudinary(file) {
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
-
-    const res = await fetch(
-        `https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`,
-        { method: "POST", body: formData }
-    );
-    const data = await res.json();
-    return data.secure_url; // URL gambar permanen
-}
-
-document.getElementById("uploadForm").addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const btnPublish = document.getElementById("btnPublish");
-    btnPublish.innerText = "⏳ Mengupload...";
-    btnPublish.disabled = true;
-
-    const judul    = document.getElementById("inputJudul").value;
-    const kategori = document.getElementById("inputKategori").value;
-    const isi      = document.getElementById("inputIsi").value;
-    const fileGambar = document.getElementById("inputGambar").files[0];
-
-    try {
-        // Upload gambar dulu kalau ada
-        let urlGambar = "";
-        if (fileGambar) {
-            btnPublish.innerText = "⏳ Upload gambar...";
-            urlGambar = await uploadKeCloudinary(fileGambar);
+        async function uploadKeCloudinary(file) {
+            const formData = new FormData();
+            formData.append("file", file);
+            formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+            const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUDINARY_CLOUD_NAME}/image/upload`, { method: "POST", body: formData });
+            const data = await res.json();
+            return data.secure_url;
         }
 
-        await addDoc(collection(db, "berita"), {
-            judul, kategori, isi,
-            gambar: urlGambar, // simpan URL di Firestore
-            tanggalDibuat: new Date()
+        document.getElementById("uploadForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const btnPublish = document.getElementById("btnPublish");
+            btnPublish.innerText = "⏳ Mengupload..."; btnPublish.disabled = true;
+
+            const judul     = document.getElementById("inputJudul").value;
+            const kategori  = document.getElementById("inputKategori").value;
+            const isi       = document.getElementById("inputIsi").value;
+            const fileGambar = document.getElementById("inputGambar").files[0];
+
+            try {
+                let urlGambar = "";
+                if (fileGambar) { urlGambar = await uploadKeCloudinary(fileGambar); }
+                await addDoc(collection(db, "berita"), {
+                    judul, kategori, isi, gambar: urlGambar, tanggalDibuat: new Date()
+                });
+                alert("✅ Berita berhasil dipublish!");
+                document.getElementById("uploadForm").reset();
+            } catch (err) { alert("❌ Gagal: " + err.message); } 
+            finally { btnPublish.innerText = "🚀 Publish Berita"; btnPublish.disabled = false; }
         });
 
-        alert("✅ Berita berhasil dipublish!");
-        document.getElementById("uploadForm").reset();
-    } catch (err) {
-        alert("❌ Gagal: " + err.message);
-    } finally {
-        btnPublish.innerText = "🚀 Publish Berita";
-        btnPublish.disabled = false;
-    }
-});
-        // -----------------------------------------
-        // E. FUNGSI BUKA MODAL EDIT
-        // -----------------------------------------
+        // E. MODAL EDIT BERITA
         function bukaModalEdit(id, judul, kategori, isi) {
             idBeritaYangDiedit = id;
             document.getElementById("editJudul").value = judul;
@@ -351,119 +353,111 @@ document.getElementById("uploadForm").addEventListener("submit", async (e) => {
             document.getElementById("editIsi").value = isi;
             modalEdit.classList.remove("hidden");
         }
-
-        // -----------------------------------------
-        // F. FUNGSI TUTUP MODAL EDIT
-        // -----------------------------------------
-        function tutupModalEdit() {
-            idBeritaYangDiedit = null;
-            modalEdit.classList.add("hidden");
-        }
-
-        // Tombol Batal di Modal
+        function tutupModalEdit() { idBeritaYangDiedit = null; modalEdit.classList.add("hidden"); }
         document.getElementById("btnBatalEdit").addEventListener("click", tutupModalEdit);
+        modalEdit.addEventListener("click", (e) => { if (e.target === modalEdit) tutupModalEdit(); });
 
-        // Klik di luar modal untuk menutup
-        modalEdit.addEventListener("click", (e) => {
-            if (e.target === modalEdit) tutupModalEdit();
-        });
-
-        // -----------------------------------------
-        // G. FUNGSI SIMPAN PERUBAHAN EDIT (UPDATE)
-        // -----------------------------------------
         document.getElementById("btnSimpanEdit").addEventListener("click", async () => {
             if (!idBeritaYangDiedit) return;
-
             const btnSimpan = document.getElementById("btnSimpanEdit");
             const judulBaru = document.getElementById("editJudul").value.trim();
             const kategoriBaru = document.getElementById("editKategori").value;
             const isiBaru = document.getElementById("editIsi").value.trim();
 
-            if (!judulBaru || !isiBaru) {
-                alert("Judul dan isi berita tidak boleh kosong!");
-                return;
-            }
-
-            btnSimpan.innerText = "⏳ Menyimpan...";
-            btnSimpan.disabled = true;
-
+            if (!judulBaru || !isiBaru) return alert("Judul dan isi tidak boleh kosong!");
+            btnSimpan.innerText = "⏳ Menyimpan..."; btnSimpan.disabled = true;
             try {
                 await updateDoc(doc(db, "berita", idBeritaYangDiedit), {
-                    judul: judulBaru,
-                    kategori: kategoriBaru,
-                    isi: isiBaru,
-                    tanggalDiedit: new Date()
+                    judul: judulBaru, kategori: kategoriBaru, isi: isiBaru, tanggalDiedit: new Date()
                 });
-
-                alert("✅ Berita berhasil diperbarui!");
-                tutupModalEdit();
-            } catch (err) {
-                alert("❌ Gagal menyimpan perubahan: " + err.message);
-            } finally {
-                btnSimpan.innerText = "💾 Simpan Perubahan";
-                btnSimpan.disabled = false;
-            }
+                alert("✅ Berita diperbarui!"); tutupModalEdit();
+            } catch (err) { alert("❌ Gagal menyimpan: " + err.message); } 
+            finally { btnSimpan.innerText = "💾 Simpan Perubahan"; btnSimpan.disabled = false; }
         });
 
-        // -----------------------------------------
-        // H. FUNGSI MENAMPILKAN, EDIT & HAPUS BERITA
-        // -----------------------------------------
+        // F. MENAMPILKAN & HAPUS BERITA
         function muatDaftarBerita() {
             const q = query(collection(db, "berita"), orderBy("tanggalDibuat", "desc"));
-            
             onSnapshot(q, (snapshot) => {
                 daftarBeritaAdmin.innerHTML = "";
-                
-                if (snapshot.empty) {
-                    daftarBeritaAdmin.innerHTML = "<p style='color:#7f8c8d;'>Belum ada berita yang diupload.</p>";
-                    return;
-                }
-
+                if (snapshot.empty) return daftarBeritaAdmin.innerHTML = "<p style='color:#7f8c8d;'>Belum ada berita.</p>";
                 snapshot.forEach((beritaDoc) => {
                     const data = beritaDoc.data();
-                    const idBerita = beritaDoc.id;
-
                     const item = document.createElement("div");
                     item.className = "article-item";
                     item.innerHTML = `
-                        <div class="article-info">
-                            <span>${data.kategori}</span>
-                            <span class="article-title">${data.judul}</span>
-                        </div>
+                        <div class="article-info"><span>${data.kategori}</span><span class="article-title">${data.judul}</span></div>
                         <div class="article-actions">
-                            <button class="btn-edit" data-id="${idBerita}">Edit ✏️</button>
-                            <button class="btn-delete" data-id="${idBerita}">Hapus ❌</button>
+                            <button class="btn-edit" data-id="${beritaDoc.id}">Edit ✏️</button>
+                            <button class="btn-delete" data-id="${beritaDoc.id}">Hapus ❌</button>
                         </div>
                     `;
-
-                    // Tombol Edit
-                    item.querySelector(".btn-edit").addEventListener("click", () => {
-                        bukaModalEdit(idBerita, data.judul, data.kategori, data.isi);
-                    });
-
-                    // Tombol Hapus
+                    item.querySelector(".btn-edit").addEventListener("click", () => bukaModalEdit(beritaDoc.id, data.judul, data.kategori, data.isi));
                     item.querySelector(".btn-delete").addEventListener("click", async (e) => {
-                        const targetId = e.target.getAttribute("data-id");
-                        const konfirmasi = confirm("Yakin ingin menghapus berita ini secara permanen?");
-                        
-                        if (konfirmasi) {
-                            try {
-                                await deleteDoc(doc(db, "berita", targetId));
-                            } catch (error) {
-                                alert("Gagal menghapus berita: " + error.message);
-                            }
-                        }
+                        if (confirm("Yakin ingin menghapus berita ini permanen?")) await deleteDoc(doc(db, "berita", e.target.getAttribute("data-id")));
                     });
-
                     daftarBeritaAdmin.appendChild(item);
                 });
             });
         }
-        // -----------------------------------------
-        // I. FUNGSI LOAD & SIMPAN IKLAN (MULTIPLE)
-        // -----------------------------------------
-        
-        // Fungsi global untuk menambah form baris iklan baru
+
+        // ===============================================
+        // FUNGSI BARU: MENAMPILKAN & HAPUS DATA PENDAFTAR
+        // ===============================================
+        function muatDaftarPendaftar() {
+            const q = query(collection(db, "pendaftar"), orderBy("tanggalDaftar", "desc"));
+            onSnapshot(q, (snapshot) => {
+                daftarPendaftarAdmin.innerHTML = "";
+                if (snapshot.empty) {
+                    daftarPendaftarAdmin.innerHTML = "<p style='color:#7f8c8d; background:#fff; padding:15px; border-radius:5px; border:1px solid #ddd;'>Belum ada data pendaftar.</p>";
+                    return;
+                }
+                
+                snapshot.forEach((docSnap) => {
+                    const data = docSnap.data();
+                    const id = docSnap.id;
+                    
+                    let tglDaftar = 'Baru saja';
+                    if(data.tanggalDaftar) {
+                        tglDaftar = new Date(data.tanggalDaftar.seconds * 1000).toLocaleString('id-ID', {day:'numeric', month:'short', year:'numeric', hour:'2-digit', minute:'2-digit'});
+                    }
+
+                    const item = document.createElement("div");
+                    item.className = "article-item";
+                    item.style.alignItems = "flex-start";
+                    
+                    item.innerHTML = `
+                        <div class="article-info" style="line-height: 1.6;">
+                            <span style="background: #27ae60;">Pendaftar</span>
+                            <span style="background: #34495e; font-size:10px;">🕒 ${tglDaftar}</span>
+                            <div class="article-title" style="margin-top: 8px; font-size: 16px;">${data.nama}</div>
+                            <div style="font-size: 13px; color: #555; margin-top: 6px;">
+                                <strong>TTL:</strong> ${data.ttl} <br>
+                                <strong>WhatsApp/No.Telp:</strong> <a href="https://wa.me/${data.wa.replace(/^0/,'62')}" target="_blank" style="color:#2980b9; text-decoration:none;">${data.wa}</a> <br>
+                                <strong>Email:</strong> ${data.email} <br>
+                                <strong>Alamat:</strong> ${data.alamat}
+                            </div>
+                        </div>
+                        <div class="article-actions">
+                            <button class="btn-delete" data-id="${id}">Hapus ❌</button>
+                        </div>
+                    `;
+                    
+                    item.querySelector(".btn-delete").addEventListener("click", async (e) => {
+                        if (confirm("Yakin ingin menghapus data pendaftar ini?")) {
+                            try {
+                                await deleteDoc(doc(db, "pendaftar", id));
+                            } catch (error) {
+                                alert("Gagal menghapus data: " + error.message);
+                            }
+                        }
+                    });
+                    daftarPendaftarAdmin.appendChild(item);
+                });
+            });
+        }
+
+        // IKLAN
         window.tambahBaris = function(kategori, imgUrl = '', linkUrl = '') {
             const wrap = document.getElementById(`wrap${kategori}`);
             const div = document.createElement('div');
@@ -473,163 +467,124 @@ document.getElementById("uploadForm").addEventListener("submit", async (e) => {
                 <div style="flex:1; min-width: 200px;">
                     <input type="file" class="ad-file" accept="image/*" style="width:100%; margin-bottom:5px;">
                     <input type="hidden" class="old-img" value="${imgUrl}">
-                    <input type="url" class="ad-link" value="${linkUrl}" placeholder="Masukkan Link Tujuan (https://...)" style="width:100%; padding:8px; box-sizing:border-box;">
+                    <input type="url" class="ad-link" value="${linkUrl}" placeholder="Masukkan Link (https://...)" style="width:100%; padding:8px; box-sizing:border-box;">
                 </div>
                 <button type="button" class="btn-hapus" onclick="this.parentElement.remove()">Hapus ❌</button>
             `;
+            const fileInput = div.querySelector('.ad-file'), imgPreview = div.querySelector('img');
+            fileInput.addEventListener('change', () => {
+                if (fileInput.files.length > 0) {
+                    const reader = new FileReader();
+                    reader.onload = (ev) => { imgPreview.src = ev.target.result; imgPreview.style.display = 'block'; };
+                    reader.readAsDataURL(fileInput.files[0]);
+                }
+            });
             wrap.appendChild(div);
         };
 
-        // Fungsi memuat data iklan dari Firestore
         async function muatDataIklan() {
             try {
                 const iklanSnap = await getDoc(doc(db, "pengaturan", "iklan"));
                 if (iklanSnap.exists()) {
                     const data = iklanSnap.data();
-                    
-                    // Bersihkan container
-                   
-                    document.getElementById("wrapSidebar").innerHTML = "";
-                    document.getElementById("wrapTengah").innerHTML = "";
-                    document.getElementById("wrapFooter").innerHTML = "";
-
-                    // Render ulang baris berdasarkan data array di Firestore
-                    if (data.ads_header) data.ads_header.forEach(ad => window.tambahBaris('Header', ad.img, ad.link));
+                    ["Atas","Kiri","Sidebar","Tengah","Footer"].forEach(id => document.getElementById(`wrap${id}`).innerHTML = "");
+                    if (data.ads_top)     data.ads_top.forEach(ad     => window.tambahBaris('Atas',    ad.img, ad.link));
+                    if (data.ads_left)    data.ads_left.forEach(ad    => window.tambahBaris('Kiri',    ad.img, ad.link));
                     if (data.ads_sidebar) data.ads_sidebar.forEach(ad => window.tambahBaris('Sidebar', ad.img, ad.link));
-                    if (data.ads_tengah) data.ads_tengah.forEach(ad => window.tambahBaris('Tengah', ad.img, ad.link));
-                    if (data.ads_footer) data.ads_footer.forEach(ad => window.tambahBaris('Footer', ad.img, ad.link));
+                    if (data.ads_tengah)  data.ads_tengah.forEach(ad  => window.tambahBaris('Tengah',  ad.img, ad.link));
+                    if (data.ads_footer)  data.ads_footer.forEach(ad  => window.tambahBaris('Footer',  ad.img, ad.link));
                 }
-            } catch (err) {
-                console.error("Gagal memuat iklan:", err);
-            }
+            } catch (err) {}
         }
 
-        // Helper untuk memproses loop upload setiap baris iklan
         async function prosesUploadKategori(kategori) {
             const rows = document.querySelectorAll(`.row-${kategori}`);
             let hasilArray = [];
-            
             for (let row of rows) {
-                const fileInput = row.querySelector('.ad-file');
-                const oldImg = row.querySelector('.old-img').value;
-                const link = row.querySelector('.ad-link').value;
-                
+                const fileInput = row.querySelector('.ad-file'), oldImg = row.querySelector('.old-img').value, link = row.querySelector('.ad-link').value;
                 let finalUrl = oldImg;
-                
-                // Jika admin memilih file gambar baru di baris ini
-                if (fileInput.files.length > 0) {
-                    finalUrl = await uploadKeCloudinary(fileInput.files[0]);
-                }
-                
-                // Simpan ke array jika ada gambarnya
-                if (finalUrl) {
-                    hasilArray.push({ img: finalUrl, link: link });
-                }
+                if (fileInput.files.length > 0) finalUrl = await uploadKeCloudinary(fileInput.files[0]);
+                if (finalUrl) hasilArray.push({ img: finalUrl, link: link });
             }
             return hasilArray;
         }
 
-        // Event simpan seluruh iklan
         document.getElementById("formIklan").addEventListener("submit", async (e) => {
             e.preventDefault();
             const btnSimpan = document.getElementById("btnSimpanIklan");
-            btnSimpan.innerText = "⏳ Sedang Mengupload & Menyimpan Semua Iklan...";
-            btnSimpan.disabled = true;
-
+            btnSimpan.innerText = "⏳ Menyimpan Semua Iklan..."; btnSimpan.disabled = true;
             try {
-                // Proses upload dan pengumpulan data secara paralel
-                const [arrHeader, arrSidebar, arrTengah, arrFooter] = await Promise.all([
-                    prosesUploadKategori('Header'),
-                    prosesUploadKategori('Sidebar'),
-                    prosesUploadKategori('Tengah'),
-                    prosesUploadKategori('Footer')
+                const [arrAtas, arrKiri, arrSidebar, arrTengah, arrFooter] = await Promise.all([
+                    prosesUploadKategori('Atas'), prosesUploadKategori('Kiri'), prosesUploadKategori('Sidebar'), prosesUploadKategori('Tengah'), prosesUploadKategori('Footer')
                 ]);
-
-                // Simpan ke Firestore dalam bentuk Array
-                await setDoc(doc(db, "pengaturan", "iklan"), {
-                    ads_header: arrHeader,
-                    ads_sidebar: arrSidebar,
-                    ads_tengah: arrTengah,
-                    ads_footer: arrFooter,
-                    diupdate: new Date()
-                });
-
-                alert("✅ Semua iklan berhasil disimpan!");
-                muatDataIklan(); // Refresh UI
-
-            } catch (err) {
-                alert("❌ Gagal menyimpan iklan: " + err.message);
-            } finally {
-                btnSimpan.innerText = "💾 Simpan Semua Pengaturan Iklan";
-                btnSimpan.disabled = false;
-            }
+                await setDoc(doc(db, "pengaturan", "iklan"), { ads_top: arrAtas, ads_left: arrKiri, ads_sidebar: arrSidebar, ads_tengah: arrTengah, ads_footer: arrFooter, diupdate: new Date() });
+                alert("✅ Semua iklan disimpan!"); muatDataIklan();
+            } catch (err) { alert("❌ Gagal menyimpan iklan: " + err.message); } 
+            finally { btnSimpan.innerText = "💾 Simpan Semua Pengaturan Iklan"; btnSimpan.disabled = false; }
         });
 
-        // Panggil fungsi muat data iklan jika berhasil login
-        onAuthStateChanged(auth, (user) => {
-            if (user) {
-                loginSection.classList.add("hidden");
-                dashboardSection.classList.remove("hidden");
-                muatDaftarBerita();
-                muatDataIklan(); // Memuat data iklan ke dalam form
-            } else {
-                loginSection.classList.remove("hidden");
-                dashboardSection.classList.add("hidden");
-            }
-        });
+        // MEDIA PARTNER
+        function buatBarisPartner(data = {}) {
+            const { id = '', nama = '', logo = '', link = '' } = data;
+            const wrap = document.getElementById('mpListWrap');
+            document.getElementById('mpEmpty').style.display = 'none';
 
-        // Event simpan iklan
-        document.getElementById("formIklan").addEventListener("submit", async (e) => {
-            e.preventDefault();
-            const btnSimpan = document.getElementById("btnSimpanIklan");
-            btnSimpan.innerText = "⏳ Sedang Mengupload & Menyimpan...";
-            btnSimpan.disabled = true;
+            const row = document.createElement('div');
+            row.className = 'mp-admin-row'; row.dataset.mpId = id;
+            row.innerHTML = `
+                <img class="mp-preview" src="${logo || 'https://via.placeholder.com/70x42?text=Logo'}" style="${logo ? '' : 'opacity:.4'}">
+                <div class="mp-fields">
+                    <input type="text" class="mp-nama" placeholder="Nama Media Partner" value="${nama}">
+                    <input type="url" class="mp-link" placeholder="Link (https://...)" value="${link}">
+                    <input type="file" class="mp-file" accept="image/*">
+                    <input type="hidden" class="mp-logo-url" value="${logo}">
+                </div>
+                <button type="button" class="btn-hapus">Hapus ❌</button>
+            `;
+            row.querySelector('.mp-file').addEventListener('change', (e) => {
+                if (!e.target.files[0]) return;
+                const r = new FileReader();
+                r.onload = ev => { row.querySelector('.mp-preview').src = ev.target.result; row.querySelector('.mp-preview').style.opacity = '1'; };
+                r.readAsDataURL(e.target.files[0]);
+            });
+            row.querySelector('.btn-hapus').addEventListener('click', async () => {
+                if (!confirm('Hapus media partner ini?')) return;
+                if (row.dataset.mpId) await deleteDoc(doc(db, 'media_partners', row.dataset.mpId));
+                row.remove();
+                if (!document.querySelectorAll('.mp-admin-row').length) document.getElementById('mpEmpty').style.display = 'block';
+            });
+            wrap.appendChild(row);
+        }
 
+        async function muatMediaPartner() {
+            const wrap = document.getElementById('mpListWrap'), emptyEl = document.getElementById('mpEmpty');
+            wrap.querySelectorAll('.mp-admin-row').forEach(r => r.remove());
             try {
-                // Ambil file yang dipilih
-                const fileHeader = document.getElementById("imgHeader").files[0];
-                const fileSidebar = document.getElementById("imgSidebar").files[0];
-                const fileTengah = document.getElementById("imgTengah").files[0];
-                const fileFooter = document.getElementById("imgFooter").files[0];
+                const snap = await getDocs(collection(db, 'media_partners'));
+                if (snap.empty) { emptyEl.textContent = 'Belum ada media partner.'; emptyEl.style.display = 'block'; return; }
+                emptyEl.style.display = 'none';
+                snap.forEach(d => buatBarisPartner({ id: d.id, ...d.data() }));
+            } catch (e) { emptyEl.textContent = 'Gagal memuat: ' + e.message; emptyEl.style.display = 'block'; }
+        }
 
-                // URL Gambar awal (pakai data lama jika tidak upload baru)
-                let urlHeader = document.getElementById("oldImgHeader").value;
-                let urlSidebar = document.getElementById("oldImgSidebar").value;
-                let urlTengah = document.getElementById("oldImgTengah").value;
-                let urlFooter = document.getElementById("oldImgFooter").value;
+        document.getElementById('btnTambahPartner').addEventListener('click', () => buatBarisPartner());
 
-                // Proses Upload ke Cloudinary jika ada file baru
-                if (fileHeader) urlHeader = await uploadKeCloudinary(fileHeader);
-                if (fileSidebar) urlSidebar = await uploadKeCloudinary(fileSidebar);
-                if (fileTengah) urlTengah = await uploadKeCloudinary(fileTengah);
-                if (fileFooter) urlFooter = await uploadKeCloudinary(fileFooter);
-
-                // Simpan ke Firestore (Koleksi: pengaturan, Dokumen: iklan)
-                await setDoc(doc(db, "pengaturan", "iklan"), {
-                    header_img: urlHeader,
-                    header_link: document.getElementById("linkHeader").value,
-                    sidebar_img: urlSidebar,
-                    sidebar_link: document.getElementById("linkSidebar").value,
-                    tengah_img: urlTengah,
-                    tengah_link: document.getElementById("linkTengah").value,
-                    footer_img: urlFooter,
-                    footer_link: document.getElementById("linkFooter").value,
-                    diupdate: new Date()
-                }, { merge: true });
-
-                alert("✅ Pengaturan iklan berhasil disimpan!");
-                // Update hidden input dengan URL terbaru agar tidak hilang saat di-save ulang tanpa file
-                document.getElementById("oldImgHeader").value = urlHeader;
-                document.getElementById("oldImgSidebar").value = urlSidebar;
-                document.getElementById("oldImgTengah").value = urlTengah;
-                document.getElementById("oldImgFooter").value = urlFooter;
-
-            } catch (err) {
-                alert("❌ Gagal menyimpan iklan: " + err.message);
-            } finally {
-                btnSimpan.innerText = "💾 Simpan Pengaturan Iklan";
-                btnSimpan.disabled = false;
-            }
+        document.getElementById('btnSimpanPartner').addEventListener('click', async () => {
+            const btn = document.getElementById('btnSimpanPartner');
+            btn.innerText = '⏳ Menyimpan...'; btn.disabled = true;
+            try {
+                for (let row of document.querySelectorAll('.mp-admin-row')) {
+                    const nama = row.querySelector('.mp-nama').value.trim(), link = row.querySelector('.mp-link').value.trim(), file = row.querySelector('.mp-file').files[0];
+                    if (!nama) continue;
+                    let logoUrl = row.querySelector('.mp-logo-url').value;
+                    if (file) { btn.innerText = `⏳ Upload logo "${nama}"...`; logoUrl = await uploadKeCloudinary(file); }
+                    const payload = { nama, logo: logoUrl, link };
+                    if (row.dataset.mpId) await updateDoc(doc(db, 'media_partners', row.dataset.mpId), payload);
+                    else { const newDoc = await addDoc(collection(db, 'media_partners'), { ...payload, urutan: Date.now() }); row.dataset.mpId = newDoc.id; }
+                }
+                alert('✅ Media partner disimpan!'); muatMediaPartner();
+            } catch (e) { alert('❌ Gagal: ' + e.message); } 
+            finally { btn.innerText = '💾 Simpan Semua Media Partner'; btn.disabled = false; }
         });
     </script>
 </body>
