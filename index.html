@@ -572,7 +572,7 @@
     
     const q = query(collection(db,"berita"),orderBy("tanggalDibuat","desc"));
     onSnapshot(q, snapshot => {
-        semuaBerita=snapshot.docs.map(d=>({id:d.id,...d.data()}));
+        semuaBerita=snapshot.docs.map(d=>({id:d.id,...d.data()})).filter(b => b.status !== 'nonaktif');
         beritaMap={}; semuaBerita.forEach(b=>beritaMap[b.id]=b); window._beritaMap=beritaMap;
         renderBerita(); renderSidebar(); updateTicker();
     }, err => {
