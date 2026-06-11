@@ -240,18 +240,42 @@
             .hero-card-img, .hero-card-img-placeholder { height: 190px; }
             .modal-title { font-size: 18px; }
         }
+
+        /* HERO SLIDER */
+        .hero-slider { position: relative; background: var(--white); border-radius: 6px; margin-bottom: 10px; box-shadow: var(--shadow); }
+        .hero-slider-wrap { overflow: hidden; width: 100%; border-radius: 6px 6px 0 0; position: relative; height: 220px; }
+        .hero-slide { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; transition: opacity .45s ease; pointer-events: none; cursor: pointer; }
+        .hero-slide.active { opacity: 1; pointer-events: auto; }
+        .hero-slide-img { width: 100%; height: 220px; object-fit: cover; background: #ddd; display: block; }
+        .hero-slide-placeholder { width: 100%; height: 220px; background: linear-gradient(135deg,#ddd,#bbb); display: flex; align-items: center; justify-content: center; font-size: 48px; }
+        [data-theme="dark"] .hero-slide-placeholder { background: linear-gradient(135deg,#2a2a2a,#1a1a1a); }
+        /* Slide info overlay */
+        .hero-slide-body { padding: 10px 14px 6px; }
+        .hero-slide-title { font-family: 'Playfair Display', serif; font-size: 17px; font-weight: 700; line-height: 1.35; margin-bottom: 5px; word-break: break-word; overflow-wrap: break-word; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .hero-slide-meta { font-size: 11px; color: var(--text-muted); display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+        .hero-slide-meta .author { color: var(--red); font-weight: 700; }
+        .hero-slide-info { background: var(--white); padding: 10px 14px 6px; }
+        /* Slider dots */
+        .slider-dots { display: flex; justify-content: center; gap: 6px; padding: 8px 0 10px; }
+        .slider-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--border); border: none; padding: 0; cursor: pointer; transition: background .2s, transform .2s; flex-shrink: 0; }
+        .slider-dot.active { background: var(--red); transform: scale(1.3); }
+        /* Slider arrows */
+        .slider-arrow { position: absolute; top: 95px; background: rgba(0,0,0,.45); border: none; color: #fff; width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 10; font-size: 20px; line-height: 1; transition: background .2s; padding: 0; }
+        .slider-arrow:hover { background: rgba(0,0,0,.75); }
+        .slider-arrow.prev { left: 8px; }
+        .slider-arrow.next { right: 8px; }
+        @media(max-width: 480px) { .hero-slider-wrap { height: 190px; } .hero-slide-img, .hero-slide-placeholder { height: 190px; } .slider-arrow { top: 80px; } }
     </style>
 </head>
 <body>
 
-<a href="https://wa.me/6281234567890" target="_blank" class="wa-float" title="Hubungi Redaksi">
-    <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+<a href="https://wa.me/6281234567890" target="_blank" class="wa-float" title="Hubungi Redaksi" id="waFloatBtn">    <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
 </a>
 
 <header class="site-header">
     <div class="ticker-bar">
     <div class="ticker-inner">
-        <span class="ticker-label">Breaking</span>
+        <span class="ticker-label">BREAKING NEWS</span>
         <div class="ticker-scroll"><span class="ticker-text" id="tickerText">Memuat berita terbaru...</span></div>
     </div>
 </div>
@@ -406,17 +430,7 @@
                     <li><a href="#">Redaksi</a></li>
                 </ul>
             </div>
-            <div class="footer-widget">
-                <h4>Kategori</h4>
-                <ul class="footer-links">
-                    <li><a href="#">Nasional</a></li>
-                    <li><a href="#">Tangerang Raya</a></li>
-                    <li><a href="#">Banten</a></li>
-                    <li><a href="#">Politik</a></li>
-                    <li><a href="#">Ekonomi</a></li>
-                    <li><a href="#">Olahraga</a></li>
-                </ul>
-            </div>
+
         </div>
         <div class="footer-bottom"><p>&copy; 2026 KJNI.my.id &mdash; Portal Berita Tangerang, Banten &amp; Indonesia.</p></div>
     </div>
@@ -574,6 +588,24 @@
     onSnapshot(q, snapshot => {
         semuaBerita=snapshot.docs.map(d=>({id:d.id,...d.data()})).filter(b => b.status !== 'nonaktif');
         beritaMap={}; semuaBerita.forEach(b=>beritaMap[b.id]=b); window._beritaMap=beritaMap;
+        
+        // --- KODE TAMBAHAN UNTUK MEMBACA KATEGORI DARI URL ---
+        const params = new URLSearchParams(window.location.search);
+        const katDariUrl = params.get('kategori');
+
+        if (katDariUrl) {
+            window._filterAktif = katDariUrl;
+            
+            // Mengubah status tombol navigasi agar menyala merah (active) sesuai kategori
+            document.querySelectorAll('.cat-nav-inner a').forEach(a => {
+                a.classList.toggle('active', a.dataset.kat === katDariUrl);
+            });
+            document.querySelectorAll('.filter-pill').forEach(p => {
+                p.classList.toggle('active', p.dataset.kat === katDariUrl);
+            });
+        }
+        // -----------------------------------------------------
+
         renderBerita(); renderSidebar(); updateTicker();
     }, err => {
         document.getElementById('newsGrid').innerHTML=`<div class="empty-state"><div class="ico">&#x26A0;&#xFE0F;</div><p>Gagal memuat berita.</p><p style="font-size:11px;margin-top:6px;">${err.message}</p></div>`;
@@ -628,16 +660,82 @@
     }
     renderMediaPartner();
     
+    let sliderInterval=null;
+
+    function buildSlider(slides) {
+        let cur=0;
+        const total=slides.length;
+        if(!total) return;
+
+        const dotsHtml = total>1 ? slides.map((_,i)=>`<button class="slider-dot${i===0?' active':''}" data-idx="${i}"></button>`).join('') : '';
+
+        // Semua slide di dalam wrap (gambar saja, absolute stacked)
+        const slidesHtml = slides.map((b,i)=>`<div class="hero-slide${i===0?' active':''}" data-id="${b.id}">${b.gambar?`<img class="hero-slide-img" src="${b.gambar}" alt="${b.judul}" loading="lazy">`:`<div class="hero-slide-placeholder">&#x1F4F0;</div>`}</div>`).join('');
+
+        // Info panel pertama
+        const firstInfo = slides[0];
+        const infoHtml = `<div class="hero-slide-info" id="sliderInfo"><span class="cat-badge">${firstInfo.kategori}</span><div class="hero-slide-title">${firstInfo.judul}</div><div class="hero-slide-meta"><span class="author">&#x270D;&#xFE0F; ${firstInfo.penulis||'Redaksi KJNI'}</span><span>&#x1F4C5; ${formatTgl(firstInfo.tanggalDibuat)}</span></div></div>`;
+
+        const html = `<div class="hero-slider" id="heroSlider">`
+            + `<div class="hero-slider-wrap">${slidesHtml}</div>`
+            + (total>1 ? `<button class="slider-arrow prev" id="sliderPrev">&#8249;</button><button class="slider-arrow next" id="sliderNext">&#8250;</button>` : '')
+            + infoHtml
+            + (total>1 ? `<div class="slider-dots">${dotsHtml}</div>` : '')
+            + `</div>`;
+
+        document.getElementById('heroArea').innerHTML = html;
+        if(total<=1) return;
+
+        function goTo(n) {
+            const prevSlides = document.querySelectorAll('#heroSlider .hero-slide');
+            prevSlides[cur].classList.remove('active');
+            cur = (n+total)%total;
+            prevSlides[cur].classList.add('active');
+            document.querySelectorAll('.slider-dot').forEach((d,i)=>d.classList.toggle('active',i===cur));
+            // Update info panel
+            const b = slides[cur];
+            document.getElementById('sliderInfo').innerHTML = `<span class="cat-badge">${b.kategori}</span><div class="hero-slide-title">${b.judul}</div><div class="hero-slide-meta"><span class="author">&#x270D;&#xFE0F; ${b.penulis||'Redaksi KJNI'}</span><span>&#x1F4C5; ${formatTgl(b.tanggalDibuat)}</span></div>`;
+        }
+
+        document.getElementById('sliderPrev').onclick = e=>{e.stopPropagation();goTo(cur-1);resetAuto();};
+        document.getElementById('sliderNext').onclick = e=>{e.stopPropagation();goTo(cur+1);resetAuto();};
+        document.querySelectorAll('.slider-dot').forEach(d=>d.addEventListener('click',e=>{e.stopPropagation();goTo(+d.dataset.idx);resetAuto();}));
+
+        // Click slide → buka artikel
+        document.querySelectorAll('#heroSlider .hero-slide').forEach(s=>s.addEventListener('click',()=>{window.location.href=`artikel.html?id=${s.dataset.id}`;}));
+
+        // Swipe
+        let tx=0;
+        const wrap = document.querySelector('#heroSlider .hero-slider-wrap');
+        wrap.addEventListener('touchstart',e=>{tx=e.touches[0].clientX;},{passive:true});
+        wrap.addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-tx;if(Math.abs(dx)>40){goTo(dx<0?cur+1:cur-1);resetAuto();}},{passive:true});
+
+        if(sliderInterval) clearInterval(sliderInterval);
+        sliderInterval = setInterval(()=>goTo(cur+1),5000);
+        function resetAuto(){clearInterval(sliderInterval);sliderInterval=setInterval(()=>goTo(cur+1),5000);}
+    }
+
     function renderBerita() {
         const fa=window._filterAktif;
         const list=fa==='Semua'?semuaBerita:semuaBerita.filter(b=>b.kategori===fa);
         const heroArea=document.getElementById('heroArea'), newsGrid=document.getElementById('newsGrid');
+        if(sliderInterval){clearInterval(sliderInterval);sliderInterval=null;}
         if(!list.length){heroArea.innerHTML='';newsGrid.innerHTML=`<div class="empty-state"><div class="ico">&#x1F4ED;</div><p>Belum ada berita untuk kategori ini.</p></div>`;return;}
-        const hero=list[0];
-        heroArea.innerHTML=`<div class="hero-card" data-id="${hero.id}">${hero.gambar?`<img class="hero-card-img" src="${hero.gambar}" alt="${hero.judul}" loading="lazy">`:`<div class="hero-card-img-placeholder">&#x1F4F0;</div>`}<div class="hero-card-body"><span class="cat-badge">${hero.kategori}</span><div class="hero-title">${hero.judul}</div><div class="hero-excerpt">${(hero.isi||'').substring(0,180)}...</div><div class="card-meta"><span class="author">&#x270D;&#xFE0F; ${hero.penulis||'Redaksi KJNI'}</span><span>&#x1F4C5; ${formatTgl(hero.tanggalDibuat)}</span></div></div></div>`;
-        const sisa=list.slice(1);
-        if(!sisa.length){newsGrid.innerHTML='<p style="color:var(--text-muted);font-size:13px;padding:12px 14px;background:var(--white);border-radius:6px;margin-top:2px;">Belum ada berita lainnya.</p>';return;}
-        newsGrid.innerHTML=`<div class="news-list">${sisa.map(b=>`<div class="news-item" data-id="${b.id}"><div class="news-thumb">${b.gambar?`<img src="${b.gambar}" alt="${b.judul}" loading="lazy">`:'&#x1F4F0;'}</div><div class="news-body"><span class="cat-badge" style="font-size:9px;padding:2px 6px;">${b.kategori}</span><div class="news-title">${b.judul}</div><div class="news-meta"><span class="author">&#x270D;&#xFE0F; ${b.penulis||'Redaksi KJNI'}</span><span>&#x1F4C5; ${formatTgl(b.tanggalDibuat)}</span></div></div></div>`).join('')}</div>`;
+        
+        if(fa==='Semua') {
+            // Tampilkan slider dari 5 berita teratas
+            const sliderItems=list.slice(0,5);
+            buildSlider(sliderItems);
+            const sisa=list.slice(5);
+            if(!sisa.length){newsGrid.innerHTML='<p style="color:var(--text-muted);font-size:13px;padding:12px 14px;background:var(--white);border-radius:6px;margin-top:2px;">Belum ada berita lainnya.</p>';return;}
+            newsGrid.innerHTML=`<div class="news-list">${sisa.map(b=>`<div class="news-item" data-id="${b.id}"><div class="news-thumb">${b.gambar?`<img src="${b.gambar}" alt="${b.judul}" loading="lazy">`:'&#x1F4F0;'}</div><div class="news-body"><span class="cat-badge" style="font-size:9px;padding:2px 6px;">${b.kategori}</span><div class="news-title">${b.judul}</div><div class="news-meta"><span class="author">&#x270D;&#xFE0F; ${b.penulis||'Redaksi KJNI'}</span><span>&#x1F4C5; ${formatTgl(b.tanggalDibuat)}</span></div></div></div>`).join('')}</div>`;
+        } else {
+            const hero=list[0];
+            heroArea.innerHTML=`<div class="hero-card" data-id="${hero.id}">${hero.gambar?`<img class="hero-card-img" src="${hero.gambar}" alt="${hero.judul}" loading="lazy">`:`<div class="hero-card-img-placeholder">&#x1F4F0;</div>`}<div class="hero-card-body"><span class="cat-badge">${hero.kategori}</span><div class="hero-title">${hero.judul}</div><div class="hero-excerpt">${(hero.isi||'').substring(0,180)}...</div><div class="card-meta"><span class="author">&#x270D;&#xFE0F; ${hero.penulis||'Redaksi KJNI'}</span><span>&#x1F4C5; ${formatTgl(hero.tanggalDibuat)}</span></div></div></div>`;
+            const sisa=list.slice(1);
+            if(!sisa.length){newsGrid.innerHTML='<p style="color:var(--text-muted);font-size:13px;padding:12px 14px;background:var(--white);border-radius:6px;margin-top:2px;">Belum ada berita lainnya.</p>';return;}
+            newsGrid.innerHTML=`<div class="news-list">${sisa.map(b=>`<div class="news-item" data-id="${b.id}"><div class="news-thumb">${b.gambar?`<img src="${b.gambar}" alt="${b.judul}" loading="lazy">`:'&#x1F4F0;'}</div><div class="news-body"><span class="cat-badge" style="font-size:9px;padding:2px 6px;">${b.kategori}</span><div class="news-title">${b.judul}</div><div class="news-meta"><span class="author">&#x270D;&#xFE0F; ${b.penulis||'Redaksi KJNI'}</span><span>&#x1F4C5; ${formatTgl(b.tanggalDibuat)}</span></div></div></div>`).join('')}</div>`;
+        }
     }
     window._renderBerita=renderBerita;
     
@@ -647,6 +745,23 @@
     }
     
     function updateTicker() { document.getElementById('tickerText').textContent=semuaBerita.map(b=>b.judul).join('  \u2022  '); }
+    // ===== LOAD NOMOR WA DINAMIS =====
+(async () => {
+    try {
+        const snap = await getDoc(doc(db, 'pengaturan', 'whatsapp'));
+        if (snap.exists()) {
+            const { nomor, pesan } = snap.data();
+            if (nomor) {
+                const url = 'https://wa.me/' + nomor + (pesan ? '?text=' + encodeURIComponent(pesan) : '');
+                const waBtn = document.getElementById('waFloatBtn');
+                if (waBtn) waBtn.href = url;
+                // Update juga tombol WA di share bar jika ada
+                const fsb = document.querySelector('.fsb-wa');
+                if (fsb) fsb.href = url;
+            }
+        }
+    } catch(e) { console.warn('Gagal load WA settings:', e.message); }
+})();
 </script>
 </body>
 </html>
