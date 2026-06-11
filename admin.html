@@ -331,6 +331,28 @@
 
             <hr style="border: 1px solid #eceff1; margin: 40px 0;">
 
+            <h3>💬 Pengaturan Tombol WhatsApp</h3>
+            <p style="font-size: 13px; color: #7f8c8d;">Nomor ini akan tampil sebagai tombol WhatsApp mengambang di semua halaman website.</p>
+            <div class="ad-section">
+                <h4 style="margin-top:0; color:#25d366;">📱 Nomor WhatsApp Redaksi</h4>
+                <div class="form-group">
+                    <label>Nomor WhatsApp (format internasional, tanpa + dan spasi)</label>
+                    <input type="text" id="inputNomorWA" placeholder="Contoh: 6281234567890" style="font-size:15px; letter-spacing:1px;">
+                    <small style="color:#7f8c8d; margin-top:4px; display:block;">Awali dengan kode negara. Indonesia = 62. Contoh: <strong>6281234567890</strong></small>
+                </div>
+                <div class="form-group">
+                    <label>Pesan Otomatis (opsional)</label>
+                    <input type="text" id="inputPesanWA" placeholder="Contoh: Halo Redaksi KJNI, saya ingin bertanya...">
+                    <small style="color:#7f8c8d; margin-top:4px; display:block;">Pesan ini akan otomatis terisi saat pengunjung membuka WhatsApp.</small>
+                </div>
+                <div style="background:#e8f5e9; border-left:3px solid #25d366; padding:10px 14px; border-radius:0 4px 4px 0; font-size:13px; margin-bottom:14px; color:#2e7d32;">
+                    🔗 Preview link: <span id="previewLinkWA" style="font-family:monospace; word-break:break-all;">—</span>
+                </div>
+                <button type="button" id="btnSimpanWA" class="btn" style="background:#25d366;">💾 Simpan Nomor WhatsApp</button>
+            </div>
+
+            <hr style="border: 1px solid #eceff1; margin: 40px 0;">
+
             <h3>🗑️ Kelola Berita Saat Ini</h3>
             <p style="font-size: 13px; color: #7f8c8d;">Klik <strong>Edit ✏️</strong> untuk mengubah isi berita, atau <strong>Hapus ❌</strong> untuk menghapus secara permanen.</p>
             <div id="daftarBeritaAdmin">
@@ -448,6 +470,7 @@
                 muatDataIklan();
                 muatMediaPartner();
                 muatDaftarPendaftar();
+                muatPengaturanWA();
             } else {
                 loginSection.classList.remove("hidden");
                 dashboardSection.classList.add("hidden");
@@ -929,6 +952,46 @@
                 snap.forEach(d => buatBarisPartner({ id: d.id, ...d.data() }));
             } catch (e) { emptyEl.textContent = 'Gagal memuat: ' + e.message; emptyEl.style.display = 'block'; }
         }
+
+        // ===== PENGATURAN WHATSAPP =====
+        async function muatPengaturanWA() {
+            try {
+                const snap = await getDoc(doc(db, 'pengaturan', 'whatsapp'));
+                if (snap.exists()) {
+                    const d = snap.data();
+                    document.getElementById('inputNomorWA').value = d.nomor || '';
+                    document.getElementById('inputPesanWA').value = d.pesan || '';
+                    updatePreviewWA();
+                }
+            } catch(e) { console.warn('Gagal muat WA settings:', e.message); }
+        }
+
+        function updatePreviewWA() {
+            const nomor = document.getElementById('inputNomorWA').value.trim().replace(/\D/g,'');
+            const pesan = encodeURIComponent(document.getElementById('inputPesanWA').value.trim());
+            const el = document.getElementById('previewLinkWA');
+            if (nomor) {
+                el.textContent = 'https://wa.me/' + nomor + (pesan ? '?text=' + pesan : '');
+            } else {
+                el.textContent = '—';
+            }
+        }
+
+        document.getElementById('inputNomorWA').addEventListener('input', updatePreviewWA);
+        document.getElementById('inputPesanWA').addEventListener('input', updatePreviewWA);
+
+        document.getElementById('btnSimpanWA').addEventListener('click', async () => {
+            const btn = document.getElementById('btnSimpanWA');
+            const nomor = document.getElementById('inputNomorWA').value.trim().replace(/\D/g,'');
+            const pesan = document.getElementById('inputPesanWA').value.trim();
+            if (!nomor) { alert('Nomor WhatsApp tidak boleh kosong!'); return; }
+            btn.innerText = '⏳ Menyimpan...'; btn.disabled = true;
+            try {
+                await setDoc(doc(db, 'pengaturan', 'whatsapp'), { nomor, pesan });
+                alert('✅ Nomor WhatsApp berhasil disimpan! Tombol WA di website kini menggunakan nomor baru.');
+            } catch(e) { alert('❌ Gagal menyimpan: ' + e.message); }
+            finally { btn.innerText = '💾 Simpan Nomor WhatsApp'; btn.disabled = false; }
+        });
 
         document.getElementById('btnTambahPartner').addEventListener('click', () => buatBarisPartner());
 
