@@ -762,6 +762,23 @@
         }
     } catch(e) { console.warn('Gagal load WA settings:', e.message); }
 })();
+// ===== LOAD NOMOR WA DINAMIS =====
+(async () => {
+    try {
+        const snap = await getDoc(doc(db, 'pengaturan', 'whatsapp'));
+        if (snap.exists()) {
+            const { nomor, pesan } = snap.data();
+            if (nomor) {
+                const url = 'https://wa.me/' + nomor + (pesan ? '?text=' + encodeURIComponent(pesan) : '');
+                const waBtn = document.getElementById('waFloatBtn');
+                if (waBtn) waBtn.href = url;
+                // Update juga tombol WA di share bar jika ada
+                const fsb = document.querySelector('.fsb-wa');
+                if (fsb) fsb.href = url;
+            }
+        }
+    } catch(e) { console.warn('Gagal load WA settings:', e.message); }
+})();
 </script>
 </body>
 </html>
