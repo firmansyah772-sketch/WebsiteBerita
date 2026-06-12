@@ -302,6 +302,7 @@
         .f-reset-btn { margin-top: 14px; padding: 9px 22px; background: var(--red); color: #fff; border: none; border-radius: 5px; font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; }
 
         /* MEDIA PARTNER */
+        .sec-label::before { content: ''; display: block; width: 4px; height: 16px; background: var(--red); border-radius: 2px; flex-shrink: 0; }
         .media-partner { background: var(--white); padding: 16px 14px 14px; margin-top: 14px; border-radius: 6px; box-shadow: var(--shadow); overflow: hidden; border: 1px solid var(--border); }
         .mp-marquee-wrap { width: 100%; overflow: hidden; position: relative; margin-top: 10px; }
         .mp-marquee-wrap::before,
@@ -312,9 +313,49 @@
         .mp-track:hover { animation-play-state: paused; }
         @keyframes mpScroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
         .partner-logo { display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-        .partner-logo img { max-height: 38px; max-width: 110px; object-fit: contain; filter:  transition: filter .3s, transform .3s; }
+        .partner-logo img { max-height: 38px; max-width: 110px; object-fit: contain; transition: filter .3s, transform .3s; }
         .partner-logo:hover img { filter: grayscale(0) opacity(1); transform: scale(1.08); }
         .mp-grid { display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; align-items: center; margin-top: 10px; }
+                /* ANTI COPAS */
+        .article-body, .blok-teks-wrap, .article-title, #artIsi, #blokKontenContainer {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        .article-img, .blok-foto-img {
+            pointer-events: none;
+            -webkit-user-drag: none;
+            user-drag: none;
+        }
+        /* Notif copas */
+        #anticopy-toast {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: rgba(20,20,20,0.92);
+            color: #fff;
+            padding: 10px 22px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            z-index: 9999;
+            opacity: 0;
+            transition: opacity .3s, transform .3s;
+            pointer-events: none;
+            white-space: nowrap;
+            border-left: 3px solid var(--red);
+        }
+        #anticopy-toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
+        .sec-label { display: flex; align-items: center; gap: 8px; margin: 14px 0 10px; font-size: 12.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .8px; }
+
+                .sec-label::before { content: ''; display: block; width: 4px; height: 16px; background: var(--red); border-radius: 2px; flex-shrink: 0; }
+
     </style>
 </head>
 <body>
@@ -1035,6 +1076,82 @@
         }
     } catch(e) { console.warn('Gagal load WA settings:', e.message); }
 })();
+</script>
+    <div id="anticopy-toast">🚫 Konten ini dilindungi hak cipta © KJNI</div>
+
+    <script>
+        // ===== ANTI COPAS =====
+        (function() {
+            const toast = document.getElementById('anticopy-toast');
+            let toastTimer;
+
+            function tampilToast(msg) {
+                toast.textContent = msg || '🚫 Konten ini dilindungi hak cipta © KJNI';
+                toast.classList.add('show');
+                clearTimeout(toastTimer);
+                toastTimer = setTimeout(() => toast.classList.remove('show'), 2800);
+            }
+
+            // Blokir klik kanan
+            document.addEventListener('contextmenu', function(e) {
+                const el = e.target;
+                const isArtikel = el.closest('.article-body, .blok-teks-wrap, .article-title, #artIsi, #blokKontenContainer, .article-img-container, .blok-foto-wrap');
+                if (isArtikel) {
+                    e.preventDefault();
+                    tampilToast('🚫 Klik kanan dinonaktifkan pada konten ini');
+                }
+            });
+
+            // Blokir keyboard shortcut copy (Ctrl+C, Ctrl+A, Ctrl+X, Ctrl+U, F12)
+            document.addEventListener('keydown', function(e) {
+                const blockedKeys = ['c', 'a', 'x', 'u', 's', 'p'];
+                if ((e.ctrlKey || e.metaKey) && blockedKeys.includes(e.key.toLowerCase())) {
+                    const sel = window.getSelection();
+                    if (sel && sel.toString().length > 0) {
+                        e.preventDefault();
+                        tampilToast('🚫 Salin teks dinonaktifkan pada artikel ini');
+                        return;
+                    }
+                    // Blokir Ctrl+A, Ctrl+U, Ctrl+S, Ctrl+P global
+                    if (['a','u','s','p'].includes(e.key.toLowerCase())) {
+                        e.preventDefault();
+                        tampilToast('🚫 Konten ini dilindungi hak cipta © KJNI');
+                    }
+                }
+                // Blokir F12 dan Ctrl+Shift+I / Ctrl+Shift+J / Ctrl+Shift+C (DevTools)
+                if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && ['i','j','c'].includes(e.key.toLowerCase()))) {
+                    e.preventDefault();
+                }
+            });
+
+            // Blokir event copy & cut
+            document.addEventListener('copy', function(e) {
+                const sel = window.getSelection();
+                if (!sel || sel.toString().length === 0) return;
+                const range = sel.getRangeAt(0);
+                const container = range.commonAncestorContainer;
+                const isProtected = container.nodeType === 3
+                    ? container.parentElement.closest('.article-body, .blok-teks-wrap, .article-title, #artIsi, #blokKontenContainer')
+                    : container.closest && container.closest('.article-body, .blok-teks-wrap, .article-title, #artIsi, #blokKontenContainer');
+                if (isProtected) {
+                    e.preventDefault();
+                    e.clipboardData && e.clipboardData.setData('text/plain', '© KJNI - Konten dilindungi hak cipta. Kunjungi kjni.my.id');
+                    tampilToast('🚫 Salin teks dinonaktifkan pada artikel ini');
+                }
+            });
+
+            document.addEventListener('cut', function(e) {
+                e.preventDefault();
+            });
+
+            // Blokir drag teks
+            document.addEventListener('dragstart', function(e) {
+                const el = e.target;
+                if (el.closest && el.closest('.article-body, .blok-teks-wrap, #artIsi, #blokKontenContainer, .article-img-container, .blok-foto-wrap')) {
+                    e.preventDefault();
+                }
+            });
+        })();
     </script>
 </body>
 </html>
