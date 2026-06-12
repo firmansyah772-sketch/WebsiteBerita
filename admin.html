@@ -152,6 +152,10 @@
         .ad-section { border: 1px solid #eceff1; padding: 20px; border-radius: 8px; margin-bottom: 20px; background: #fafafa; }
         .ad-section-info { font-size: 12px; color: #7f8c8d; margin: -10px 0 14px; padding: 8px 12px; background: #fff8e1; border-left: 3px solid #ffc107; border-radius: 0 4px 4px 0; line-height: 1.6; }
         .ad-section-info code { background: #eee; padding: 1px 5px; border-radius: 3px; font-size: 11px; }
+        .btn-ad-up, .btn-ad-down { background: #f0f4f8; color: #34495e; border: 1px solid #ccd6dd; padding: 6px 10px; cursor: pointer; border-radius: 4px; font-size: 13px; line-height: 1; transition: 0.2s; }
+        .btn-ad-up:hover { background: #d5e8f7; border-color: #2980b9; color: #1a5276; }
+        .btn-ad-down:hover { background: #d5e8f7; border-color: #2980b9; color: #1a5276; }
+        .ad-order-btns { display: flex; flex-direction: column; gap: 4px; flex-shrink: 0; }
 
         /* ===== MEDIA PARTNER ===== */
         .mp-admin-row { display: flex; gap: 10px; align-items: center; background: #fff; padding: 14px; border: 1px solid #ddd; border-radius: 6px; margin-bottom: 10px; flex-wrap: wrap; }
@@ -398,6 +402,7 @@
                 <div id="mpListWrap" class="mp-list-wrap">
                     <p class="mp-empty" id="mpEmpty">Memuat data media partner...</p>
                 </div>
+                <div id="paginasiMP"></div>
                 <button type="button" class="btn-tambah" id="btnTambahPartner">+ Tambah Media Partner</button>
                 <button type="button" class="btn" id="btnSimpanPartner" style="width:100%; font-size:15px; padding:13px; margin-top:4px;">💾 Simpan Semua Media Partner</button>
             </div>
@@ -966,6 +971,10 @@
             const div = document.createElement('div');
             div.className = `ad-row row-${kategori}`;
             div.innerHTML = `
+                <div class="ad-order-btns">
+                    <button type="button" class="btn-ad-up" title="Naik">▲</button>
+                    <button type="button" class="btn-ad-down" title="Turun">▼</button>
+                </div>
                 <img src="${imgUrl || 'https://via.placeholder.com/60x40?text=Baru'}" alt="Preview" style="display: ${imgUrl ? 'block' : 'none'}">
                 <div style="flex:1; min-width: 200px;">
                     <input type="file" class="ad-file" accept="image/*" style="width:100%; margin-bottom:5px;">
@@ -981,6 +990,14 @@
                     reader.onload = (ev) => { imgPreview.src = ev.target.result; imgPreview.style.display = 'block'; };
                     reader.readAsDataURL(fileInput.files[0]);
                 }
+            });
+            div.querySelector('.btn-ad-up').addEventListener('click', () => {
+                const prev = div.previousElementSibling;
+                if (prev) wrap.insertBefore(div, prev);
+            });
+            div.querySelector('.btn-ad-down').addEventListener('click', () => {
+                const next = div.nextElementSibling;
+                if (next) wrap.insertBefore(next, div);
             });
             wrap.appendChild(div);
         };
@@ -1126,10 +1143,12 @@
         }
 
         // MEDIA PARTNER
-        function buatBarisPartner(data = {}) {
+        let _semuaPartner = [];
+        let _halamanMP = 1;
+        const MP_PER_HALAMAN = 6;
+
+        function buatBarisPartner(data = {}, tambahKeDom = true) {
             const { id = '', nama = '', logo = '', link = '' } = data;
-            const wrap = document.getElementById('mpListWrap');
-            document.getElementById('mpEmpty').style.display = 'none';
 
             const row = document.createElement('div');
             row.className = 'mp-admin-row'; row.dataset.mpId = id;
@@ -1152,20 +1171,92 @@
             row.querySelector('.btn-hapus').addEventListener('click', async () => {
                 if (!confirm('Hapus media partner ini?')) return;
                 if (row.dataset.mpId) await deleteDoc(doc(db, 'media_partners', row.dataset.mpId));
-                row.remove();
-                if (!document.querySelectorAll('.mp-admin-row').length) document.getElementById('mpEmpty').style.display = 'block';
+                // Hapus dari cache dan re-render
+                _semuaPartner = _semuaPartner.filter(p => p.id !== row.dataset.mpId);
+                renderMediaPartner();
             });
-            wrap.appendChild(row);
+            return row;
+        }
+
+        function renderMediaPartner() {
+            const wrap = document.getElementById('mpListWrap');
+            const emptyEl = document.getElementById('mpEmpty');
+            const paginasiEl = document.getElementById('paginasiMP');
+
+            // Hapus baris lama (bukan elemen mpEmpty)
+            wrap.querySelectorAll('.mp-admin-row').forEach(r => r.remove());
+            paginasiEl.innerHTML = '';
+
+            if (_semuaPartner.length === 0) {
+                emptyEl.textContent = 'Belum ada media partner.';
+                emptyEl.style.display = 'block';
+                return;
+            }
+            emptyEl.style.display = 'none';
+
+            const totalHalaman = Math.max(1, Math.ceil(_semuaPartner.length / MP_PER_HALAMAN));
+            if (_halamanMP > totalHalaman) _halamanMP = totalHalaman;
+            if (_halamanMP < 1) _halamanMP = 1;
+
+            const mulai = (_halamanMP - 1) * MP_PER_HALAMAN;
+            const halIni = _semuaPartner.slice(mulai, mulai + MP_PER_HALAMAN);
+
+            halIni.forEach(data => {
+                const row = buatBarisPartner(data);
+                wrap.appendChild(row);
+            });
+
+            // Render pagination hanya jika lebih dari 1 halaman
+            if (totalHalaman <= 1) return;
+
+            const pwrap = document.createElement('div');
+            pwrap.className = 'pagination-wrap';
+
+            const info = document.createElement('div');
+            info.className = 'pagination-info';
+            info.textContent = `Menampilkan ${mulai + 1}–${Math.min(mulai + MP_PER_HALAMAN, _semuaPartner.length)} dari ${_semuaPartner.length} partner`;
+            pwrap.appendChild(info);
+
+            const btns = document.createElement('div');
+            btns.className = 'pagination-btns';
+
+            const btnPrev = document.createElement('button');
+            btnPrev.className = 'btn-page';
+            btnPrev.textContent = '◀ Prev';
+            btnPrev.disabled = _halamanMP === 1;
+            btnPrev.addEventListener('click', () => { _halamanMP--; renderMediaPartner(); });
+            btns.appendChild(btnPrev);
+
+            for (let i = 1; i <= totalHalaman; i++) {
+                const btn = document.createElement('button');
+                btn.className = 'btn-page' + (i === _halamanMP ? ' active' : '');
+                btn.textContent = i;
+                btn.addEventListener('click', () => { _halamanMP = i; renderMediaPartner(); });
+                btns.appendChild(btn);
+            }
+
+            const btnNext = document.createElement('button');
+            btnNext.className = 'btn-page';
+            btnNext.textContent = 'Next ▶';
+            btnNext.disabled = _halamanMP === totalHalaman;
+            btnNext.addEventListener('click', () => { _halamanMP++; renderMediaPartner(); });
+            btns.appendChild(btnNext);
+
+            pwrap.appendChild(btns);
+            paginasiEl.appendChild(pwrap);
         }
 
         async function muatMediaPartner() {
-            const wrap = document.getElementById('mpListWrap'), emptyEl = document.getElementById('mpEmpty');
-            wrap.querySelectorAll('.mp-admin-row').forEach(r => r.remove());
+            const emptyEl = document.getElementById('mpEmpty');
+            emptyEl.textContent = 'Memuat data media partner...';
+            emptyEl.style.display = 'block';
+            _semuaPartner = [];
             try {
                 const snap = await getDocs(collection(db, 'media_partners'));
-                if (snap.empty) { emptyEl.textContent = 'Belum ada media partner.'; emptyEl.style.display = 'block'; return; }
-                emptyEl.style.display = 'none';
-                snap.forEach(d => buatBarisPartner({ id: d.id, ...d.data() }));
+                if (snap.empty) { emptyEl.textContent = 'Belum ada media partner.'; return; }
+                snap.forEach(d => _semuaPartner.push({ id: d.id, ...d.data() }));
+                _halamanMP = 1;
+                renderMediaPartner();
             } catch (e) { emptyEl.textContent = 'Gagal memuat: ' + e.message; emptyEl.style.display = 'block'; }
         }
 
@@ -1209,14 +1300,20 @@
             finally { btn.innerText = '💾 Simpan Nomor WhatsApp'; btn.disabled = false; }
         });
 
-        document.getElementById('btnTambahPartner').addEventListener('click', () => buatBarisPartner());
+        document.getElementById('btnTambahPartner').addEventListener('click', () => {
+            // Tambah partner baru ke cache sebagai data kosong, lalu render ke halaman terakhir
+            const newEntry = { id: '', nama: '', logo: '', link: '', _baru: true };
+            _semuaPartner.push(newEntry);
+            _halamanMP = Math.ceil(_semuaPartner.length / MP_PER_HALAMAN);
+            renderMediaPartner();
+        });
 
         document.getElementById('btnSimpanPartner').addEventListener('click', async () => {
             const btn = document.getElementById('btnSimpanPartner');
             btn.innerText = '⏳ Menyimpan...'; btn.disabled = true;
             try {
                 const rows = Array.from(document.querySelectorAll('.mp-admin-row'));
-                if (rows.length === 0) { alert('Belum ada media partner yang ditambahkan.'); return; }
+                if (rows.length === 0 && _semuaPartner.length === 0) { alert('Belum ada media partner yang ditambahkan.'); return; }
                 for (let row of rows) {
                     const nama = row.querySelector('.mp-nama').value.trim();
                     const link = row.querySelector('.mp-link').value.trim();
