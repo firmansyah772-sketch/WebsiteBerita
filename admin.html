@@ -264,6 +264,13 @@
             white-space: nowrap;
         }
         .btn-reset-filter:hover { background: #cfd8dc; }
+
+        /* ===== PENGATURAN HALAMAN REDAKSI ===== */
+        .gen-row { display: flex; gap: 8px; align-items: center; background: #fff; padding: 10px; border: 1px solid #ddd; border-radius: 6px; margin-bottom: 8px; flex-wrap: wrap; }
+        .gen-row input { flex: 1; min-width: 130px; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-family: inherit; font-size: 13px; }
+        .gen-row .btn-hapus-gen { background: #ffebee; color: #d32f2f; border: none; padding: 8px 12px; cursor: pointer; border-radius: 4px; font-weight: bold; flex-shrink: 0; }
+        .gen-row .btn-hapus-gen:hover { background: #ffcdd2; }
+        .gen-empty-info { font-size: 12px; color: #95a5a6; text-align: center; padding: 6px 0; }
     </style>
 </head>
 <body>
@@ -431,6 +438,73 @@
 
             <hr style="border: 1px solid #eceff1; margin: 40px 0;">
 
+            <h3>📋 Pengaturan Halaman Redaksi</h3>
+            <p style="font-size: 13px; color: #7f8c8d;">Atur seluruh konten yang tampil di halaman Redaksi.html — legalitas, susunan pengurus, investigasi, DPW provinsi, asosiasi, dan pemberitahuan.</p>
+
+            <div class="ad-section">
+                <h4 style="margin-top:0; color:#d32f2f;">🏢 Legalitas Lembaga</h4>
+                <div class="form-group"><label>Nama Lembaga</label><input type="text" id="redLegalNama" placeholder="Komite Jurnalis Nusantara Independen"></div>
+                <div class="form-group"><label>Akte Notaris</label><input type="text" id="redLegalAkte" placeholder="EVA KURNIASIH, S.H., M.Kn."></div>
+                <div class="form-group"><label>SK Kemenkumham RI</label><input type="text" id="redLegalSK" placeholder="AHU-xxxxxxx.AH.01.01.TAHUN.2021"></div>
+                <div class="form-group"><label>Daftar Perseroan</label><input type="text" id="redLegalDaftar" placeholder="AHU-xxxxxxx.AH.01.07.TAHUN 2026"></div>
+                <div class="form-group" style="margin-bottom:0;"><label>NPWP</label><input type="text" id="redLegalNpwp" placeholder="0000 0000 0000 0000"></div>
+            </div>
+
+            <div class="ad-section">
+                <h4 style="margin-top:0; color:#d32f2f;">☆ Pendiri</h4>
+                <div id="wrapPendiri"></div>
+                <button type="button" class="btn-tambah" data-target="wrapPendiri" data-type="2col">+ Tambah Pendiri</button>
+            </div>
+
+            <div class="ad-section">
+                <h4 style="margin-top:0; color:#d32f2f;">☆ Pengurus Inti DPP</h4>
+                <div id="wrapPengurus"></div>
+                <button type="button" class="btn-tambah" data-target="wrapPengurus" data-type="2col">+ Tambah Pengurus</button>
+            </div>
+
+            <div class="ad-section">
+                <h4 style="margin-top:0; color:#d32f2f;">☆ Dewan Pembina &amp; Penasehat</h4>
+                <div id="wrapPembina"></div>
+                <button type="button" class="btn-tambah" data-target="wrapPembina" data-type="2col">+ Tambah Dewan Pembina/Penasehat</button>
+            </div>
+
+            <div class="ad-section">
+                <h4 style="margin-top:0; color:#d32f2f;">☆ Pimpinan Redaksi</h4>
+                <div id="wrapPimpinan"></div>
+                <button type="button" class="btn-tambah" data-target="wrapPimpinan" data-type="2col">+ Tambah Pimpinan Redaksi</button>
+            </div>
+
+            <div class="ad-section">
+                <h4 style="margin-top:0; color:#d32f2f;">☆ Bidang Investigasi PTI</h4>
+                <p class="ad-section-info">Daftar nama akan ditampilkan sebagai tag/badge di halaman Redaksi.</p>
+                <div id="wrapInvestigasi"></div>
+                <button type="button" class="btn-tambah" data-target="wrapInvestigasi" data-type="1col">+ Tambah Nama</button>
+            </div>
+
+            <div class="ad-section">
+                <h4 style="margin-top:0; color:#d32f2f;">☆ Pengurus DPW Provinsi</h4>
+                <p class="ad-section-info">Kosongkan Ketua/Sekretaris/Bendahara jika belum ada (akan tampil tanda "—").</p>
+                <div id="wrapDPW"></div>
+                <button type="button" class="btn-tambah" data-target="wrapDPW" data-type="dpw">+ Tambah DPW Provinsi</button>
+            </div>
+
+            <div class="ad-section">
+                <h4 style="margin-top:0; color:#d32f2f;">☆ Asosiasi Wartawan / Jurnalis</h4>
+                <div id="wrapAsosiasi"></div>
+                <button type="button" class="btn-tambah" data-target="wrapAsosiasi" data-type="1col">+ Tambah Asosiasi</button>
+            </div>
+
+            <div class="ad-section">
+                <h4 style="margin-top:0; color:#d32f2f;">⚠️ Pemberitahuan Penting</h4>
+                <div class="form-group" style="margin-bottom:0;">
+                    <textarea id="redPemberitahuan" rows="5" placeholder="Tulis isi pemberitahuan di sini..."></textarea>
+                </div>
+            </div>
+
+            <button type="button" id="btnSimpanRedaksi" class="btn" style="width:100%; font-size:16px; padding:15px;">💾 Simpan Pengaturan Redaksi</button>
+
+            <hr style="border: 1px solid #eceff1; margin: 40px 0;">
+
             <h3>🗑️ Kelola Berita Saat Ini</h3>
             <p style="font-size: 13px; color: #7f8c8d;">Klik <strong>Edit ✏️</strong> untuk mengubah isi berita, atau <strong>Hapus ❌</strong> untuk menghapus secara permanen.</p>
             
@@ -577,6 +651,7 @@
                 muatMediaPartner();
                 muatDaftarPendaftar();
                 muatPengaturanWA();
+                muatDataRedaksi();
             } else {
                 loginSection.classList.remove("hidden");
                 dashboardSection.classList.add("hidden");
@@ -1338,6 +1413,176 @@
                 await muatMediaPartner();
             } catch (e) { alert('❌ Gagal: ' + e.message); } 
             finally { btn.innerText = '💾 Simpan Semua Media Partner'; btn.disabled = false; }
+        });
+        // ===== PENGATURAN HALAMAN REDAKSI =====
+        const DEFAULT_REDAKSI = {
+            legalitas: {
+                nama: "Komite Jurnalis Nusantara Independen",
+                akte: "EVA KURNIASIH, S.H., M.Kn.",
+                sk: "AHU-0049584.AH.01.01.TAHUN.2021",
+                daftar_perseroan: "AHU-0003690.AH.01.07.TAHUN 2026",
+                npwp: "1000 0000 0989 2975"
+            },
+            pendiri: [
+                { jabatan: "Pendiri 1", nama: "NURUL QOMAR, C. BJ., PTI" },
+                { jabatan: "Pendiri 2", nama: "HERIYANTO" },
+                { jabatan: "Pendiri 3", nama: "YOGA KUMALA" }
+            ],
+            pengurus_inti: [
+                { jabatan: "Ketua DPP", nama: "NURUL QOMAR, C. BJ., PTI" },
+                { jabatan: "Wakil Ketua DPP", nama: "HERIYANTO" },
+                { jabatan: "Bendahara", nama: "SATI" },
+                { jabatan: "Sekretaris", nama: "YOGA KUMALA" }
+            ],
+            dewan_pembina: [
+                { jabatan: "Dewan Pembina", nama: "ILHAMMUDIN, SE, SH, CPM." },
+                { jabatan: "Dewan Pembina", nama: "H. FACHRUDIN HS, S. PDJ" },
+                { jabatan: "Penasehat Hukum", nama: "ILHAMMUDIN, SE, SH, CPM. & FATNER" }
+            ],
+            pimpinan_redaksi: [
+                { jabatan: "Pimpinan Redaksi", nama: "ARUL / NURUL QOMAR, C. BJ., PTI" }
+            ],
+            investigasi: ["RAHMAT TOLETOLE", "WAHYUDIN", "TAMRIN", "IMAM RAMADANI", "SANGKUT", "HAMZAH", "BUHORI", "ADI NUGRAHA"],
+            dpw: [
+                { provinsi: "Jawa Barat", ketua: "", sekretaris: "", bendahara: "" },
+                { provinsi: "Banten", ketua: "", sekretaris: "", bendahara: "" }
+            ],
+            asosiasi: [
+                "Perkumpulan Pemimpin Redaksi Independent Indonesia (PPRI)",
+                "Persatuan Pewarta Warga Indonesia (PPWI)",
+                "Komite Jurnalis Nusantara Independen (KJNI)"
+            ],
+            pemberitahuan: "Seluruh Pengurus KJNI dilegitimasi dengan KTA dan SURAT TUGAS serta namanya tercantum di Box Redaksi dan Kepengurusan. Apabila ada yang mengaku atau mengatasnamakan Wartawan / Jurnalis / Pengurus KJNI tanpa KTA dan Surat Tugas serta namanya tidak ada di dalam Box Redaksi, maka segala tindakannya bukan merupakan tanggung jawab Redaksi."
+        };
+
+        // Buat satu baris editor generik. type: '2col' (jabatan+nama), '1col' (nama saja), 'dpw' (provinsi+ketua+sekretaris+bendahara)
+        function buatBarisGenerik(wrapId, type, values = {}) {
+            const wrap = document.getElementById(wrapId);
+            const row = document.createElement('div');
+            row.className = 'gen-row';
+
+            if (type === '2col') {
+                row.innerHTML = `
+                    <input type="text" class="gen-jabatan" placeholder="Jabatan (contoh: Ketua DPP)" value="${values.jabatan || ''}">
+                    <input type="text" class="gen-nama" placeholder="Nama Lengkap" value="${values.nama || ''}">
+                    <button type="button" class="btn-hapus-gen">Hapus ❌</button>
+                `;
+            } else if (type === '1col') {
+                row.innerHTML = `
+                    <input type="text" class="gen-nama" placeholder="Nama" value="${values.nama || ''}">
+                    <button type="button" class="btn-hapus-gen">Hapus ❌</button>
+                `;
+            } else if (type === 'dpw') {
+                row.innerHTML = `
+                    <input type="text" class="gen-provinsi" placeholder="Nama Provinsi (contoh: Jawa Barat)" value="${values.provinsi || ''}" style="flex-basis:100%;">
+                    <input type="text" class="gen-ketua" placeholder="Ketua" value="${values.ketua || ''}">
+                    <input type="text" class="gen-sekretaris" placeholder="Sekretaris" value="${values.sekretaris || ''}">
+                    <input type="text" class="gen-bendahara" placeholder="Bendahara" value="${values.bendahara || ''}">
+                    <button type="button" class="btn-hapus-gen">Hapus ❌</button>
+                `;
+            }
+            row.querySelector('.btn-hapus-gen').addEventListener('click', () => row.remove());
+            wrap.appendChild(row);
+        }
+
+        // Kumpulkan data dari semua baris dalam sebuah wrap, sesuai tipenya
+        function kumpulkanGenerik(wrapId, type) {
+            const rows = document.querySelectorAll(`#${wrapId} .gen-row`);
+            const hasil = [];
+            rows.forEach(row => {
+                if (type === '2col') {
+                    const jabatan = row.querySelector('.gen-jabatan').value.trim();
+                    const nama = row.querySelector('.gen-nama').value.trim();
+                    if (jabatan || nama) hasil.push({ jabatan, nama });
+                } else if (type === '1col') {
+                    const nama = row.querySelector('.gen-nama').value.trim();
+                    if (nama) hasil.push(nama);
+                } else if (type === 'dpw') {
+                    const provinsi = row.querySelector('.gen-provinsi').value.trim();
+                    const ketua = row.querySelector('.gen-ketua').value.trim();
+                    const sekretaris = row.querySelector('.gen-sekretaris').value.trim();
+                    const bendahara = row.querySelector('.gen-bendahara').value.trim();
+                    if (provinsi || ketua || sekretaris || bendahara) hasil.push({ provinsi, ketua, sekretaris, bendahara });
+                }
+            });
+            return hasil;
+        }
+
+        // Tombol "+ Tambah" untuk setiap section redaksi
+        document.querySelectorAll('.btn-tambah[data-target]').forEach(btn => {
+            btn.addEventListener('click', () => {
+                buatBarisGenerik(btn.dataset.target, btn.dataset.type);
+            });
+        });
+
+        // Muat data redaksi dari Firestore (atau pakai default jika belum ada)
+        async function muatDataRedaksi() {
+            let data = DEFAULT_REDAKSI;
+            try {
+                const snap = await getDoc(doc(db, 'pengaturan', 'redaksi'));
+                if (snap.exists()) data = { ...DEFAULT_REDAKSI, ...snap.data() };
+            } catch (e) {
+                console.warn('Gagal memuat data redaksi:', e.message);
+            }
+
+            // Legalitas
+            const leg = data.legalitas || {};
+            document.getElementById('redLegalNama').value = leg.nama || '';
+            document.getElementById('redLegalAkte').value = leg.akte || '';
+            document.getElementById('redLegalSK').value = leg.sk || '';
+            document.getElementById('redLegalDaftar').value = leg.daftar_perseroan || '';
+            document.getElementById('redLegalNpwp').value = leg.npwp || '';
+
+            // Helper isi list ke wrap
+            const isiList = (wrapId, arr, type) => {
+                const wrap = document.getElementById(wrapId);
+                wrap.innerHTML = '';
+                (arr || []).forEach(item => {
+                    const values = (type === '1col') ? { nama: item } : item;
+                    buatBarisGenerik(wrapId, type, values);
+                });
+            };
+            isiList('wrapPendiri', data.pendiri, '2col');
+            isiList('wrapPengurus', data.pengurus_inti, '2col');
+            isiList('wrapPembina', data.dewan_pembina, '2col');
+            isiList('wrapPimpinan', data.pimpinan_redaksi, '2col');
+            isiList('wrapInvestigasi', data.investigasi, '1col');
+            isiList('wrapDPW', data.dpw, 'dpw');
+            isiList('wrapAsosiasi', data.asosiasi, '1col');
+
+            document.getElementById('redPemberitahuan').value = data.pemberitahuan || '';
+        }
+
+        // Simpan semua pengaturan redaksi ke Firestore
+        document.getElementById('btnSimpanRedaksi').addEventListener('click', async () => {
+            const btn = document.getElementById('btnSimpanRedaksi');
+            btn.innerText = '⏳ Menyimpan...'; btn.disabled = true;
+            try {
+                const payload = {
+                    legalitas: {
+                        nama: document.getElementById('redLegalNama').value.trim(),
+                        akte: document.getElementById('redLegalAkte').value.trim(),
+                        sk: document.getElementById('redLegalSK').value.trim(),
+                        daftar_perseroan: document.getElementById('redLegalDaftar').value.trim(),
+                        npwp: document.getElementById('redLegalNpwp').value.trim()
+                    },
+                    pendiri: kumpulkanGenerik('wrapPendiri', '2col'),
+                    pengurus_inti: kumpulkanGenerik('wrapPengurus', '2col'),
+                    dewan_pembina: kumpulkanGenerik('wrapPembina', '2col'),
+                    pimpinan_redaksi: kumpulkanGenerik('wrapPimpinan', '2col'),
+                    investigasi: kumpulkanGenerik('wrapInvestigasi', '1col'),
+                    dpw: kumpulkanGenerik('wrapDPW', 'dpw'),
+                    asosiasi: kumpulkanGenerik('wrapAsosiasi', '1col'),
+                    pemberitahuan: document.getElementById('redPemberitahuan').value.trim(),
+                    diupdate: new Date()
+                };
+                await setDoc(doc(db, 'pengaturan', 'redaksi'), payload);
+                alert('✅ Pengaturan Redaksi berhasil disimpan!');
+            } catch (e) {
+                alert('❌ Gagal menyimpan: ' + e.message);
+            } finally {
+                btn.innerText = '💾 Simpan Pengaturan Redaksi'; btn.disabled = false;
+            }
         });
     </script>
 </body>
