@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redaksi - KJNI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --red: #cc0000;
+            --red-dark: #990000;
+            --black: #111111;
+            --gray-dark: #222222;
+            --gray-mid: #444444;
+            --gray-light: #f3f3f3;
+            --white: #ffffff;
+            --border: #e0e0e0;
+            --text: #1a1a1a;
+            --text-muted: #777777;
+            --shadow: 0 1px 4px rgba(0,0,0,0.10);
+        }
+        [data-theme="dark"] {
+            --gray-light: #181818;
+            --white: #1e1e1e;
+            --border: #2e2e2e;
+            --text: #e8e8e8;
+            --text-muted: #999999;
+            --shadow: 0 1px 4px rgba(0,0,0,0.4);
+        }
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body { width: 100%; }
+        body { font-family: 'Source Sans 3', sans-serif; background: var(--gray-light); color: var(--text); transition: background .3s, color .3s; line-height: 1.6; }
+        a { text-decoration: none; color: inherit; }
+        img { max-width: 100%; height: auto; display: block; }
+
+        /* TICKER */
+        .ticker-bar { background: var(--black); color: #fff; font-size: 11.5px; padding: 6px 0; overflow: hidden; }
+        .ticker-inner { display: flex; align-items: center; max-width: 1100px; margin: 0 auto; padding: 0 12px; }
+        .ticker-label { background: var(--red); color: #fff; font-weight: 700; font-size: 10px; padding: 3px 9px; text-transform: uppercase; letter-spacing: .8px; flex-shrink: 0; margin-right: 10px; }
+        .ticker-scroll { overflow: hidden; flex: 1; }
+        .ticker-text { white-space: nowrap; animation: marquee 45s linear infinite; display: inline-block; }
+        @keyframes marquee { 0%{transform:translateX(100vw)} 100%{transform:translateX(-100%)} }
+
+        /* HEADER */
+        .site-header { background: var(--white); position: sticky; top: 0; z-index: 500; box-shadow: 0 2px 8px rgba(0,0,0,.25); width: 100%; }
+        .header-inner { display: flex; align-items: center; justify-content: space-between; padding: 0 1px; height: 60px; max-width: 1100px; margin: 0 auto; }
+        .header-logo { flex: 1; display: flex; justify-content: center; }
+        .header-logo img { height: 90px; width: auto; object-fit: contain; }
+        .header-left, .header-right { display: flex; align-items: center; gap: 6px; min-width: 80px; }
+        .header-right { justify-content: flex-end; position: relative; }
+        .hdr-btn { background: rgba(255,255,255,.18); border: none; border-radius: 4px; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: black; font-size: 16px; transition: background .2s; }
+        .hdr-btn:hover { background: rgba(255,255,255,.3); }
+        .hamburger-lines { display: flex; flex-direction: column; gap: 5px; width: 20px; }
+        .hamburger-lines span { display: block; width: 100%; height: 2px; background: currentColor; border-radius: 2px; transition: all .3s; }
+        [data-theme="dark"] .hamburger-lines span { background: var(--text); }
+        .hdr-btn.open .hamburger-lines span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+        .hdr-btn.open .hamburger-lines span:nth-child(2) { opacity: 0; }
+        .hdr-btn.open .hamburger-lines span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+        /* DROPDOWN HAMBURGER */
+        .h-dropdown { position: absolute; top: 50px; right: 0; background: var(--white); width: 180px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border-radius: 6px; z-index: 900; opacity: 0; pointer-events: none; transform: translateY(-10px); transition: all .2s ease; border: 1px solid var(--border); overflow: hidden; }
+        .h-dropdown.open { opacity: 1; pointer-events: all; transform: translateY(0); }
+        .h-drop-link { display: block; padding: 12px 16px; font-size: 13.5px; font-weight: 600; color: var(--text); border-bottom: 1px solid var(--border); transition: background .2s, color .2s; }
+        .h-drop-link:last-child { border-bottom: none; }
+        .h-drop-link:hover { background: var(--red); color: #fff; }
+
+        /* SEARCH DROP */
+        .search-bar-drop { background: var(--red-dark); padding: 10px 12px; display: none; }
+        .search-bar-drop.open { display: flex; gap: 0; max-width: 1100px; margin: 0 auto; }
+        .search-bar-drop input { flex: 1; padding: 9px 12px; border: none; outline: none; font-size: 14px; font-family: inherit; border-radius: 4px 0 0 4px; background: #fff; color: #111; }
+        .search-bar-drop button { padding: 9px 16px; background: var(--black); color: #fff; border: none; font-weight: 700; font-size: 13px; cursor: pointer; font-family: inherit; border-radius: 0 4px 4px 0; }
+
+        /* CATEGORY NAV */
+        .cat-nav { background: var(--black); overflow-x: auto; scrollbar-width: none; }
+        .cat-nav::-webkit-scrollbar { display: none; }
+        .cat-nav-inner { display: flex; white-space: nowrap; padding: 0 4px; max-width: 1100px; margin: 0 auto; }
+        .cat-nav-inner a { display: inline-block; padding: 10px 13px; font-size: 12px; font-weight: 700; color: #aaa; text-transform: uppercase; letter-spacing: .4px; border-bottom: 2px solid transparent; transition: color .2s, border-color .2s; }
+        .cat-nav-inner a:hover { color: #fff; border-bottom-color: var(--red); }
+
+        /* LAYOUT */
+        .page-body { padding: 16px 0 24px; }
+        .layout { display: grid; grid-template-columns: 1fr; gap: 16px; max-width: 1100px; margin: 0 auto; padding: 0 12px; }
+        @media(min-width: 900px) { .layout { grid-template-columns: 1fr 290px; gap: 18px; padding: 0 16px; } }
+
+        /* ARTICLE CONTAINER */
+        article {
+            background: var(--white); padding: 24px; border-radius: 6px;
+            box-shadow: var(--shadow); border: 1px solid var(--border);
+            max-width: 100%; overflow: hidden;
+        }
+        @media (max-width: 480px) { article { padding: 16px; } }
+
+        .cat-badge { display: inline-block; background: var(--red); color: #fff; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 2px; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 12px; }
+
+        .article-title {
+            font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 700;
+            line-height: 1.3; margin-bottom: 12px; color: var(--text);
+            word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;
+        }
+        @media (max-width: 480px) { .article-title { font-size: 22px; } }
+
+        .article-meta {
+            display: flex; flex-wrap: wrap; gap: 12px; font-size: 11px;
+            color: var(--text-muted); border-bottom: 1px solid var(--border);
+            padding-bottom: 12px; margin-bottom: 20px; align-items: center;
+        }
+
+        /* REDAKSI TABLE STYLES */
+        .redaksi-section { margin-bottom: 28px; }
+        .redaksi-section-title {
+            font-family: 'Playfair Display', serif;
+            font-size: 16px; font-weight: 700;
+            color: var(--white);
+            background: var(--red);
+            padding: 8px 14px;
+            border-radius: 4px;
+            margin-bottom: 0;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .redaksi-section-title::before {
+            content: ''; display: block; width: 4px; height: 18px;
+            background: rgba(255,255,255,0.6); border-radius: 2px; flex-shrink: 0;
+        }
+
+        /* PENGURUS CARD GRID */
+        .pengurus-grid {
+            display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+            gap: 16px 10px; padding: 18px 14px;
+            background: var(--white); border: 1px solid var(--border); border-top: none;
+        }
+        .pengurus-card { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 6px; }
+        .pengurus-card-foto {
+            width: 78px; height: 78px; border-radius: 0; object-fit: cover;
+            border: 2px solid var(--red); background: var(--gray-light); flex-shrink: 0;
+        }
+        .pengurus-card-foto-placeholder {
+            display: flex; align-items: center; justify-content: center;
+            background: var(--red); color: #fff; font-size: 26px; font-weight: 700;
+            font-family: 'Playfair Display', serif;
+        }
+        .pengurus-card-nama { font-weight: 700; font-size: 13px; color: var(--text); line-height: 1.3; word-break: break-word; }
+        .pengurus-card-jabatan { font-size: 11px; color: var(--red); font-weight: 700; text-transform: uppercase; letter-spacing: .4px; }
+
+        /* LEGAL INFO BOX */
+        .legal-box {
+            background: var(--gray-light); border: 1px solid var(--border);
+            border-left: 4px solid var(--red); border-radius: 4px;
+            padding: 14px 16px; margin-bottom: 24px; font-size: 13px;
+        }
+        .legal-box .legal-title {
+            font-weight: 700; font-size: 15px; color: var(--text);
+            margin-bottom: 10px; font-family: 'Playfair Display', serif;
+        }
+        .legal-box table { width: 100%; border-collapse: collapse; }
+        .legal-box table td { padding: 4px 0; font-size: 13px; color: var(--text-muted); vertical-align: top; }
+        .legal-box table td:first-child { font-weight: 700; color: var(--text); width: 200px; }
+
+        /* NOTICE BOX */
+        .notice-box {
+            background: #fff8e1; border: 1px solid #ffe082;
+            border-left: 4px solid #f9a825; border-radius: 4px;
+            padding: 14px 16px; margin-top: 24px; font-size: 13px;
+            line-height: 1.7;
+        }
+        [data-theme="dark"] .notice-box { background: #2a2500; border-color: #5a4800; }
+        .notice-box strong { color: var(--red); }
+
+        /* ASOSIASI */
+        .assoc-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+        .assoc-list li {
+            background: var(--gray-light); border: 1px solid var(--border);
+            border-radius: 4px; padding: 9px 14px; font-size: 13.5px; font-weight: 600;
+            color: var(--text);
+        }
+        .assoc-list li::before { content: '✦ '; color: var(--red); }
+
+        /* WIDGET STYLES */
+        .widget { background: var(--white); border-radius: 6px; overflow: hidden; margin-bottom: 16px; box-shadow: var(--shadow); border: 1px solid var(--border); }
+        .widget-head { background: var(--black); color: #fff; font-size: 11.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .8px; padding: 9px 14px; }
+        .widget-body { padding: 12px 14px; }
+
+        .cat-cloud { display: flex; flex-wrap: wrap; gap: 7px; }
+        .cat-tag { background: var(--gray-light); border: 1px solid var(--border); color: var(--text-muted); font-size: 12px; font-weight: 600; padding: 4px 11px; border-radius: 3px; cursor: pointer; transition: all .2s; text-decoration: none; }
+        .cat-tag:hover { background: var(--red); border-color: var(--red); color: #fff; }
+
+        .soc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+        .soc-card { color: #fff; padding: 9px 10px; border-radius: 4px; font-size: 11px; display: flex; flex-direction: column; gap: 2px; text-decoration: none; }
+        .soc-card .cnt { font-size: 14px; font-weight: 700; }
+        .soc-fb { background: #3b5998; } .soc-tw { background: #1da1f2; } .soc-yt { background: #ff0000; } .soc-ig { background: #e1306c; }
+
+        /* DPW TABLE & FOTO GRID */
+        .dpw-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 14px; background: var(--white); border: 1px solid var(--border); border-top: none; }
+        @media (max-width: 600px) { .dpw-grid { grid-template-columns: 1fr; } }
+        .dpw-card { background: var(--gray-light); border: 1px solid var(--border); border-radius: 4px; padding: 12px 14px; }
+        .dpw-card h4 { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .6px; color: var(--red); margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px dashed var(--border); }
+        
+        .dpw-role-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 14px; }
+        .dpw-role-item { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 6px; }
+        .dpw-role-item > div { display: flex; flex-direction: column; align-items: center; }
+        .dpw-role-foto { width: 56px; height: 56px; border-radius: 0; object-fit: cover; border: 2px solid var(--red); background: var(--white); flex-shrink: 0; }
+        .dpw-role-foto-placeholder { display: flex; align-items: center; justify-content: center; width: 56px; height: 56px; border-radius: 0; background: var(--red); color: #fff; font-size: 20px; font-weight: 700; font-family: 'Playfair Display', serif; }
+        .dpw-role-nama { font-weight: 700; font-size: 11.5px; color: var(--text); line-height: 1.3; word-break: break-word; }
+        .dpw-role-jabatan { font-size: 10px; color: var(--red); font-weight: 700; text-transform: uppercase; letter-spacing: .4px; }
+        @media (max-width: 480px) {
+            .dpw-role-grid { grid-template-columns: 1fr; gap: 12px; }
+            .dpw-role-item { flex-direction: row; text-align: left; align-items: center; justify-content: flex-start; }
+            .dpw-role-item > div { align-items: flex-start; }
+        }
+
+        /* FOOTER */
+        footer { background: var(--black); color: #fff; padding: 30px 0 16px; margin-top: 20px; font-size: 13px; text-align: center; }
+        .footer-inner { max-width: 1100px; margin: 0 auto; padding: 0 16px; overflow: hidden; }
+        .footer-grid { display: grid; grid-template-columns: 1fr; gap: 24px; margin-bottom: 22px; text-align: left; }
+        @media(min-width: 640px) { .footer-grid { grid-template-columns: 2fr 1fr 1fr; } }
+        .footer-logo-img { height: 90px; width: auto; object-fit: contain; margin-bottom: 10px; max-width: 100%; }
+        .footer-desc { color: #999; line-height: 1.6; }
+        .footer-widget h4 { font-size: 11.5px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 13px; padding-bottom: 7px; border-bottom: 1px solid #2a2a2a; color: #ccc; }
+        .footer-links { list-style: none; }
+        .footer-links li { margin-bottom: 8px; }
+        .footer-links a { color: #999; transition: color .2s; }
+        .footer-links a:hover { color: #fff; }
+        .footer-soc { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+        .footer-soc a { display: flex; align-items: center; gap: 5px; padding: 6px 10px; border-radius: 4px; font-size: 11px; font-weight: 700; color: #fff; transition: opacity .2s; }
+        .footer-soc a:hover { opacity: .85; color: #fff; }
+        .footer-soc svg { width: 13px; height: 13px; fill: #fff; flex-shrink: 0; }
+        .fsb-ig { background: linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888); }
+        .fsb-fb { background: #1877f2; } .fsb-yt { background: #ff0000; } .fsb-x { background: #1a1a1a; border: 1px solid #333; } .fsb-wa { background: #25d366; } .fsb-tg { background: #0088cc; }
+        .footer-bottom { border-top: 1px solid #1e1e1e; padding-top: 16px; text-align: center; color: #555; font-size: 12px; }
+
+        /* WA FLOAT */
+        .wa-float { position: fixed; bottom: 20px; right: 16px; z-index: 3000; width: 50px; height: 50px; background: #25d366; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 3px 12px rgba(37,211,102,.5); transition: transform .2s; animation: waPulse 2.5s infinite; }
+        .wa-float:hover { transform: scale(1.1); }
+        .wa-float svg { width: 26px; height: 26px; fill: #fff; }
+        @keyframes waPulse { 0%,100%{box-shadow:0 3px 12px rgba(37,211,102,.5)} 50%{box-shadow:0 3px 22px rgba(37,211,102,.8),0 0 0 8px rgba(37,211,102,.12)} }
+
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+    <a href="https://wa.me/6283817591582" target="_blank" class="wa-float" title="Hubungi Redaksi" id="waFloatBtn">
+        <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    </a>
+
+    <header class="site-header">
+        <div class="ticker-bar">
+            <div class="ticker-inner">
+                <span class="ticker-label">INFO REDAKSI</span>
+                <div class="ticker-scroll"><span class="ticker-text">Komite Jurnalis Nusantara Independen (KJNI) — Portal Berita Terpercaya Tangerang, Banten &amp; Indonesia</span></div>
+            </div>
+        </div>
+        <div class="header-inner">
+            <div class="header-left">
+                <button class="hdr-btn" id="themeBtn" title="Ganti Tema">🌓</button>
+            </div>
+            <div class="header-logo">
+                <a href="index.html">
+                    <img src="https://res.cloudinary.com/dc7guxgnm/image/upload/q_auto/f_auto/v1780978628/1000305972_ynq9xo.png" alt="KJNI">
+                </a>
+            </div>
+            <div class="header-right">
+                <button class="hdr-btn" id="searchToggleBtn" title="Cari">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="22" y2="22"/></svg>
+                </button>
+                <button class="hdr-btn" id="hamburgerBtn" title="Menu">
+                    <div class="hamburger-lines"><span></span><span></span><span></span></div>
+                </button>
+                <div class="h-dropdown" id="hamburgerDropdown">
+                    <a href="index.html" class="h-drop-link">Beranda</a>
+                    <a href="tentangkami.html" class="h-drop-link">Tentang Kami</a>
+                    <a href="redaksi.html" class="h-drop-link">Redaksi</a>
+                    <a href="pendaftaran.html" class="h-drop-link">Pendaftaran</a>
+                </div>
+            </div>
+        </div>
+        <div class="search-bar-drop" id="searchDrop">
+            <input type="text" id="searchInput" placeholder="Cari berita..." autocomplete="off">
+            <button id="searchBtn">Cari</button>
+        </div>
+        <nav class="cat-nav">
+            <div class="cat-nav-inner">
+                <a href="index.html">Semua</a>
+                <a href="index.html?kategori=Nasional">Nasional</a>
+                <a href="index.html?kategori=Tangerang Raya">Tangerang Raya</a>
+                <a href="index.html?kategori=Banten">Banten</a>
+                <a href="index.html?kategori=Serang">Serang</a>
+                <a href="index.html?kategori=Peristiwa">Peristiwa</a>
+                <a href="index.html?kategori=Politik">Politik</a>
+                <a href="index.html?kategori=Hukum dan Kriminal">Hukum dan Kriminal</a>
+                <a href="index.html?kategori=Ekonomi">Ekonomi</a>
+                <a href="index.html?kategori=Pendidikan">Pendidikan</a>
+                <a href="index.html?kategori=Olahraga">Olahraga</a>
+                <a href="index.html?kategori=Teknologi">Teknologi</a>
+                <a href="index.html?kategori=Hiburan">Hiburan</a>
+                <a href="index.html?kategori=Lifestyle">Lifestyle</a>
+                <a href="index.html?kategori=Opini">Opini</a>
+            </div>
+        </nav>
+    </header>
+
+    <div class="page-body">
+        <div class="layout">
+            <main style="max-width: 100%; overflow: hidden;">
+                <article>
+                    <div class="cat-badge">Box Redaksi</div>
+                    <h1 class="article-title">Susunan Redaksi KJNI</h1>
+                    <div class="article-meta">
+                        <span>🏛️ Komite Jurnalis Nusantara Independen</span>
+                        <span>📋 Data Kepengurusan Resmi</span>
+                    </div>
+
+                    <div class="legal-box">
+                        <div class="legal-title" id="redaksiLegalTitle">🏢 Komite Jurnalis Nusantara Independen</div>
+                        <table>
+                            <tbody id="redaksiLegalitas">
+                                <tr><td>Akte Notaris</td><td>: EVA KURNIASIH, S.H., M.Kn.</td></tr>
+                                <tr><td>SK Kemenkumham RI</td><td>: AHU-0049584.AH.01.01.TAHUN.2021</td></tr>
+                                <tr><td>Daftar Perseroan</td><td>: AHU-0003690.AH.01.07.TAHUN 2026</td></tr>
+                                <tr><td>NPWP</td><td>: 1000 0000 0989 2975</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="redaksi-section">
+                        <div class="redaksi-section-title" id="judulPendiri">☆ Pendiri KJNI ☆</div>
+                        <div class="pengurus-grid" id="redaksiPendiri"></div>
+                    </div>
+
+                    <div class="redaksi-section">
+                        <div class="redaksi-section-title" id="judulPengurus">☆ Pengurus Inti DPP KJNI ☆</div>
+                        <div class="pengurus-grid" id="redaksiPengurus"></div>
+                    </div>
+
+                    <div class="redaksi-section">
+                        <div class="redaksi-section-title" id="judulPembina">☆ Dewan Pembina &amp; Penasehat ☆</div>
+                        <div class="pengurus-grid" id="redaksiPembina"></div>
+                    </div>
+
+                    <div class="redaksi-section">
+                        <div class="redaksi-section-title" id="judulPimpinan">☆ Pimpinan Redaksi ☆</div>
+                        <div class="pengurus-grid" id="redaksiPimpinan"></div>
+                    </div>
+
+                    <div class="redaksi-section">
+                        <div class="redaksi-section-title" id="judulInvestigasi">☆ Bidang Investigasi PTI ☆</div>
+                        <div class="pengurus-grid" id="redaksiInvestigasi"></div>
+                    </div>
+
+                    <div class="redaksi-section">
+                        <div class="redaksi-section-title" id="judulDPW">☆ Pengurus DPW Provinsi ☆</div>
+                        <div class="dpw-grid" id="redaksiDPW"></div>
+                    </div>
+
+                    <div class="redaksi-section">
+                        <div class="redaksi-section-title" id="judulAsosiasi">☆ Asosiasi Wartawan / Jurnalis ☆</div>
+                        <div style="padding: 14px; background: var(--white); border: 1px solid var(--border); border-top: none;">
+                            <ul class="assoc-list" id="redaksiAsosiasi"></ul>
+                        </div>
+                    </div>
+
+                    <div class="notice-box">
+                        <strong>⚠️ PEMBERITAHUAN PENTING:</strong><br>
+                        <span id="redaksiPemberitahuan">Memuat pemberitahuan...</span>
+                    </div>
+
+                </article>
+            </main>
+
+            <aside style="max-width: 100%;">
+                <div style="position:sticky;top:112px;">
+                    <div style="height:12px;"></div>
+                    <div class="widget">
+                        <div class="widget-head">Sosial Media</div>
+                        <div class="widget-body">
+                            <div class="soc-grid">
+                                <a href="#" class="soc-card soc-fb"><span>Facebook</span><span class="cnt">3.5K</span></a>
+                                <a href="#" class="soc-card soc-tw"><span>Twitter</span><span class="cnt">1.7K</span></a>
+                                <a href="#" class="soc-card soc-yt"><span>YouTube</span><span class="cnt">2.8K</span></a>
+                                <a href="#" class="soc-card soc-ig"><span>Instagram</span><span class="cnt">849</span></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="widget">
+                        <div class="widget-head">Kategori</div>
+                        <div class="widget-body">
+                            <div class="cat-cloud">
+                                <a href="index.html" class="cat-tag">Nasional</a>
+                                <a href="index.html" class="cat-tag">Tangerang Raya</a>
+                                <a href="index.html" class="cat-tag">Banten</a>
+                                <a href="index.html" class="cat-tag">Serang</a>
+                                <a href="index.html" class="cat-tag">Peristiwa</a>
+                                <a href="index.html" class="cat-tag">Politik</a>
+                                <a href="index.html" class="cat-tag">Ekonomi</a>
+                                <a href="index.html" class="cat-tag">Pendidikan</a>
+                                <a href="index.html" class="cat-tag">Olahraga</a>
+                                <a href="index.html" class="cat-tag">Teknologi</a>
+                                <a href="index.html" class="cat-tag">Hiburan</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-inner">
+            <div class="footer-grid">
+                <div>
+                    <img class="footer-logo-img" src="https://res.cloudinary.com/dc7guxgnm/image/upload/q_auto/f_auto/v1780932379/1000305700_b9k0wb.jpg" alt="KJNI">
+                    <p class="footer-desc">Portal berita terpercaya menyajikan informasi aktual seputar Tangerang, Banten, dan Indonesia.</p>
+                    <div class="footer-soc">
+                        <a class="fsb-fb" href="#" target="_blank"><svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>FB</a>
+                        <a class="fsb-ig" href="#" target="_blank"><svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>IG</a>
+                        <a class="fsb-yt" href="#" target="_blank"><svg viewBox="0 0 24 24"><path d="M23.495 6.205a3.007 3.007 0 0 0-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 0 0 .527 6.205a31.247 31.247 0 0 0-.522 5.805 31.247 31.247 0 0 0 .522 5.783 3.007 3.007 0 0 0 2.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 0 0 2.088-2.088 31.247 31.247 0 0 0 .5-5.783 31.247 31.247 0 0 0-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/></svg>YT</a>
+                    </div>
+                </div>
+                <div class="footer-widget">
+                    <h4>Halaman</h4>
+                    <ul class="footer-links">
+                        <li><a href="redaksi.html">Susunan Pengurus</a></li>
+                        <li><a href="KontakKami.html">Kontak Kami</a></li>
+                        <li><a href="#">Pedoman Media Siber</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom"><p>&copy; 2026 KJNI.my.id &mdash; Portal Berita Tangerang, Banten &amp; Indonesia.</p></div>
+        </div>
+    </footer>
+
+    <script>
+        // Dark Mode & Hamburger Logic
+        const themeBtn = document.getElementById('themeBtn');
+        if (localStorage.getItem('theme') === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+        themeBtn.addEventListener('click', () => {
+            const h = document.documentElement;
+            if (h.getAttribute('data-theme') === 'dark') { h.removeAttribute('data-theme'); localStorage.setItem('theme', 'light'); } 
+            else { h.setAttribute('data-theme', 'dark'); localStorage.setItem('theme', 'dark'); }
+        });
+        const hamburgerBtn = document.getElementById('hamburgerBtn'), hDropdown = document.getElementById('hamburgerDropdown');
+        hamburgerBtn.addEventListener('click', e => { e.stopPropagation(); hamburgerBtn.classList.toggle('open'); hDropdown.classList.toggle('open'); });
+        document.addEventListener('click', e => { if (!hDropdown.contains(e.target) && !hamburgerBtn.contains(e.target)) { hamburgerBtn.classList.remove('open'); hDropdown.classList.remove('open'); } });
+        document.getElementById('searchToggleBtn').addEventListener('click', () => { document.getElementById('searchDrop').classList.toggle('open'); });
+    </script>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyCCOOmXPfLhbDdSoil1UHfld5731689HVw",
+            authDomain: "webberita-8af66.firebaseapp.com",
+            projectId: "webberita-8af66",
+            storageBucket: "webberita-8af66.firebasestorage.app",
+            messagingSenderId: "752062961977",
+            appId: "1:752062961977:web:6af98cd5ebe074189c30e8"
+        };
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // DEFAULT DATA
+        const DEFAULT_REDAKSI = {
+            judul_pendiri: "☆ Pendiri KJNI ☆",
+            judul_pengurus_inti: "☆ Pengurus Inti DPP KJNI ☆",
+            judul_dewan_pembina: "☆ Dewan Pembina & Penasehat ☆",
+            judul_pimpinan_redaksi: "☆ Pimpinan Redaksi ☆",
+            judul_investigasi: "☆ Bidang Investigasi PTI ☆",
+            judul_dpw: "☆ Pengurus DPW Provinsi ☆",
+            judul_asosiasi: "☆ Asosiasi Wartawan / Jurnalis ☆",
+            legalitas: { nama: "Komite Jurnalis Nusantara Independen", akte: "EVA KURNIASIH, S.H., M.Kn.", sk: "AHU-0049584.AH.01.01.TAHUN.2021", daftar_perseroan: "AHU-0003690.AH.01.07.TAHUN 2026", npwp: "1000 0000 0989 2975" },
+            pendiri: [ { jabatan: "Pendiri 1", nama: "NURUL QOMAR, C. BJ., PTI" }, { jabatan: "Pendiri 2", nama: "HERIYANTO" }, { jabatan: "Pendiri 3", nama: "YOGA KUMALA" } ],
+            pengurus_inti: [ { jabatan: "Ketua DPP", nama: "NURUL QOMAR, C. BJ., PTI" }, { jabatan: "Wakil Ketua DPP", nama: "HERIYANTO" }, { jabatan: "Bendahara", nama: "SATI" }, { jabatan: "Sekretaris", nama: "YOGA KUMALA" } ],
+            dewan_pembina: [ { jabatan: "Dewan Pembina", nama: "ILHAMMUDIN, SE, SH, CPM." }, { jabatan: "Dewan Pembina", nama: "H. FACHRUDIN HS, S. PDJ" } ],
+            pimpinan_redaksi: [ { jabatan: "Pimpinan Redaksi", nama: "ARUL / NURUL QOMAR, C. BJ., PTI" } ],
+            investigasi: [ { nama: "RAHMAT TOLETOLE", foto: "" }, { nama: "WAHYUDIN", foto: "" }, { nama: "TAMRIN", foto: "" }, { nama: "IMAM RAMADANI", foto: "" }, { nama: "SANGKUT", foto: "" } ],
+            dpw: [
+                { provinsi: "Jawa Barat", ketua: {nama: "", foto: ""}, sekretaris: {nama: "", foto: ""}, bendahara: {nama: "", foto: ""} },
+                { provinsi: "Banten", ketua: {nama: "", foto: ""}, sekretaris: {nama: "", foto: ""}, bendahara: {nama: "", foto: ""} }
+            ],
+            asosiasi: [ "Perkumpulan Pemimpin Redaksi Independent Indonesia (PPRI)", "Persatuan Pewarta Warga Indonesia (PPWI)", "Komite Jurnalis Nusantara Independen (KJNI)" ],
+            pemberitahuan: "Seluruh Pengurus KJNI dilegitimasi dengan <strong>KTA dan SURAT TUGAS</strong> serta namanya tercantum di Box Redaksi dan Kepengurusan."
+        };
+
+        function esc(str) { return String(str ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+        function renderLegalitas(d) {
+            document.getElementById('redaksiLegalTitle').textContent = '🏢 ' + (d.nama || DEFAULT_REDAKSI.legalitas.nama);
+            document.getElementById('redaksiLegalitas').innerHTML = `
+                <tr><td>Akte Notaris</td><td>: ${esc(d.akte)}</td></tr>
+                <tr><td>SK Kemenkumham RI</td><td>: ${esc(d.sk)}</td></tr>
+                <tr><td>Daftar Perseroan</td><td>: ${esc(d.daftar_perseroan)}</td></tr>
+                <tr><td>NPWP</td><td>: ${esc(d.npwp)}</td></tr>
+            `;
+        }
+
+        function renderTabel2Kolom(elId, arr) {
+            const el = document.getElementById(elId);
+            if (!arr || !arr.length) { el.innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:14px;width:100%;">Belum ada data.</p>'; return; }
+            el.innerHTML = arr.map(item => {
+                const inisial = (item.nama || '?').trim().charAt(0).toUpperCase();
+                const fotoHtml = item.foto ? `<img class="pengurus-card-foto" src="${esc(item.foto)}" alt="${esc(item.nama)}" loading="lazy">` : `<span class="pengurus-card-foto pengurus-card-foto-placeholder">${esc(inisial)}</span>`;
+                return `<div class="pengurus-card">${fotoHtml}<span class="pengurus-card-nama">${esc(item.nama)}</span><span class="pengurus-card-jabatan">${esc(item.jabatan)}</span></div>`;
+            }).join('');
+        }
+
+        // Render untuk data investigasi dengan layout foto (mendukung data lama maupun objek foto baru)
+        function renderInvestigasi(arr) {
+            const el = document.getElementById('redaksiInvestigasi');
+            if (!arr || !arr.length) { el.innerHTML = '<span style="color:var(--text-muted);font-size:13px;grid-column:1/-1;text-align:center;">Belum ada data.</span>'; return; }
+            
+            el.innerHTML = arr.map(item => {
+                const nama = typeof item === 'string' ? item : (item.nama || '');
+                const foto = typeof item === 'string' ? '' : (item.foto || '');
+                const inisial = (nama || '?').trim().charAt(0).toUpperCase();
+                
+                const fotoHtml = foto 
+                    ? `<img class="pengurus-card-foto" src="${esc(foto)}" alt="${esc(nama)}" loading="lazy">`
+                    : `<span class="pengurus-card-foto pengurus-card-foto-placeholder">${esc(inisial)}</span>`;
+                    
+                return `<div class="pengurus-card">${fotoHtml}<span class="pengurus-card-nama">${esc(nama)}</span><span class="pengurus-card-jabatan">Investigasi</span></div>`;
+            }).join('');
+        }
+
+        // Render DPW (mendukung struktur string lama maupun object foto yang baru)
+        function renderDPW(arr) {
+            const el = document.getElementById('redaksiDPW');
+            if (!arr || !arr.length) { el.innerHTML = '<p style="color:var(--text-muted);font-size:13px;padding:14px;grid-column:1/-1;">Belum ada data DPW.</p>'; return; }
+            
+            el.innerHTML = arr.map(p => {
+                const renderRole = (roleData, roleName) => {
+                    let nama = '—'; let foto = '';
+                    if (typeof roleData === 'string') { nama = roleData; }
+                    else if (roleData) { nama = roleData.nama || '—'; foto = roleData.foto || ''; }
+
+                    const validNama = (nama !== '—' && nama.trim() !== '');
+                    const inisial = validNama ? nama.trim().charAt(0).toUpperCase() : '?';
+
+                    const fotoHtml = foto
+                        ? `<img class="dpw-role-foto" src="${esc(foto)}" alt="${esc(nama)}" loading="lazy">`
+                        : `<span class="dpw-role-foto-placeholder">${esc(inisial)}</span>`;
+
+                    return `<div class="dpw-role-item">
+                        ${fotoHtml}
+                        <div>
+                            <div class="dpw-role-nama">${esc(nama)}</div>
+                            <div class="dpw-role-jabatan">${roleName}</div>
+                        </div>
+                    </div>`;
+                };
+
+                return `
+                <div class="dpw-card">
+                    <h4>DPW ${esc(p.provinsi)}</h4>
+                    <div class="dpw-role-grid">
+                        ${renderRole(p.ketua, 'Ketua')}
+                        ${renderRole(p.sekretaris, 'Sekretaris')}
+                        ${renderRole(p.bendahara, 'Bendahara')}
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        function renderAsosiasi(arr) {
+            const el = document.getElementById('redaksiAsosiasi');
+            if (!arr || !arr.length) { el.innerHTML = '<li style="list-style:none;color:var(--text-muted);">Belum ada data.</li>'; return; }
+            el.innerHTML = arr.map(a => `<li>${esc(a)}</li>`).join('');
+        }
+
+        async function muatDataRedaksi() {
+            let data = DEFAULT_REDAKSI;
+            try {
+                const snap = await getDoc(doc(db, 'pengaturan', 'redaksi'));
+                if (snap.exists()) {
+                    const fs = snap.data();
+                    data = { ...DEFAULT_REDAKSI, ...fs };
+                }
+            } catch (e) { console.warn('Gagal memuat data redaksi, menampilkan data default:', e.message); }
+
+            document.getElementById('judulPendiri').textContent = data.judul_pendiri || DEFAULT_REDAKSI.judul_pendiri;
+            document.getElementById('judulPengurus').textContent = data.judul_pengurus_inti || DEFAULT_REDAKSI.judul_pengurus_inti;
+            document.getElementById('judulPembina').textContent = data.judul_dewan_pembina || DEFAULT_REDAKSI.judul_dewan_pembina;
+            document.getElementById('judulPimpinan').textContent = data.judul_pimpinan_redaksi || DEFAULT_REDAKSI.judul_pimpinan_redaksi;
+            document.getElementById('judulInvestigasi').textContent = data.judul_investigasi || DEFAULT_REDAKSI.judul_investigasi;
+            document.getElementById('judulDPW').textContent = data.judul_dpw || DEFAULT_REDAKSI.judul_dpw;
+            document.getElementById('judulAsosiasi').textContent = data.judul_asosiasi || DEFAULT_REDAKSI.judul_asosiasi;
+
+            renderLegalitas(data.legalitas || DEFAULT_REDAKSI.legalitas);
+            renderTabel2Kolom('redaksiPendiri', data.pendiri);
+            renderTabel2Kolom('redaksiPengurus', data.pengurus_inti);
+            renderTabel2Kolom('redaksiPembina', data.dewan_pembina);
+            renderTabel2Kolom('redaksiPimpinan', data.pimpinan_redaksi);
+            renderInvestigasi(data.investigasi);
+            renderDPW(data.dpw);
+            renderAsosiasi(data.asosiasi);
+            
+            const pemberitahuan = data.pemberitahuan ? esc(data.pemberitahuan).replace(/\n/g,'<br>') : DEFAULT_REDAKSI.pemberitahuan;
+            document.getElementById('redaksiPemberitahuan').innerHTML = pemberitahuan;
+        }
+
+        muatDataRedaksi();
+    </script>
+</body>
+</html>
