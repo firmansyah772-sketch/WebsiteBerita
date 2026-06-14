@@ -19,8 +19,8 @@
             padding: 30px;
             border-radius: 8px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            overflow-x: hidden; /* Mencegah konten meluap ke samping */
-    word-wrap: break-word; /* Memaksa teks panjang turun ke baris baru */
+            overflow-x: hidden;
+            word-wrap: break-word;
         }
         .hidden { display: none !important; }
 
@@ -306,6 +306,33 @@
                 <button type="button" class="btn" id="btnSimpanPartner" style="width:100%; font-size:15px; padding:13px; margin-top:4px;">💾 Simpan Semua Media Partner</button>
             </div>
 
+            <hr style="border: 1px solid #eceff1; margin: 40px 0;">
+
+            <h3>📊 Pengaturan Statistik Jaringan</h3>
+            <p style="font-size: 13px; color: #7f8c8d;">Atur angka statistik yang ditampilkan di beranda (bawah Media Partner).</p>
+            
+            <div class="ad-section">
+                <h4 style="margin-top:0; color:#d32f2f;">Data Statistik Saat Ini</h4>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px;">
+                    <div class="form-group">
+                        <label>Jumlah DPW</label>
+                        <input type="text" id="statDpw" placeholder="Misal: 38">
+                    </div>
+                    <div class="form-group">
+                        <label>Jumlah DPC</label>
+                        <input type="text" id="statDpc" placeholder="Misal: 416">
+                    </div>
+                    <div class="form-group">
+                        <label>Jumlah PAC</label>
+                        <input type="text" id="statPac" placeholder="Misal: 7000">
+                    </div>
+                    <div class="form-group">
+                        <label>Jumlah Anggota</label>
+                        <input type="text" id="statAnggota" placeholder="Misal: 5.000+">
+                    </div>
+                </div>
+                <button type="button" id="btnSimpanStatistik" class="btn" style="width:100%; font-size:16px; padding:15px; margin-top: 10px;">💾 Simpan Statistik</button>
+            </div>
             <hr style="border: 1px solid #eceff1; margin: 40px 0;">
 
             <h3>💬 Pengaturan Tombol WhatsApp</h3>
@@ -617,7 +644,6 @@
                 dashboardSection.classList.remove("hidden");
 
                 // Cek role pengguna dari Firestore (koleksi 'pengguna', id dokumen = UID)
-                // Jika dokumen tidak ditemukan, anggap sebagai admin (kompatibilitas akun lama)
                 let role = 'admin';
                 try {
                     const snapRole = await getDoc(doc(db, 'pengguna', user.uid));
@@ -642,6 +668,7 @@
                 if (role === 'admin') {
                     muatDataIklan();
                     muatMediaPartner();
+                    muatStatistikAdmin(); // LOAD DATA STATISTIK
                     muatDaftarPendaftar();
                     muatPengaturanWA();
                     muatDataRedaksi();
@@ -1064,6 +1091,42 @@
             try { const snap = await getDocs(collection(db, 'media_partners')); if (snap.empty) { emptyEl.textContent = 'Belum ada media partner.'; return; } snap.forEach(d => _semuaPartner.push({ id: d.id, ...d.data() })); _halamanMP = 1; renderMediaPartner(); } catch (e) { emptyEl.textContent = 'Gagal memuat: ' + e.message; emptyEl.style.display = 'block'; }
         }
 
+        // ===============================================
+        // FUNGSI STATISTIK (DITAMBAHKAN DI SINI)
+        // ===============================================
+        async function muatStatistikAdmin() {
+            try {
+                const snap = await getDoc(doc(db, 'pengaturan', 'statistik'));
+                if (snap.exists()) {
+                    const data = snap.data();
+                    document.getElementById('statDpw').value = data.dpw || 0;
+                    document.getElementById('statDpc').value = data.dpc || 0;
+                    document.getElementById('statPac').value = data.pac || 0;
+                    document.getElementById('statAnggota').value = data.anggota || 0;
+                }
+            } catch(e) {}
+        }
+
+        document.getElementById('btnSimpanStatistik').addEventListener('click', async () => {
+            const btn = document.getElementById('btnSimpanStatistik');
+            btn.innerText = '⏳ Menyimpan...'; btn.disabled = true;
+            try {
+                await setDoc(doc(db, 'pengaturan', 'statistik'), {
+                    dpw: document.getElementById('statDpw').value || 0,
+                    dpc: document.getElementById('statDpc').value || 0,
+                    pac: document.getElementById('statPac').value || 0,
+                    anggota: document.getElementById('statAnggota').value || 0,
+                    diupdate: new Date()
+                });
+                alert('✅ Statistik berhasil disimpan!');
+            } catch(e) {
+                alert('❌ Gagal: ' + e.message);
+            } finally {
+                btn.innerText = '💾 Simpan Statistik'; btn.disabled = false;
+            }
+        });
+        // ===============================================
+
         // PENGATURAN WHATSAPP
         async function muatPengaturanWA() {
             try { const snap = await getDoc(doc(db, 'pengaturan', 'whatsapp')); if (snap.exists()) { const d = snap.data(); document.getElementById('inputNomorWA').value = d.nomor || ''; document.getElementById('inputPesanWA').value = d.pesan || ''; updatePreviewWA(); } } catch(e) {}
@@ -1103,7 +1166,6 @@
 
         function esc(str) { return String(str ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
-        // Buat elemen tombol naik/turun untuk mengubah urutan baris di dalam parent-nya
         function buatTombolUrutan(el) {
             const wrap = document.createElement('div');
             wrap.className = 'gen-order-btns';
@@ -1278,7 +1340,6 @@
                 if (p.perangkat) {
                     return { label: p.label || 'DPW', nama: p.nama || p.provinsi || '', perangkat: p.perangkat };
                 }
-                // Migrasi format lama (provinsi + ketua/sekretaris/bendahara)
                 const toRole = (r, jabatan) => {
                     const obj = typeof r === 'string' ? { nama: r, foto: '' } : (r || {});
                     return { jabatan, nama: obj.nama || '', foto: obj.foto || '' };
@@ -1312,6 +1373,7 @@
                 await setDoc(doc(db, 'pengaturan', 'redaksi'), payload); alert('✅ Pengaturan Redaksi berhasil disimpan!');
             } catch (e) { alert('❌ Gagal menyimpan: ' + e.message); } finally { btn.innerText = '💾 Simpan Pengaturan Redaksi'; btn.disabled = false; }
         });
+
         // ===============================================
         // PENGATURAN HALAMAN TENTANG KAMI & KONTAK
         // ===============================================
