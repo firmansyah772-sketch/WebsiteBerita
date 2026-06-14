@@ -365,11 +365,11 @@
             </div>
 
             <div class="ad-section">
-                <h4 style="margin-top:0; color:#d32f2f;">☆ Pengurus DPW Provinsi</h4>
-                <div class="form-group"><label>Judul Section</label><input type="text" id="redJudulDPW" placeholder="☆ Pengurus DPW Provinsi ☆"></div>
-                <p class="ad-section-info">Atur Provinsi (Misal: Banten) beserta foto dinamis untuk Ketua, Sekretaris, dan Bendahara DPW.</p>
+                <h4 style="margin-top:0; color:#d32f2f;">☆ Pengurus DPW/DPC</h4>
+                <div class="form-group"><label>Judul Section</label><input type="text" id="redJudulDPW" placeholder="☆ Pengurus DPW/DPC ☆"></div>
+                <p class="ad-section-info">Atur Label (DPW/DPC/dll), Nama Wilayah (Misal: Banten), dan susunan perangkat (Ketua, Wakil, Sekretaris, Bendahara, dst) secara dinamis — bisa tambah jabatan sebanyak yang diperlukan.</p>
                 <div id="wrapDPW"></div>
-                <button type="button" class="btn-tambah" data-target="wrapDPW" data-type="dpw">+ Tambah DPW Provinsi Baru</button>
+                <button type="button" class="btn-tambah" data-target="wrapDPW" data-type="dpw">+ Tambah DPW/DPC Baru</button>
             </div>
 
             <div class="ad-section">
@@ -979,8 +979,10 @@
         // PENGATURAN HALAMAN REDAKSI GENERIK (Dengan Update FOTO untuk Investigasi & DPW)
         // ===============================================
         const DEFAULT_REDAKSI = {
-            judul_pendiri: "☆ Pendiri KJNI ☆", judul_pengurus_inti: "☆ Pengurus Inti DPP KJNI ☆", judul_dewan_pembina: "☆ Dewan Pembina & Penasehat ☆", judul_pimpinan_redaksi: "☆ Pimpinan Redaksi ☆", judul_investigasi: "☆ Bidang Investigasi PTI ☆", judul_dpw: "☆ Pengurus DPW Provinsi ☆", judul_asosiasi: "☆ Asosiasi Wartawan / Jurnalis ☆"
+            judul_pendiri: "☆ Pendiri KJNI ☆", judul_pengurus_inti: "☆ Pengurus Inti DPP KJNI ☆", judul_dewan_pembina: "☆ Dewan Pembina & Penasehat ☆", judul_pimpinan_redaksi: "☆ Pimpinan Redaksi ☆", judul_investigasi: "☆ Bidang Investigasi PTI ☆", judul_dpw: "☆ Pengurus DPW/DPC ☆", judul_asosiasi: "☆ Asosiasi Wartawan / Jurnalis ☆"
         };
+
+        function esc(str) { return String(str ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
         function buatBarisGenerik(wrapId, type, values = {}) {
             const wrap = document.getElementById(wrapId);
@@ -1011,30 +1013,49 @@
                 row.innerHTML = `<input type="text" class="gen-nama" placeholder="Nama / Teks" value="${values.nama || ''}"><button type="button" class="btn-hapus-gen">Hapus ❌</button>`;
             } else if (type === 'dpw') {
                 row.style.cssText = "flex-direction:column; align-items:stretch; background:#f9f9f9; padding:15px; border:1px solid #dcdcdc;";
-                const k = values.ketua || {}; const s = values.sekretaris || {}; const b = values.bendahara || {};
-                const roleMarkup = (title, pfx, obj) => `
-                    <div style="display:flex; align-items:center; gap:10px; background:#fff; padding:10px; border-radius:4px; border:1px solid #eee; margin-bottom:5px;">
-                        <label style="width:85px; font-size:11px; font-weight:bold; color:#d32f2f; margin:0;">${title}</label>
-                        <img class="${pfx}-preview" src="${obj.foto || 'https://via.placeholder.com/40x40.png?text=Foto'}" style="width:40px; height:40px; border-radius:0; object-fit:cover;">
-                        <div style="display:flex; flex-direction:column; gap:5px; flex:1;">
-                            <input type="text" class="gen-${pfx}-nama" placeholder="Nama ${title}" value="${obj.nama || ''}" style="padding:6px; font-size:13px; margin:0; width:100%;">
-                            <input type="file" class="${pfx}-file" accept="image/*" style="font-size:11px;">
-                            <input type="hidden" class="${pfx}-url" value="${obj.foto || ''}">
-                        </div>
-                    </div>
-                `;
+                const perangkat = (values.perangkat && values.perangkat.length) ? values.perangkat : [
+                    { jabatan: 'Ketua', nama: '', foto: '' },
+                    { jabatan: 'Sekretaris', nama: '', foto: '' },
+                    { jabatan: 'Bendahara', nama: '', foto: '' }
+                ];
+
                 row.innerHTML = `
-                    <input type="text" class="gen-provinsi" placeholder="Nama Provinsi (Cth: Banten)" value="${values.provinsi || ''}" style="font-weight:bold; margin-bottom:10px; width: 100%;">
-                    ${roleMarkup('KETUA', 'ket', k)}
-                    ${roleMarkup('SEKRETARIS', 'sek', s)}
-                    ${roleMarkup('BENDAHARA', 'ben', b)}
-                    <button type="button" class="btn-hapus-gen" style="align-self:flex-end; margin-top:5px;">Hapus DPW ❌</button>
+                    <div style="display:flex; gap:10px; margin-bottom:10px;">
+                        <input type="text" class="gen-dpw-label" placeholder="Label (Cth: DPW / DPC)" value="${values.label || 'DPW'}" style="font-weight:bold; width:110px; flex-shrink:0;">
+                        <input type="text" class="gen-dpw-nama" placeholder="Nama Wilayah (Cth: Jawa Barat / Kota Tangerang)" value="${values.nama || ''}" style="font-weight:bold; flex:1;">
+                    </div>
+                    <div class="gen-dpw-perangkat"></div>
+                    <button type="button" class="btn-tambah-perangkat" style="background:#e8f5e9; color:#2e7d32; border:1px dashed #2e7d32; padding:8px 12px; cursor:pointer; border-radius:4px; font-weight:bold; font-size:12px; margin-top:5px;">+ Tambah Jabatan / Perangkat</button>
+                    <button type="button" class="btn-hapus-gen" style="align-self:flex-end; margin-top:8px;">Hapus DPW/DPC ❌</button>
                 `;
-                const bindImg = (pf) => {
-                    const fileInput = row.querySelector(`.${pf}-file`);
-                    if (fileInput) { fileInput.addEventListener('change', e => { const file = e.target.files[0]; if(!file) return; const r = new FileReader(); r.onload = ev => { row.querySelector(`.${pf}-preview`).src = ev.target.result; }; r.readAsDataURL(file); }); }
+
+                const perangkatWrap = row.querySelector('.gen-dpw-perangkat');
+
+                const buatBarisPerangkat = (p = {}) => {
+                    const prow = document.createElement('div');
+                    prow.className = 'gen-dpw-prow';
+                    prow.style.cssText = "display:flex; align-items:center; gap:10px; background:#fff; padding:10px; border-radius:4px; border:1px solid #eee; margin-bottom:5px; flex-wrap:wrap;";
+                    prow.innerHTML = `
+                        <input type="text" class="prow-jabatan" placeholder="Jabatan (Cth: Ketua / Wakil Ketua)" value="${esc(p.jabatan || '')}" style="width:160px; padding:6px; font-size:13px; margin:0;">
+                        <img class="prow-preview" src="${p.foto || 'https://via.placeholder.com/40x40.png?text=Foto'}" style="width:40px; height:40px; border-radius:0; object-fit:cover; flex-shrink:0;">
+                        <div style="display:flex; flex-direction:column; gap:5px; flex:1; min-width:160px;">
+                            <input type="text" class="prow-nama" placeholder="Nama Lengkap" value="${esc(p.nama || '')}" style="padding:6px; font-size:13px; margin:0; width:100%;">
+                            <input type="file" class="prow-file" accept="image/*" style="font-size:11px;">
+                            <input type="hidden" class="prow-url" value="${p.foto || ''}">
+                        </div>
+                        <button type="button" class="btn-hapus-prow" style="background:#ffebee; color:#d32f2f; border:none; padding:6px 10px; cursor:pointer; border-radius:4px; font-weight:bold; flex-shrink:0;">❌</button>
+                    `;
+                    prow.querySelector('.prow-file').addEventListener('change', e => {
+                        const file = e.target.files[0]; if (!file) return;
+                        const r = new FileReader(); r.onload = ev => { prow.querySelector('.prow-preview').src = ev.target.result; }; r.readAsDataURL(file);
+                    });
+                    prow.querySelector('.btn-hapus-prow').addEventListener('click', () => prow.remove());
+                    perangkatWrap.appendChild(prow);
                 };
-                bindImg('ket'); bindImg('sek'); bindImg('ben');
+
+                perangkat.forEach(p => buatBarisPerangkat(p));
+
+                row.querySelector('.btn-tambah-perangkat').addEventListener('click', () => buatBarisPerangkat());
             }
             row.querySelector('.btn-hapus-gen').addEventListener('click', () => row.remove()); wrap.appendChild(row);
         }
@@ -1058,15 +1079,21 @@
                 } else if (type === '1col') {
                     const nama = row.querySelector('.gen-nama').value.trim(); if (nama) hasil.push(nama);
                 } else if (type === 'dpw') {
-                    const provinsi = row.querySelector('.gen-provinsi').value.trim();
-                    if (!provinsi) continue;
-                    const fetchRole = async (pfx) => {
-                        const namaRole = row.querySelector(`.gen-${pfx}-nama`).value.trim();
-                        let foto = row.querySelector(`.${pfx}-url`).value; const file = row.querySelector(`.${pfx}-file`).files[0];
-                        if (file) { if (btnStatus) btnStatus.innerText = `⏳ Upload foto ${pfx.toUpperCase()} ${provinsi}...`; foto = await uploadKeCloudinary(file); row.querySelector(`.${pfx}-url`).value = foto; }
-                        return { nama: namaRole, foto };
-                    };
-                    hasil.push({ provinsi, ketua: await fetchRole('ket'), sekretaris: await fetchRole('sek'), bendahara: await fetchRole('ben') });
+                    const label = row.querySelector('.gen-dpw-label').value.trim() || 'DPW';
+                    const nama = row.querySelector('.gen-dpw-nama').value.trim();
+                    if (!nama) continue;
+                    const perangkat = [];
+                    const prows = row.querySelectorAll('.gen-dpw-prow');
+                    for (const prow of prows) {
+                        const jabatan = prow.querySelector('.prow-jabatan').value.trim();
+                        const namaPerangkat = prow.querySelector('.prow-nama').value.trim();
+                        if (!jabatan && !namaPerangkat) continue;
+                        let foto = prow.querySelector('.prow-url').value;
+                        const file = prow.querySelector('.prow-file').files[0];
+                        if (file) { if (btnStatus) btnStatus.innerText = `⏳ Upload foto ${jabatan || ''} ${nama}...`; foto = await uploadKeCloudinary(file); prow.querySelector('.prow-url').value = foto; }
+                        perangkat.push({ jabatan, nama: namaPerangkat, foto });
+                    }
+                    hasil.push({ label, nama, perangkat });
                 }
             } return hasil;
         }
@@ -1091,12 +1118,25 @@
             const invData = (data.investigasi || []).map(i => typeof i === 'string' ? {nama: i, foto: ''} : i);
             isiList('wrapInvestigasi', invData, '1col-foto');
 
-            const dpwData = (data.dpw || []).map(p => ({
-                provinsi: p.provinsi,
-                ketua: typeof p.ketua === 'string' ? {nama: p.ketua, foto: ''} : (p.ketua || {}),
-                sekretaris: typeof p.sekretaris === 'string' ? {nama: p.sekretaris, foto: ''} : (p.sekretaris || {}),
-                bendahara: typeof p.bendahara === 'string' ? {nama: p.bendahara, foto: ''} : (p.bendahara || {})
-            }));
+            const dpwData = (data.dpw || []).map(p => {
+                if (p.perangkat) {
+                    return { label: p.label || 'DPW', nama: p.nama || p.provinsi || '', perangkat: p.perangkat };
+                }
+                // Migrasi format lama (provinsi + ketua/sekretaris/bendahara)
+                const toRole = (r, jabatan) => {
+                    const obj = typeof r === 'string' ? { nama: r, foto: '' } : (r || {});
+                    return { jabatan, nama: obj.nama || '', foto: obj.foto || '' };
+                };
+                return {
+                    label: 'DPW',
+                    nama: p.provinsi || '',
+                    perangkat: [
+                        toRole(p.ketua, 'Ketua'),
+                        toRole(p.sekretaris, 'Sekretaris'),
+                        toRole(p.bendahara, 'Bendahara')
+                    ]
+                };
+            });
             isiList('wrapDPW', dpwData, 'dpw');
             
             isiList('wrapAsosiasi', data.asosiasi, '1col'); document.getElementById('redPemberitahuan').value = data.pemberitahuan || '';
