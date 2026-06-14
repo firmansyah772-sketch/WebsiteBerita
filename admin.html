@@ -3,39 +3,201 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel Manajemen Berita - KJNI</title>
+    <title>Panel Manajemen - KJNI</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background-color: #f4f6f8;
             color: #2c3e50;
             margin: 0;
-            padding: 20px;
-        }
-        .admin-container {
-            max-width: 800px;
-            margin: 40px auto;
-            background: #ffffff;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-            overflow-x: hidden;
-            word-wrap: break-word;
+            padding: 0;
         }
         .hidden { display: none !important; }
 
-        .role-badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: bold; text-transform: uppercase; letter-spacing: .5px; }
-        .role-badge.admin { background: #ffebee; color: #d32f2f; }
-        .role-badge.user { background: #e3f2fd; color: #1565c0; }
-        .user-row { display: flex; align-items: center; gap: 10px; background: #fff; padding: 10px; border: 1px solid #ddd; border-radius: 6px; margin-bottom: 8px; flex-wrap: wrap; }
-        .user-row .user-email { flex: 1; min-width: 160px; font-size: 13px; font-weight: bold; word-break: break-all; }
-        .user-row select { padding: 6px; border: 1px solid #ccc; border-radius: 4px; font-size: 12px; font-family: inherit; }
+        /* ===== LOGIN LAYOUT ===== */
+        .login-container {
+            max-width: 400px;
+            margin: 10vh auto;
+            background: #ffffff;
+            padding: 40px 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            text-align: center;
+        }
+        .login-container h2 { color: #d32f2f; margin-top: 0; border-bottom: none; }
+        .login-container .form-group { text-align: left; }
+
+        /* ===== DASHBOARD LAYOUT ===== */
+        .dashboard-layout {
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        /* SIDEBAR (Desktop) */
+        .sidebar {
+            width: 260px;
+            background: #1a252f;
+            color: #ecf0f1;
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            z-index: 1050;
+            transition: left 0.3s ease;
+        }
+        .sidebar-header {
+            padding: 20px;
+            font-size: 20px;
+            font-weight: 900;
+            background: #d32f2f;
+            color: #fff;
+            text-align: center;
+            letter-spacing: 1px;
+            position: relative;
+        }
+        .sidebar-nav {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px 0;
+        }
+        .sidebar-nav .nav-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: #7f8c8d;
+            padding: 10px 20px 5px;
+            letter-spacing: 1px;
+            font-weight: bold;
+        }
+        .sidebar-nav .nav-item {
+            display: block;
+            padding: 12px 20px;
+            color: #bdc3c7;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 600;
+            border-left: 4px solid transparent;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+        .sidebar-nav .nav-item:hover {
+            background: #2c3e50;
+            color: #fff;
+        }
+        .sidebar-nav .nav-item.active {
+            background: #2c3e50;
+            color: #fff;
+            border-left-color: #e74c3c;
+        }
+        .sidebar-footer {
+            padding: 15px 20px;
+            background: #151e27;
+        }
+        .btn-logout {
+            width: 100%;
+            background: #c0392b;
+            color: #fff;
+            border: none;
+            padding: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+        .btn-logout:hover { background: #e74c3c; }
+
+        /* MAIN CONTENT */
+        .main-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 30px 40px;
+            background: #f4f6f8;
+        }
+        .content-section {
+            display: none;
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
+            margin-bottom: 20px;
+            animation: fadeIn 0.3s;
+        }
+        .content-section.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* MOBILE HEADER & OVERLAY */
+        .mobile-header {
+            display: none;
+            background: #d32f2f;
+            color: #fff;
+            padding: 15px;
+            align-items: center;
+            justify-content: space-between;
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        .mobile-menu-btn, .mobile-logout-btn {
+            background: none; border: none; color: #fff; cursor: pointer;
+        }
+        .mobile-menu-btn { font-size: 24px; padding: 0 10px; }
+        .mobile-logout-btn { font-size: 13px; font-weight: bold; background: #b71c1c; padding: 6px 12px; border-radius: 4px; }
+        .mobile-title { font-weight: 900; letter-spacing: 1px; font-size: 16px; }
+        .close-sidebar-btn {
+            display: none; background: none; border: none; color: #fff; font-size: 24px; cursor: pointer; position: absolute; right: 15px; top: 15px;
+        }
+        .sidebar-overlay {
+            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 1049;
+        }
+
+        /* ===== MOBILE RESPONSIVE TWEAKS ===== */
+        @media (max-width: 768px) {
+            /* Tampilkan header mobile */
+            .mobile-header { display: flex; }
+            
+            /* Ubah layout utama */
+            .dashboard-layout { flex-direction: column; }
+            .main-content { padding: 80px 15px 20px 15px; } /* Offset header */
+            .content-section { padding: 15px; }
+            
+            /* Sidebar Off-canvas */
+            .sidebar { 
+                position: fixed; left: -280px; top: 0; bottom: 0; height: 100vh;
+            }
+            .sidebar.open { left: 0; }
+            .sidebar-overlay.open { display: block; }
+            .close-sidebar-btn { display: block; }
+            .sidebar-footer { display: none; } /* Logout sudah ada di header */
+
+            /* Stack baris form yang rumit */
+            .ad-row, .mp-admin-row, .gen-row { flex-direction: column; align-items: stretch; gap: 12px; }
+            .ad-row img, .mp-admin-row img.mp-preview { width: 100%; height: auto; max-height: 150px; object-fit: contain; }
+            .ad-order-btns, .gen-order-btns { flex-direction: row; justify-content: center; }
+            .ad-order-btns button, .gen-order-btns button { flex: 1; padding: 8px; }
+            .gen-fields-2col { min-width: 100%; }
+            .btn-tambah, .btn-hapus, .btn-hapus-gen, .btn-hapus-prow { width: 100%; text-align: center; }
+            
+            /* Pagination & Filters */
+            .pagination-search { flex-direction: column; align-items: stretch; }
+            .pagination-search input, .pagination-search select, .pagination-search button { width: 100%; min-width: 0; }
+            .stat-grid { grid-template-columns: 1fr 1fr; }
+
+            /* Blok Item */
+            .blok-img-row { flex-direction: column; align-items: flex-start; }
+            .blok-img-row input[type="file"] { width: 100%; }
+            .blok-order-btns { margin-top: 10px; width: 100%; display: flex; }
+            .blok-order-btns button { flex: 1; }
+        }
+
+        /* ===== GLOBAL ADMIN ELEMENTS ===== */
         .role-banner { padding: 10px 14px; border-radius: 6px; font-size: 13px; margin-bottom: 20px; border-left: 4px solid; }
         .role-banner.admin { background: #ffebee; border-color: #d32f2f; color: #b71c1c; }
         .role-banner.user { background: #e3f2fd; border-color: #1565c0; color: #0d47a1; }
         
         h2 { margin-top: 0; color: #d32f2f; border-bottom: 2px solid #eceff1; padding-bottom: 10px; }
-        h3 { margin-top: 30px; color: #2c3e50; }
+        h3 { margin-top: 0; color: #2c3e50; border-bottom: 2px solid #eceff1; padding-bottom: 10px; margin-bottom: 20px;}
         
         .form-group { margin-bottom: 15px; }
         .form-group label { display: block; margin-bottom: 5px; font-weight: bold; font-size: 14px; }
@@ -44,160 +206,216 @@
         }
         .preview-img { display: none; max-width: 220px; max-height: 140px; object-fit: cover; border-radius: 6px; border: 1px solid #ddd; margin-top: 10px; background: #f5f5f5; }
         
-        .btn { 
-            background: #d32f2f; color: white; padding: 10px 20px; border: none; border-radius: 4px; 
-            cursor: pointer; font-weight: bold; transition: 0.3s; 
-        }
+        .btn { background: #d32f2f; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; transition: 0.3s; }
         .btn:hover { background: #b71c1c; }
         .btn:disabled { background: #95a5a6; cursor: not-allowed; }
+        .btn-cancel { background: #95a5a6; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; transition: 0.3s; margin-left: 10px; }
+        .btn-cancel:hover { background: #7f8c8d; }
 
-        /* --- PERBAIKAN CSS DAFTAR BERITA --- */
-        .article-item {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            background: #f9f9f9;
-            padding: 15px;
-            border: 1px solid #eceff1;
-            border-radius: 4px;
-            margin-bottom: 10px;
-        }
+        /* ===== DAFTAR BERITA ===== */
+        .article-item { display: flex; flex-direction: column; gap: 15px; background: #f9f9f9; padding: 15px; border: 1px solid #eceff1; border-radius: 4px; margin-bottom: 10px; }
         .article-info { width: 100%; word-break: break-word; }
         .article-title { font-weight: bold; display: block; margin-top: 8px; color: #2c3e50; font-size: 14px; }
         .article-actions { display: flex; gap: 8px; flex-wrap: wrap; width: 100%; justify-content: flex-start; }
-
         @media (min-width: 600px) {
             .article-item { flex-direction: row; justify-content: space-between; align-items: center; }
             .article-info { width: auto; padding-right: 20px; }
             .article-actions { width: auto; flex-shrink: 0; justify-content: flex-end; }
         }
-
-        .btn-cancel { background: #95a5a6; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold; transition: 0.3s; margin-left: 10px; }
-        .btn-cancel:hover { background: #7f8c8d; }
         .article-info span { font-size: 12px; background: #2c3e50; color: #fff; padding: 3px 8px; border-radius: 3px; margin-right: 10px; display: inline-block; }
-        
         .btn-delete { background: #e74c3c; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; }
-        .btn-delete:hover { background: #c0392b; }
-        .btn-approve { background: #27ae60; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; }
-        .btn-approve:hover { background: #2ecc71; }
+        .btn-approve, .btn-toggle-aktif { background: #27ae60; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; }
         .btn-edit { background: #2980b9; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; }
-        .btn-edit:hover { background: #1a5276; }
-        .btn-toggle-aktif { background: #27ae60; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; }
-        .btn-toggle-aktif:hover { background: #1e8449; }
         .btn-toggle-nonaktif { background: #f39c12; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 12px; }
-        .btn-toggle-nonaktif:hover { background: #d68910; }
-        .badge-aktif { background: #27ae60 !important; }
-        .badge-nonaktif { background: #e74c3c !important; }
+        .badge-aktif { background: #27ae60 !important; } .badge-nonaktif { background: #e74c3c !important; }
 
-        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; display: flex; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box; }
+        /* ===== MODAL & OVERLAY ===== */
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 3000; display: flex; align-items: center; justify-content: center; padding: 20px; box-sizing: border-box; }
         .modal-box { background: #fff; border-radius: 8px; padding: 30px; width: 100%; max-width: 600px; max-height: 90vh; overflow-y: auto; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
-        .modal-box h3 { margin-top: 0; color: #2980b9; border-bottom: 2px solid #eceff1; padding-bottom: 10px; }
         .modal-footer { display: flex; align-items: center; margin-top: 10px; }
+        @media (max-width: 768px) { .modal-box { padding: 20px; } .btn-cancel { margin-left: 0; margin-top: 10px; width: 100%; } .modal-footer { flex-direction: column; } .modal-footer .btn { width: 100%; } }
 
-        .ad-row { display: flex; gap: 10px; align-items: center; background: #fff; padding: 15px; border: 1px solid #ddd; border-radius: 6px; margin-bottom: 10px; flex-wrap: wrap; }
-        .ad-row img { width: 60px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #eee; }
+        /* ===== ELEMEN BERSAMA & IKLAN ===== */
         .btn-tambah { background: #e3f2fd; color: #1976d2; border: 1px dashed #1976d2; padding: 8px 15px; cursor: pointer; border-radius: 4px; font-weight: bold; width: 100%; margin-bottom: 20px; transition: 0.2s; }
-        .btn-tambah:hover { background: #bbdefb; }
         .btn-hapus { background: #ffebee; color: #d32f2f; border: none; padding: 8px 12px; cursor: pointer; border-radius: 4px; font-weight: bold; }
         .ad-section { border: 1px solid #eceff1; padding: 20px; border-radius: 8px; margin-bottom: 20px; background: #fafafa; }
         .ad-section-info { font-size: 12px; color: #7f8c8d; margin: -10px 0 14px; padding: 8px 12px; background: #fff8e1; border-left: 3px solid #ffc107; border-radius: 0 4px 4px 0; line-height: 1.6; }
-        .btn-ad-up, .btn-ad-down { background: #f0f4f8; color: #34495e; border: 1px solid #ccd6dd; padding: 6px 10px; cursor: pointer; border-radius: 4px; font-size: 13px; line-height: 1; transition: 0.2s; }
-        .btn-ad-up:hover, .btn-ad-down:hover { background: #d5e8f7; border-color: #2980b9; color: #1a5276; }
+        
+        /* IKLAN ROW */
+        .ad-row { display: flex; gap: 10px; align-items: center; background: #fff; padding: 15px; border: 1px solid #ddd; border-radius: 6px; margin-bottom: 10px; flex-wrap: wrap; }
+        .ad-row img { width: 60px; height: 40px; object-fit: cover; border-radius: 4px; border: 1px solid #eee; }
         .ad-order-btns { display: flex; flex-direction: column; gap: 4px; flex-shrink: 0; }
+        .btn-ad-up, .btn-ad-down { background: #f0f4f8; color: #34495e; border: 1px solid #ccd6dd; padding: 6px 10px; cursor: pointer; border-radius: 4px; font-size: 13px; line-height: 1; transition: 0.2s; }
 
-        /* ===== MEDIA PARTNER ===== */
+        /* ===== MEDIA PARTNER ROW ===== */
         .mp-admin-row { display: flex; gap: 10px; align-items: center; background: #fff; padding: 14px; border: 1px solid #ddd; border-radius: 6px; margin-bottom: 10px; flex-wrap: wrap; }
         .mp-admin-row img.mp-preview { width: 70px; height: 42px; object-fit: contain; border-radius: 4px; border: 1px solid #eee; background: #f5f5f5; }
         .mp-admin-row .mp-fields { flex: 1; min-width: 220px; display: flex; flex-direction: column; gap: 6px; }
-        .mp-admin-row input[type="text"], .mp-admin-row input[type="url"] { width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-family: inherit; font-size: 13px; }
         .mp-list-wrap { margin-bottom: 6px; }
-        .mp-empty { font-size: 13px; color: #95a5a6; text-align: center; padding: 14px 0; }
 
-        /* ===== KONTEN BLOK (foto + artikel dinamis) ===== */
+        /* ===== KONTEN BLOK (foto + teks dinamis) ===== */
         .blok-section { border: 1px solid #e0e0e0; border-radius: 8px; padding: 18px; margin-bottom: 16px; background: #fafafa; }
-        .blok-section h4 { margin: 0 0 4px; color: #d32f2f; font-size: 14px; }
         .blok-item { background: #fff; border: 1.5px solid #ddd; border-radius: 6px; padding: 14px; margin-bottom: 10px; position: relative; }
-        .blok-item-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; font-size: 13px; font-weight: bold; color: #2c3e50; }
-        .blok-item-header .blok-type-label { background: #2c3e50; color: #fff; padding: 2px 10px; border-radius: 12px; font-size: 11px; }
-        .blok-item-header .blok-type-label.foto { background: #1976d2; }
-        .blok-item-header .blok-type-label.teks { background: #388e3c; }
+        .blok-item-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; font-size: 13px; font-weight: bold; flex-wrap: wrap; gap: 10px;}
+        .blok-type-label { color: #fff; padding: 2px 10px; border-radius: 12px; font-size: 11px; }
+        .blok-type-label.foto { background: #1976d2; } .blok-type-label.teks { background: #388e3c; }
         .blok-item textarea { width: 100%; box-sizing: border-box; padding: 9px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit; font-size: 13px; min-height: 100px; resize: vertical; }
-        .blok-item .blok-img-preview { width: 80px; height: 55px; object-fit: cover; border-radius: 4px; border: 1px solid #ddd; display: none; }
-        .blok-item .blok-img-preview.visible { display: block; }
-        .blok-item .blok-img-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+        .blok-img-preview { width: 80px; height: 55px; object-fit: cover; border-radius: 4px; border: 1px solid #ddd; display: none; }
+        .blok-img-preview.visible { display: block; }
+        .blok-img-row { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
         .blok-item input[type="file"] { flex: 1; font-size: 12px; }
         .blok-item .blok-caption { width: 100%; box-sizing: border-box; padding: 7px 9px; border: 1px solid #ccc; border-radius: 4px; font-size: 12px; font-family: inherit; margin-top: 8px; }
         .btn-hapus-blok { background: #ffebee; color: #d32f2f; border: none; padding: 5px 10px; cursor: pointer; border-radius: 4px; font-size: 12px; font-weight: bold; }
-        .btn-add-blok { flex: 1; padding: 9px; cursor: pointer; border-radius: 4px; font-weight: bold; font-size: 13px; transition: .2s; border: 1.5px dashed; }
-        .btn-add-foto { background: #e3f2fd; color: #1565c0; border-color: #1565c0; }
-        .btn-add-teks { background: #e8f5e9; color: #2e7d32; border-color: #2e7d32; }
+        .btn-add-blok { flex: 1; padding: 9px; cursor: pointer; border-radius: 4px; font-weight: bold; font-size: 13px; border: 1.5px dashed; text-align: center; }
+        .btn-add-foto { background: #e3f2fd; color: #1565c0; border-color: #1565c0; } .btn-add-teks { background: #e8f5e9; color: #2e7d32; border-color: #2e7d32; }
         .blok-order-btns { display: flex; gap: 4px; }
         .btn-blok-up, .btn-blok-down { background: #f0f0f0; border: 1px solid #ddd; padding: 3px 8px; border-radius: 4px; cursor: pointer; font-size: 13px; }
-        .blok-info { font-size: 12px; color: #7f8c8d; background: #fff8e1; border-left: 3px solid #ffc107; padding: 8px 12px; border-radius: 0 4px 4px 0; margin-bottom: 10px; line-height: 1.6; }
 
-        /* ===== PAGINATION BERITA ===== */
+        /* ===== PAGINATION ===== */
         .pagination-wrap { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-top: 16px; padding: 12px 0 4px; border-top: 1px solid #eceff1; }
         .pagination-info { font-size: 13px; color: #7f8c8d; }
-        .pagination-btns { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
-        .btn-page { background: #fff; color: #2c3e50; border: 1px solid #ddd; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: bold; transition: 0.2s; min-width: 36px; text-align: center; }
-        .btn-page:hover { background: #f0f0f0; border-color: #bbb; }
-        .btn-page.active { background: #d32f2f; color: #fff; border-color: #d32f2f; cursor: default; }
-        .btn-page:disabled { opacity: 0.4; cursor: not-allowed; }
+        .pagination-btns { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; justify-content: center; width: 100%; }
+        @media (min-width: 600px) { .pagination-btns { width: auto; justify-content: flex-end; } }
+        .btn-page { background: #fff; color: #2c3e50; border: 1px solid #ddd; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 13px; font-weight: bold; min-width: 36px; text-align: center; }
+        .btn-page.active { background: #d32f2f; color: #fff; border-color: #d32f2f; }
         .pagination-search { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-bottom: 12px; }
-        .pagination-search input { flex: 1; min-width: 180px; padding: 8px 12px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit; font-size: 13px; }
-        .pagination-search select { padding: 8px 10px; border: 1px solid #ccc; border-radius: 4px; font-family: inherit; font-size: 13px; background: #fff; }
-        .btn-reset-filter { background: #eceff1; color: #546e7a; border: 1px solid #ccc; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-size: 13px; white-space: nowrap; }
 
-        /* ===== PENGATURAN HALAMAN REDAKSI ===== */
+        /* ===== GENERIK ROW (Pengaturan Pengurus) ===== */
         .gen-row { display: flex; gap: 8px; align-items: center; background: #fff; padding: 10px; border: 1px solid #ddd; border-radius: 6px; margin-bottom: 8px; flex-wrap: wrap; }
-        .gen-row input { flex: 1; min-width: 130px; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-family: inherit; font-size: 13px; }
-        .gen-row .btn-hapus-gen { background: #ffebee; color: #d32f2f; border: none; padding: 8px 12px; cursor: pointer; border-radius: 4px; font-weight: bold; flex-shrink: 0; }
-        .gen-empty-info { font-size: 12px; color: #95a5a6; text-align: center; padding: 6px 0; }
         .gen-row.gen-2col { align-items: flex-start; }
-        .gen-order-btns { display: flex; flex-direction: column; gap: 4px; flex-shrink: 0; }
-        .gen-order-btns .btn-gen-up, .gen-order-btns .btn-gen-down { background: #f0f4f8; color: #34495e; border: 1px solid #ccd6dd; padding: 5px 9px; cursor: pointer; border-radius: 4px; font-size: 12px; line-height: 1; transition: 0.2s; }
-        .gen-order-btns .btn-gen-up:hover, .gen-order-btns .btn-gen-down:hover { background: #d5e8f7; border-color: #2980b9; color: #1a5276; }
-        .gen-order-btns .btn-gen-up:disabled, .gen-order-btns .btn-gen-down:disabled { opacity: .35; cursor: not-allowed; }
         .gen-foto-wrap { display: flex; flex-direction: column; align-items: center; gap: 5px; flex-shrink: 0; }
         .gen-foto-preview { width: 54px; height: 54px; border-radius: 50%; object-fit: cover; border: 1px solid #ddd; background: #f5f5f5; }
-        .gen-foto-wrap input[type="file"] { font-size: 11px; width: 92px; }
         .gen-fields-2col { display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 160px; }
-        .gen-fields-2col input { width: 100%; }
+        .btn-hapus-gen { background: #ffebee; color: #d32f2f; border: none; padding: 8px 12px; cursor: pointer; border-radius: 4px; font-weight: bold; flex-shrink: 0; }
+        .gen-order-btns { display: flex; flex-direction: column; gap: 4px; flex-shrink: 0; }
+        .btn-gen-up, .btn-gen-down { background: #f0f4f8; color: #34495e; border: 1px solid #ccd6dd; padding: 5px 9px; cursor: pointer; border-radius: 4px; font-size: 12px; }
+
+        /* ===== KELOLA PENGGUNA ===== */
+        .role-badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: bold; text-transform: uppercase; }
+        .role-badge.admin { background: #ffebee; color: #d32f2f; } .role-badge.user { background: #e3f2fd; color: #1565c0; }
+        .user-row { display: flex; align-items: center; gap: 10px; background: #fff; padding: 10px; border: 1px solid #ddd; border-radius: 6px; margin-bottom: 8px; flex-wrap: wrap; }
+        .user-row .user-email { flex: 1; min-width: 160px; font-size: 13px; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <div class="admin-container">
+    <div id="loginSection" class="login-container">
+        <h2>🔑 Login Panel Redaksi</h2>
+        <p style="color: #7f8c8d; font-size: 14px; margin-bottom: 20px;">Masukkan email dan password rahasia untuk mengelola website KJNI.</p>
+        <form id="loginForm">
+            <div class="form-group">
+                <label>Email Admin</label>
+                <input type="email" id="loginEmail" required placeholder="Contoh: admin@kjni.com">
+            </div>
+            <div class="form-group">
+                <label>Password</label>
+                <input type="password" id="loginPassword" required placeholder="Minimal 6 karakter">
+            </div>
+            <button type="submit" id="btnLogin" class="btn" style="width: 100%;">Masuk Ke Panel</button>
+        </form>
+    </div>
+
+    <div id="dashboardSection" class="dashboard-layout hidden">
         
-        <div id="loginSection">
-            <h2>🔑 Login Panel Redaksi</h2>
-            <p style="color: #7f8c8d; font-size: 14px; margin-bottom: 20px;">Masukkan email dan password rahasia untuk mengelola website.</p>
-            <form id="loginForm">
-                <div class="form-group">
-                    <label>Email Admin</label>
-                    <input type="email" id="loginEmail" required placeholder="Contoh: admin@kjni.com">
-                </div>
-                <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" id="loginPassword" required placeholder="Minimal 6 karakter">
-                </div>
-                <button type="submit" id="btnLogin" class="btn">Masuk Ke Panel</button>
-            </form>
+        <div class="mobile-header">
+            <button id="mobileMenuBtn" class="mobile-menu-btn">☰</button>
+            <div class="mobile-title">PANEL KJNI</div>
+            <button id="mobileLogoutBtn" class="mobile-logout-btn">Logout</button>
         </div>
 
-        <div id="dashboardSection" class="hidden">
-            <div class="dashboard-header" style="display:flex; justify-content:space-between; align-items:center; border-bottom:2px solid #eceff1; margin-bottom:20px; padding-bottom:10px;">
-                <h2 style="border:none; margin:0; padding:0;">📝 Dashboard Kelola Berita</h2>
-                <button id="btnLogout" class="btn btn-logout" style="background:#d32f2f">Keluar (Logout)</button>
+        <div id="sidebarOverlay" class="sidebar-overlay"></div>
+        
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                PANEL KJNI
+                <button id="closeSidebarBtn" class="close-sidebar-btn">&times;</button>
             </div>
+            <nav class="sidebar-nav">
+                <div class="nav-title">Menu Utama</div>
+                <a href="#sec-tulis" class="nav-item active">Tulis Berita Baru</a>
+                <a href="#sec-kelola" class="nav-item">Kelola Berita</a>
 
+                <div id="adminOnlyNav" class="admin-only">
+                    <div class="nav-title">Menu Administrator</div>
+                    <a href="#sec-pendaftar" class="nav-item">Data Pendaftar</a>
+                    <a href="#sec-redaksi" class="nav-item">Susunan Pengurus</a>
+                    <a href="#sec-halaman" class="nav-item">Tentang & Kontak</a>
+                    <a href="#sec-iklan" class="nav-item">Iklan & WhatsApp</a>
+                    <a href="#sec-statistik" class="nav-item">Statistik & Partner</a>
+                    <a href="#sec-pengguna" class="nav-item">Kelola Pengguna</a>
+                </div>
+            </nav>
+            <div class="sidebar-footer">
+                <button id="btnLogout" class="btn-logout">Logout / Keluar</button>
+            </div>
+        </aside>
+
+        <main class="main-content">
             <div id="roleBanner" class="role-banner hidden"></div>
 
-            <h3>➕ Tambah Berita Baru</h3>
-            <form id="uploadForm">
-                <div class="form-group">
-                    <label>Kategori</label>
-                    <select id="inputKategori">
+            <div id="sec-tulis" class="content-section active">
+                <h3>➕ Tambah Berita Baru</h3>
+                <form id="uploadForm">
+                    <div class="form-group">
+                        <label>Kategori</label>
+                        <select id="inputKategori">
+                            <option value="Nasional">Nasional</option>
+                            <option value="Tangerang Raya">Tangerang Raya</option>
+                            <option value="Banten">Banten</option>
+                            <option value="Serang">Serang</option>
+                            <option value="Peristiwa">Peristiwa</option>
+                            <option value="Politik">Politik</option>
+                            <option value="Ekonomi">Ekonomi</option>
+                            <option value="Pendidikan">Pendidikan</option>
+                            <option value="Olahraga">Olahraga</option>
+                            <option value="Teknologi">Teknologi</option>
+                            <option value="Hiburan">Hiburan</option>
+                            <option value="Lifestyle">Lifestyle</option>
+                            <option value="Opini">Opini</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Judul Berita</label>
+                        <input type="text" id="inputJudul" required placeholder="Masukkan judul yang menarik...">
+                    </div>
+                    <div class="form-group">
+                        <label>Gambar Utama / Cover </label>
+                        <input type="file" id="inputGambar" accept="image/*">
+                        <small style="color:#7f8c8d;">Max 2MB. Format: JPG, PNG, WEBP</small>
+                    </div>
+                    <div class="form-group">
+                        <label>Pembuka / Paragraf 1</label>
+                        <textarea id="inputIsi" rows="3" placeholder="Paragraf pembuka singkat (opsional). Konten utama pakai Blok Konten di bawah..."></textarea>
+                    </div>
+                    <div class="blok-section" id="blokBuilderSection">
+                        <h4 style="margin: 0 0 4px; color: #d32f2f; font-size: 14px;">📦 Blok Konten Artikel (Foto + Teks Dinamis)</h4>
+                        <p class="blok-info">
+                            Susun isi artikel dengan blok <strong>Foto</strong> dan <strong> Teks</strong> secara bergantian dan bebas. 
+                            Urutan blok di sini = urutan tampil di artikel.<br>
+                            Contoh: <em>Foto → Teks → Foto → Teks → ...</em>
+                        </p>
+                        <div id="blokList"></div>
+                        <div style="display: flex; gap:10px; margin-top: 10px; flex-wrap:wrap;">
+                            <button type="button" class="btn-add-blok btn-add-foto" onclick="tambahBlok('foto', 'blokList')">🖼️ + Blok Foto</button>
+                            <button type="button" class="btn-add-blok btn-add-teks" onclick="tambahBlok('teks', 'blokList')">📝 + Blok Teks</button>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Hashtags (Pisahkan dengan koma, contoh: pilkada, banten, viral)</label>
+                        <input type="text" id="inputHashtags" placeholder="Masukkan hashtags untuk berita ini...">
+                    </div>
+                    <button type="submit" id="btnPublish" class="btn" style="width:100%;">🚀 Publish Berita</button>
+                </form>
+            </div>
+
+            <div id="sec-kelola" class="content-section">
+                <h3>🗑️ Kelola Berita Saat Ini</h3>
+                <p style="font-size: 13px; color: #7f8c8d;">Klik <strong>Edit ✏️</strong> untuk mengubah isi berita, atau <strong>Hapus ❌</strong> untuk menghapus secara permanen.</p>
+                
+                <div class="pagination-search">
+                    <input type="text" id="filterJudul" placeholder="🔍 Cari judul..." style="flex:1;">
+                    <select id="filterKategori">
+                        <option value="">Semua Kategori</option>
                         <option value="Nasional">Nasional</option>
                         <option value="Tangerang Raya">Tangerang Raya</option>
                         <option value="Banten">Banten</option>
@@ -212,332 +430,239 @@
                         <option value="Lifestyle">Lifestyle</option>
                         <option value="Opini">Opini</option>
                     </select>
-                </div>
-                <div class="form-group">
-                    <label>Judul Berita</label>
-                    <input type="text" id="inputJudul" required placeholder="Masukkan judul yang menarik...">
-                </div>
-                <div class="form-group">
-                    <label>Gambar Utama / Cover </label>
-                    <input type="file" id="inputGambar" accept="image/*">
-                    <small style="color:#7f8c8d;">Max 2MB. Format: JPG, PNG, WEBP</small>
-                </div>
-                
-                <div class="form-group">
-                    <label>Pembuka / Paragraf 1</label>
-                    <textarea id="inputIsi" rows="3" placeholder="Paragraf pembuka singkat (opsional). Konten utama pakai Blok Konten di bawah..."></textarea>
-                </div>
-                
-                <div class="blok-section" id="blokBuilderSection">
-                    <h4>📦 Blok Konten Artikel (Foto + Teks Dinamis)</h4>
-                    <p class="blok-info">
-                        Susun isi artikel dengan blok <strong>Foto</strong> dan <strong> Teks</strong> secara bergantian dan bebas. 
-                        Urutan blok di sini = urutan tampil di artikel.<br>
-                        Contoh: <em>Foto → Teks → Foto → Teks → ...</em>
-                    </p>
-                    <div id="blokList"></div>
-                    <div class="blok-add-row">
-                        <button type="button" class="btn-add-blok btn-add-foto" onclick="tambahBlok('foto', 'blokList')">🖼️ + Tambah Blok Foto</button>
-                        <button type="button" class="btn-add-blok btn-add-teks" onclick="tambahBlok('teks', 'blokList')">📝 + Tambah Blok Teks</button>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>Hashtags (Pisahkan dengan koma, contoh: pilkada, banten, viral)</label>
-                    <input type="text" id="inputHashtags" placeholder="Masukkan hashtags untuk berita ini...">
+                    <select id="filterStatus">
+                        <option value="">Semua Status</option>
+                        <option value="aktif">🟢 Aktif</option>
+                        <option value="nonaktif">🔴 Nonaktif</option>
+                    </select>
+                    <button class="btn-cancel" id="btnResetFilter" style="margin-left:0; padding:10px;">🔄 Reset</button>
                 </div>
 
-                <button type="submit" id="btnPublish" class="btn" >🚀 Publish Berita</button>
-            </form>
+                <div id="daftarBeritaAdmin"><p>Memuat data berita...</p></div>
+                <div id="paginasiBerita"></div>
+            </div>
 
-            <div id="adminOnlySections" class="admin-only">
-            <hr style="border: 1px solid #eceff1; margin: 40px 0;">
-            <h3>📢 Pengaturan Iklan Banner (Multiple)</h3>
-            <p style="font-size: 13px; color: #7f8c8d;">Tambahkan sebanyak mungkin iklan di masing-masing posisi. Iklan akan tersusun ke bawah.(Max 2MB)</p>
+            <div id="sec-pendaftar" class="content-section admin-only-section">
+                <h3>📋 Data Pendaftar</h3>
+                <p style="font-size: 13px; color: #7f8c8d;">Data orang yang mengisi formulir di halaman Pendaftaran KJNI.</p>
+                <div id="daftarPendaftarAdmin">
+                    <p>Memuat data pendaftar...</p>
+                </div>
+            </div>
 
-            <form id="formIklan">
+            <div id="sec-redaksi" class="content-section admin-only-section">
+                <h3>📋 Pengaturan Susunan Pengurus</h3>
+                <p style="font-size: 13px; color: #7f8c8d;">Atur seluruh konten yang tampil di halaman Redaksi.html.</p>
+
                 <div class="ad-section">
-                    <h4 style="margin-top:0; color:#d32f2f;">1. 🔝 Iklan Atas (Top Banner) 728×90px</h4>
-                    <div id="wrapAtas"></div>
-                    <button type="button" class="btn-tambah" onclick="tambahBaris('Atas')">+ Tambah Baris Iklan Atas</button>
+                    <h4 style="margin-top:0; color:#d32f2f;">🏢 Legalitas Lembaga</h4>
+                    <div class="form-group"><label>Nama Lembaga</label><input type="text" id="redLegalNama" placeholder="Komite Jurnalis Nusantara Independen"></div>
+                    <div class="form-group"><label>Akte Notaris</label><input type="text" id="redLegalAkte" placeholder="EVA KURNIASIH, S.H., M.Kn."></div>
+                    <div class="form-group"><label>SK Kemenkumham RI</label><input type="text" id="redLegalSK" placeholder="AHU-xxxxxxx.AH.01.01.TAHUN.2021"></div>
+                    <div class="form-group"><label>Daftar Perseroan</label><input type="text" id="redLegalDaftar" placeholder="AHU-xxxxxxx.AH.01.07.TAHUN 2026"></div>
+                    <div class="form-group" style="margin-bottom:0;"><label>NPWP</label><input type="text" id="redLegalNpwp" placeholder="0000 0000 0000 0000"></div>
                 </div>
+
                 <div class="ad-section">
-                    <h4 style="margin-top:0; color:#d32f2f;">2. ⬅️ Iklan Kiri (Left Sidebar) 160×600px</h4>
-                    <div id="wrapKiri"></div>
-                    <button type="button" class="btn-tambah" onclick="tambahBaris('Kiri')">+ Tambah Baris Iklan Kiri</button>
+                    <h4 style="margin-top:0; color:#d32f2f;">☆ Pendiri</h4>
+                    <div class="form-group"><label>Judul Section</label><input type="text" id="redJudulPendiri" placeholder="☆ Pendiri KJNI ☆"></div>
+                    <div id="wrapPendiri"></div>
+                    <button type="button" class="btn-tambah" data-target="wrapPendiri" data-type="2col">+ Tambah Pendiri</button>
                 </div>
+
                 <div class="ad-section">
-                    <h4 style="margin-top:0; color:#d32f2f;">3. ➡️ Iklan Sidebar Kanan 300×250px</h4>
-                    <div id="wrapSidebar"></div>
-                    <button type="button" class="btn-tambah" onclick="tambahBaris('Sidebar')">+ Tambah Baris Iklan Sidebar</button>
+                    <h4 style="margin-top:0; color:#d32f2f;">☆ Pengurus Inti DPP</h4>
+                    <div class="form-group"><label>Judul Section</label><input type="text" id="redJudulPengurus" placeholder="☆ Pengurus Inti DPP KJNI ☆"></div>
+                    <div id="wrapPengurus"></div>
+                    <button type="button" class="btn-tambah" data-target="wrapPengurus" data-type="2col">+ Tambah Pengurus</button>
                 </div>
+
                 <div class="ad-section">
-                    <h4 style="margin-top:0; color:#d32f2f;">4. 📰 Iklan Tengah Artikel</h4>
-                    <div id="wrapTengah"></div>
-                    <button type="button" class="btn-tambah" onclick="tambahBaris('Tengah')">+ Tambah Baris Iklan Tengah</button>
+                    <h4 style="margin-top:0; color:#d32f2f;">☆ Dewan Pembina &amp; Penasehat</h4>
+                    <div class="form-group"><label>Judul Section</label><input type="text" id="redJudulPembina" placeholder="☆ Dewan Pembina & Penasehat ☆"></div>
+                    <div id="wrapPembina"></div>
+                    <button type="button" class="btn-tambah" data-target="wrapPembina" data-type="2col">+ Tambah Dewan Pembina/Penasehat</button>
                 </div>
+
                 <div class="ad-section">
-                    <h4 style="margin-top:0; color:#d32f2f;">5. 🔻 Iklan Footer (Bawah) 728×90px</h4>
-                    <div id="wrapFooter"></div>
-                    <button type="button" class="btn-tambah" onclick="tambahBaris('Footer')">+ Tambah Baris Iklan Footer</button>
-                </div>
-                <button type="submit" id="btnSimpanIklan" class="btn" style="width:100%; font-size:16px; padding:15px;">💾 Simpan Semua Pengaturan Iklan</button>
-            </form>
-
-            <hr style="border: 1px solid #eceff1; margin: 40px 0;">
-
-            <h3>📋 Data Pendaftar</h3>
-            <p style="font-size: 13px; color: #7f8c8d;">Data orang yang mengisi formulir di halaman Pendaftaran.</p>
-            <div id="daftarPendaftarAdmin">
-                <p>Memuat data pendaftar...</p>
-            </div>
-
-            <hr style="border: 1px solid #eceff1; margin: 40px 0;">
-
-            <h3>🤝 Pengaturan Media Partner</h3>
-            <p style="font-size: 13px; color: #7f8c8d;">Tambahkan foto dan link media partner. Foto akan ditampilkan dalam slider otomatis di halaman utama.(Max 2MB)</p>
-
-            <div class="ad-section">
-                <h4 style="margin-top:0; color:#d32f2f;">Daftar Media Partner</h4>
-                <div id="mpListWrap" class="mp-list-wrap">
-                    <p class="mp-empty" id="mpEmpty">Memuat data media partner...</p>
-                </div>
-                <div id="paginasiMP"></div>
-                <button type="button" class="btn-tambah" id="btnTambahPartner">+ Tambah Media Partner</button>
-                <button type="button" class="btn" id="btnSimpanPartner" style="width:100%; font-size:15px; padding:13px; margin-top:4px;">💾 Simpan Semua Media Partner</button>
-            </div>
-
-            <hr style="border: 1px solid #eceff1; margin: 40px 0;">
-
-            <h3>📊 Pengaturan Statistik Jaringan</h3>
-            <p style="font-size: 13px; color: #7f8c8d;">Atur angka statistik yang ditampilkan di beranda (bawah Media Partner).</p>
-            
-            <div class="ad-section">
-                <h4 style="margin-top:0; color:#d32f2f;">Data Statistik Saat Ini</h4>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px;">
-                    <div class="form-group">
-                        <label>Jumlah DPW</label>
-                        <input type="text" id="statDpw" placeholder="Misal: 38">
-                    </div>
-                    <div class="form-group">
-                        <label>Jumlah DPC</label>
-                        <input type="text" id="statDpc" placeholder="Misal: 416">
-                    </div>
-                    <div class="form-group">
-                        <label>Jumlah PAC</label>
-                        <input type="text" id="statPac" placeholder="Misal: 7000">
-                    </div>
-                    <div class="form-group">
-                        <label>Jumlah Anggota</label>
-                        <input type="text" id="statAnggota" placeholder="Misal: 5.000+">
-                    </div>
-                </div>
-                <button type="button" id="btnSimpanStatistik" class="btn" style="width:100%; font-size:16px; padding:15px; margin-top: 10px;">💾 Simpan Statistik</button>
-            </div>
-            <hr style="border: 1px solid #eceff1; margin: 40px 0;">
-
-            <h3>💬 Pengaturan Tombol WhatsApp</h3>
-            <p style="font-size: 13px; color: #7f8c8d;">Nomor ini akan tampil sebagai tombol WhatsApp mengambang di semua halaman website.</p>
-            <div class="ad-section">
-                <h4 style="margin-top:0; color:#25d366;">📱 Nomor WhatsApp Redaksi</h4>
-                <div class="form-group">
-                    <label>Nomor WhatsApp (format internasional, tanpa + dan spasi)</label>
-                    <input type="text" id="inputNomorWA" placeholder="Contoh: 6281234567890" style="font-size:15px; letter-spacing:1px;">
-                    <small style="color:#7f8c8d; margin-top:4px; display:block;">Awali dengan kode negara. Indonesia = 62. Contoh: <strong>6281234567890</strong></small>
-                </div>
-                <div class="form-group">
-                    <label>Pesan Otomatis (opsional)</label>
-                    <input type="text" id="inputPesanWA" placeholder="Contoh: Halo Redaksi KJNI, saya ingin bertanya...">
-                    <small style="color:#7f8c8d; margin-top:4px; display:block;">Pesan ini akan otomatis terisi saat pengunjung membuka WhatsApp.</small>
-                </div>
-                <div style="background:#e8f5e9; border-left:3px solid #25d366; padding:10px 14px; border-radius:0 4px 4px 0; font-size:13px; margin-bottom:14px; color:#2e7d32;">
-                    🔗 Preview link: <span id="previewLinkWA" style="font-family:monospace; word-break:break-all;">—</span>
-                </div>
-                <button type="button" id="btnSimpanWA" class="btn" style="background:#25d366;">💾 Simpan Nomor WhatsApp</button>
-            </div>
-
-            <hr style="border: 1px solid #eceff1; margin: 40px 0;">
-
-            <h3>📋 Pengaturan Susunan Pengurus</h3>
-            <p style="font-size: 13px; color: #7f8c8d;">Atur seluruh konten yang tampil di halaman Redaksi.html — legalitas, susunan pengurus, investigasi, DPW provinsi, asosiasi, dan pemberitahuan.</p>
-
-            <div class="ad-section">
-                <h4 style="margin-top:0; color:#d32f2f;">🏢 Legalitas Lembaga</h4>
-                <div class="form-group"><label>Nama Lembaga</label><input type="text" id="redLegalNama" placeholder="Komite Jurnalis Nusantara Independen"></div>
-                <div class="form-group"><label>Akte Notaris</label><input type="text" id="redLegalAkte" placeholder="EVA KURNIASIH, S.H., M.Kn."></div>
-                <div class="form-group"><label>SK Kemenkumham RI</label><input type="text" id="redLegalSK" placeholder="AHU-xxxxxxx.AH.01.01.TAHUN.2021"></div>
-                <div class="form-group"><label>Daftar Perseroan</label><input type="text" id="redLegalDaftar" placeholder="AHU-xxxxxxx.AH.01.07.TAHUN 2026"></div>
-                <div class="form-group" style="margin-bottom:0;"><label>NPWP</label><input type="text" id="redLegalNpwp" placeholder="0000 0000 0000 0000"></div>
-            </div>
-
-            <div class="ad-section">
-                <h4 style="margin-top:0; color:#d32f2f;">☆ Pendiri</h4>
-                <div class="form-group"><label>Judul Section</label><input type="text" id="redJudulPendiri" placeholder="☆ Pendiri KJNI ☆"></div>
-                <p class="ad-section-info">Disarankan rasio 1:1 (persegi), maks 2MB. Jika tidak diisi, akan tampil avatar inisial nama.</p>
-                <div id="wrapPendiri"></div>
-                <button type="button" class="btn-tambah" data-target="wrapPendiri" data-type="2col">+ Tambah Pendiri</button>
-            </div>
-
-            <div class="ad-section">
-                <h4 style="margin-top:0; color:#d32f2f;">☆ Pengurus Inti DPP</h4>
-                <div class="form-group"><label>Judul Section</label><input type="text" id="redJudulPengurus" placeholder="☆ Pengurus Inti DPP KJNI ☆"></div>
-                <p class="ad-section-info">Disarankan rasio 1:1 (persegi), maks 2MB. Jika tidak diisi, akan tampil avatar inisial nama.</p>
-                <div id="wrapPengurus"></div>
-                <button type="button" class="btn-tambah" data-target="wrapPengurus" data-type="2col">+ Tambah Pengurus</button>
-            </div>
-
-            <div class="ad-section">
-                <h4 style="margin-top:0; color:#d32f2f;">☆ Dewan Pembina &amp; Penasehat</h4>
-                <div class="form-group"><label>Judul Section</label><input type="text" id="redJudulPembina" placeholder="☆ Dewan Pembina & Penasehat ☆"></div>
-                <p class="ad-section-info">Disarankan rasio 1:1 (persegi), maks 2MB. Jika tidak diisi, akan tampil avatar inisial nama.</p>
-                <div id="wrapPembina"></div>
-                <button type="button" class="btn-tambah" data-target="wrapPembina" data-type="2col">+ Tambah Dewan Pembina/Penasehat</button>
-            </div>
-
-            <div class="ad-section">
-                <h4 style="margin-top:0; color:#d32f2f;">☆ Pimpinan Redaksi</h4>
-                <div class="form-group"><label>Judul Section</label><input type="text" id="redJudulPimpinan" placeholder="☆ Pimpinan Redaksi ☆"></div>
-                <p class="ad-section-info">Disarankan rasio 1:1 (persegi), maks 2MB. Jika tidak diisi, akan tampil avatar inisial nama.</p>
-                <div id="wrapPimpinan"></div>
-                <button type="button" class="btn-tambah" data-target="wrapPimpinan" data-type="2col">+ Tambah Pimpinan Redaksi</button>
-            </div>
-
-            <div class="ad-section">
-                <h4 style="margin-top:0; color:#d32f2f;">☆ Bidang Investigasi PTI</h4>
-                <div class="form-group"><label>Judul Section</label><input type="text" id="redJudulInvestigasi" placeholder="☆ Bidang Investigasi PTI ☆"></div>
-                <p class="ad-section-info">Tambahkan anggota investigasi beserta fotonya secara dinamis.</p>
-                <div id="wrapInvestigasi"></div>
-                <button type="button" class="btn-tambah" data-target="wrapInvestigasi" data-type="1col-foto">+ Tambah Nama/Anggota Investigasi</button>
-            </div>
-
-            <div class="ad-section">
-                <h4 style="margin-top:0; color:#d32f2f;">☆ Pengurus DPW/DPC</h4>
-                <div class="form-group"><label>Judul Section</label><input type="text" id="redJudulDPW" placeholder="☆ Pengurus DPW/DPC ☆"></div>
-                <p class="ad-section-info">Atur Label (DPW/DPC/dll), Nama Wilayah (Misal: Banten), dan susunan perangkat (Ketua, Wakil, Sekretaris, Bendahara, dst) secara dinamis — bisa tambah jabatan sebanyak yang diperlukan.</p>
-                <div id="wrapDPW"></div>
-                <button type="button" class="btn-tambah" data-target="wrapDPW" data-type="dpw">+ Tambah DPW/DPC Baru</button>
-            </div>
-
-            <div class="ad-section">
-                <h4 style="margin-top:0; color:#d32f2f;">☆ Asosiasi Wartawan / Jurnalis</h4>
-                <div class="form-group"><label>Judul Section</label><input type="text" id="redJudulAsosiasi" placeholder="☆ Asosiasi Wartawan / Jurnalis ☆"></div>
-                <div id="wrapAsosiasi"></div>
-                <button type="button" class="btn-tambah" data-target="wrapAsosiasi" data-type="1col">+ Tambah Asosiasi</button>
-            </div>
-
-            <div class="ad-section">
-                <h4 style="margin-top:0; color:#d32f2f;">⚠️ Pemberitahuan Penting</h4>
-                <div class="form-group" style="margin-bottom:0;">
-                    <textarea id="redPemberitahuan" rows="5" placeholder="Tulis isi pemberitahuan di sini..."></textarea>
-                </div>
-            </div>
-
-            <button type="button" id="btnSimpanRedaksi" class="btn" style="width:100%; font-size:16px; padding:15px;">💾 Simpan Pengaturan Redaksi</button>
-
-            <hr style="border: 1px solid #eceff1; margin: 40px 0;">
-
-            <h3>🏢 Pengaturan Tentang Kami & Kontak</h3>
-            <p style="font-size: 13px; color: #7f8c8d;">Atur teks Sejarah, Filosofi Logo, dan informasi Kontak yang tampil di halaman Tentang Kami & Kontak.</p>
-
-            <div class="ad-section">
-                <h4 style="margin-top:0; color:#d32f2f;">📝 Sejarah & Filosofi</h4>
-                <div class="form-group">
-                    <label>Sejarah Singkat KJNI</label>
-                    <textarea id="inputSejarah" rows="5" placeholder="Tulis sejarah KJNI..."></textarea>
+                    <h4 style="margin-top:0; color:#d32f2f;">☆ Pimpinan Redaksi</h4>
+                    <div class="form-group"><label>Judul Section</label><input type="text" id="redJudulPimpinan" placeholder="☆ Pimpinan Redaksi ☆"></div>
+                    <div id="wrapPimpinan"></div>
+                    <button type="button" class="btn-tambah" data-target="wrapPimpinan" data-type="2col">+ Tambah Pimpinan Redaksi</button>
                 </div>
 
-                <div class="form-group">
-                    <label>Foto di Atas Filosofi Logo</label>
-                    <input type="file" id="inputFotoFilosofi" accept="image/*">
-                    <img id="previewFoto" class="preview-img">
-                    <input type="hidden" id="urlFotoLama" value="">
-                    <button type="button" id="btnHapusFotoFilosofi" class="btn" style="background:#95a5a6; margin-top:8px; display:none; font-size:12px; padding:6px 12px;">❌ Hapus Foto</button>
-                    <small style="color:#7f8c8d; margin-top:4px; display:block;">Foto ini akan tampil di atas judul "Filosofi Logo" pada halaman Tentang Kami. Kosongkan jika tidak ingin menampilkan foto.</small>
+                <div class="ad-section">
+                    <h4 style="margin-top:0; color:#d32f2f;">☆ Bidang Investigasi PTI</h4>
+                    <div class="form-group"><label>Judul Section</label><input type="text" id="redJudulInvestigasi" placeholder="☆ Bidang Investigasi PTI ☆"></div>
+                    <div id="wrapInvestigasi"></div>
+                    <button type="button" class="btn-tambah" data-target="wrapInvestigasi" data-type="1col-foto">+ Tambah Nama/Anggota Investigasi</button>
                 </div>
 
-                <div class="form-group">
-                    <label>Filosofi Logo</label>
-                    <textarea id="inputFilosofi" rows="6" placeholder="Tulis filosofi logo..."></textarea>
+                <div class="ad-section">
+                    <h4 style="margin-top:0; color:#d32f2f;">☆ Pengurus DPW/DPC</h4>
+                    <div class="form-group"><label>Judul Section</label><input type="text" id="redJudulDPW" placeholder="☆ Pengurus DPW/DPC ☆"></div>
+                    <div id="wrapDPW"></div>
+                    <button type="button" class="btn-tambah" data-target="wrapDPW" data-type="dpw">+ Tambah DPW/DPC Baru</button>
                 </div>
-            </div>
 
-            <div class="ad-section">
-                <button type="button" id="btnSimpanKontak" class="btn" style="width:100%; font-size:16px; padding:15px;">💾 Simpan Pengaturan Tentang Kami & Kontak</button>
-            </div>
+                <div class="ad-section">
+                    <h4 style="margin-top:0; color:#d32f2f;">☆ Asosiasi Wartawan / Jurnalis</h4>
+                    <div class="form-group"><label>Judul Section</label><input type="text" id="redJudulAsosiasi" placeholder="☆ Asosiasi Wartawan / Jurnalis ☆"></div>
+                    <div id="wrapAsosiasi"></div>
+                    <button type="button" class="btn-tambah" data-target="wrapAsosiasi" data-type="1col">+ Tambah Asosiasi</button>
+                </div>
 
-            <hr style="border: 1px solid #eceff1; margin: 40px 0;">
-
-            <h3>👥 Kelola Pengguna (Admin & User)</h3>
-            <p style="font-size: 13px; color: #7f8c8d;">Buat akun baru untuk admin lain atau staf yang hanya boleh mengunggah & mengedit berita. Role <strong>Admin</strong> memiliki akses penuh, role <strong>User</strong> hanya bisa mengelola berita.</p>
-
-            <div class="ad-section">
-                <h4 style="margin-top:0; color:#d32f2f;">➕ Tambah Pengguna Baru</h4>
-                <form id="formTambahPengguna">
-                    <div class="form-group">
-                        <label>Email</label>
-                        <input type="email" id="puEmail" required placeholder="staf@kjni.com">
-                    </div>
-                    <div class="form-group">
-                        <label>Password (minimal 6 karakter)</label>
-                        <input type="password" id="puPassword" required placeholder="Minimal 6 karakter">
-                    </div>
+                <div class="ad-section">
+                    <h4 style="margin-top:0; color:#d32f2f;">⚠️ Pemberitahuan Penting</h4>
                     <div class="form-group" style="margin-bottom:0;">
-                        <label>Role</label>
-                        <select id="puRole">
-                            <option value="user">User (hanya upload & edit berita)</option>
-                            <option value="admin">Admin (akses penuh)</option>
-                        </select>
+                        <textarea id="redPemberitahuan" rows="5" placeholder="Tulis isi pemberitahuan di sini..."></textarea>
                     </div>
-                    <button type="submit" id="btnTambahPengguna" class="btn" style="margin-top:14px;">➕ Buat Akun Pengguna</button>
+                </div>
+
+                <button type="button" id="btnSimpanRedaksi" class="btn" style="width:100%; font-size:16px; padding:15px;">💾 Simpan Pengaturan Redaksi</button>
+            </div>
+
+            <div id="sec-halaman" class="content-section admin-only-section">
+                <h3>🏢 Pengaturan Tentang Kami & Kontak</h3>
+                <p style="font-size: 13px; color: #7f8c8d;">Atur teks Sejarah, Filosofi Logo, dan informasi Kontak yang tampil di halaman Tentang Kami.</p>
+
+                <div class="ad-section">
+                    <h4 style="margin-top:0; color:#d32f2f;">📝 Sejarah & Filosofi</h4>
+                    <div class="form-group">
+                        <label>Sejarah Singkat KJNI</label>
+                        <textarea id="inputSejarah" rows="5" placeholder="Tulis sejarah KJNI..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Foto di Atas Filosofi Logo</label>
+                        <input type="file" id="inputFotoFilosofi" accept="image/*">
+                        <img id="previewFoto" class="preview-img">
+                        <input type="hidden" id="urlFotoLama" value="">
+                        <button type="button" id="btnHapusFotoFilosofi" class="btn" style="background:#95a5a6; margin-top:8px; display:none; font-size:12px; padding:6px 12px; width:100%;">❌ Hapus Foto</button>
+                        <small style="color:#7f8c8d; margin-top:4px; display:block;">Kosongkan jika tidak ingin menampilkan foto.</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Filosofi Logo</label>
+                        <textarea id="inputFilosofi" rows="6" placeholder="Tulis filosofi logo..."></textarea>
+                    </div>
+                </div>
+
+                <button type="button" id="btnSimpanKontak" class="btn" style="width:100%; font-size:16px; padding:15px;">💾 Simpan Pengaturan Halaman</button>
+            </div>
+
+            <div id="sec-iklan" class="content-section admin-only-section">
+                <h3>📢 Pengaturan Iklan Banner & WhatsApp</h3>
+                
+                <div class="ad-section" style="border-left: 4px solid #25d366;">
+                    <h4 style="margin-top:0; color:#25d366;">📱 Nomor WhatsApp Redaksi</h4>
+                    <div class="form-group">
+                        <label>Nomor WhatsApp</label>
+                        <input type="text" id="inputNomorWA" placeholder="Contoh: 6281234567890">
+                    </div>
+                    <div class="form-group">
+                        <label>Pesan Otomatis (opsional)</label>
+                        <input type="text" id="inputPesanWA" placeholder="Contoh: Halo Redaksi KJNI...">
+                    </div>
+                    <div style="background:#e8f5e9; padding:10px 14px; border-radius:4px; font-size:13px; margin-bottom:14px; color:#2e7d32;">
+                        🔗 Preview: <span id="previewLinkWA" style="font-family:monospace; word-break:break-all;">—</span>
+                    </div>
+                    <button type="button" id="btnSimpanWA" class="btn" style="background:#25d366; width:100%;">💾 Simpan WA</button>
+                </div>
+
+                <form id="formIklan">
+                    <div class="ad-section">
+                        <h4 style="margin-top:0; color:#d32f2f;">1. 🔝 Iklan Atas (728×90px)</h4>
+                        <div id="wrapAtas"></div>
+                        <button type="button" class="btn-tambah" onclick="tambahBaris('Atas')">+ Tambah Iklan Atas</button>
+                    </div>
+                    <div class="ad-section">
+                        <h4 style="margin-top:0; color:#d32f2f;">2. ⬅️ Iklan Kiri Sidebar (160×600px)</h4>
+                        <div id="wrapKiri"></div>
+                        <button type="button" class="btn-tambah" onclick="tambahBaris('Kiri')">+ Tambah Iklan Kiri</button>
+                    </div>
+                    <div class="ad-section">
+                        <h4 style="margin-top:0; color:#d32f2f;">3. ➡️ Iklan Kanan Sidebar (300×250px)</h4>
+                        <div id="wrapSidebar"></div>
+                        <button type="button" class="btn-tambah" onclick="tambahBaris('Sidebar')">+ Tambah Iklan Kanan</button>
+                    </div>
+                    <div class="ad-section">
+                        <h4 style="margin-top:0; color:#d32f2f;">4. 📰 Iklan Tengah Artikel</h4>
+                        <div id="wrapTengah"></div>
+                        <button type="button" class="btn-tambah" onclick="tambahBaris('Tengah')">+ Tambah Iklan Tengah</button>
+                    </div>
+                    <div class="ad-section">
+                        <h4 style="margin-top:0; color:#d32f2f;">5. 🔻 Iklan Footer (728×90px)</h4>
+                        <div id="wrapFooter"></div>
+                        <button type="button" class="btn-tambah" onclick="tambahBaris('Footer')">+ Tambah Iklan Footer</button>
+                    </div>
+                    <button type="submit" id="btnSimpanIklan" class="btn" style="width:100%; font-size:16px; padding:15px;">💾 Simpan Semua Iklan</button>
                 </form>
             </div>
 
-            <div class="ad-section">
-                <h4 style="margin-top:0; color:#d32f2f;">📜 Daftar Pengguna</h4>
-                <div id="daftarPengguna"><p style="color:#7f8c8d; font-size:13px;">Memuat data pengguna...</p></div>
-            </div>
+            <div id="sec-statistik" class="content-section admin-only-section">
+                <h3>📊 Statistik Jaringan & Media Partner</h3>
+                
+                <div class="ad-section">
+                    <h4 style="margin-top:0; color:#d32f2f;">Data Statistik Jaringan</h4>
+                    <div class="stat-grid" style="display: grid; gap: 15px;">
+                        <div class="form-group"><label>Jumlah DPW</label><input type="text" id="statDpw" placeholder="38"></div>
+                        <div class="form-group"><label>Jumlah DPC</label><input type="text" id="statDpc" placeholder="416"></div>
+                        <div class="form-group"><label>Jumlah PAC</label><input type="text" id="statPac" placeholder="7000"></div>
+                        <div class="form-group"><label>Jumlah Anggota</label><input type="text" id="statAnggota" placeholder="5.000+"></div>
+                    </div>
+                    <button type="button" id="btnSimpanStatistik" class="btn" style="width:100%;">💾 Simpan Statistik</button>
+                </div>
+
+                <div class="ad-section">
+                    <h4 style="margin-top:0; color:#d32f2f;">Daftar Media Partner</h4>
+                    <div id="mpListWrap" class="mp-list-wrap">
+                        <p class="mp-empty" id="mpEmpty">Memuat data media partner...</p>
+                    </div>
+                    <div id="paginasiMP"></div>
+                    <button type="button" class="btn-tambah" id="btnTambahPartner">+ Tambah Media Partner</button>
+                    <button type="button" class="btn" id="btnSimpanPartner" style="width:100%; font-size:15px; padding:13px; margin-top:4px;">💾 Simpan Media Partner</button>
+                </div>
             </div>
 
-            <hr style="border: 1px solid #eceff1; margin: 40px 0;">
+            <div id="sec-pengguna" class="content-section admin-only-section">
+                <h3>👥 Kelola Pengguna</h3>
+                <p style="font-size: 13px; color: #7f8c8d;">Role <strong>Admin</strong> memiliki akses penuh, role <strong>User</strong> hanya bisa mengelola berita.</p>
 
-            <h3>🗑️ Kelola Berita Saat Ini</h3>
-            <p style="font-size: 13px; color: #7f8c8d;">Klik <strong>Edit ✏️</strong> untuk mengubah isi berita, atau <strong>Hapus ❌</strong> untuk menghapus secara permanen.</p>
-            
-            <div class="pagination-search">
-                <input type="text" id="filterJudul" placeholder="🔍 Cari judul berita...">
-                <select id="filterKategori">
-                    <option value="">Semua Kategori</option>
-                    <option value="Nasional">Nasional</option>
-                    <option value="Tangerang Raya">Tangerang Raya</option>
-                    <option value="Banten">Banten</option>
-                    <option value="Serang">Serang</option>
-                    <option value="Peristiwa">Peristiwa</option>
-                    <option value="Politik">Politik</option>
-                    <option value="Ekonomi">Ekonomi</option>
-                    <option value="Pendidikan">Pendidikan</option>
-                    <option value="Olahraga">Olahraga</option>
-                    <option value="Teknologi">Teknologi</option>
-                    <option value="Hiburan">Hiburan</option>
-                    <option value="Lifestyle">Lifestyle</option>
-                    <option value="Opini">Opini</option>
-                </select>
-                <select id="filterStatus">
-                    <option value="">Semua Status</option>
-                    <option value="aktif">🟢 Aktif</option>
-                    <option value="nonaktif">🔴 Nonaktif</option>
-                </select>
-                <button class="btn-reset-filter" id="btnResetFilter">🔄 Reset</button>
+                <div class="ad-section">
+                    <h4 style="margin-top:0; color:#d32f2f;">➕ Tambah Pengguna Baru</h4>
+                    <form id="formTambahPengguna">
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" id="puEmail" required placeholder="staf@kjni.com">
+                        </div>
+                        <div class="form-group">
+                            <label>Password (minimal 6 karakter)</label>
+                            <input type="password" id="puPassword" required placeholder="Minimal 6 karakter">
+                        </div>
+                        <div class="form-group" style="margin-bottom:0;">
+                            <label>Role</label>
+                            <select id="puRole">
+                                <option value="user">User (hanya upload & edit berita)</option>
+                                <option value="admin">Admin (akses penuh)</option>
+                            </select>
+                        </div>
+                        <button type="submit" id="btnTambahPengguna" class="btn" style="margin-top:14px; width:100%;">➕ Buat Akun Pengguna</button>
+                    </form>
+                </div>
+
+                <div class="ad-section">
+                    <h4 style="margin-top:0; color:#d32f2f;">📜 Daftar Pengguna</h4>
+                    <div id="daftarPengguna"><p style="color:#7f8c8d; font-size:13px;">Memuat data pengguna...</p></div>
+                </div>
             </div>
 
-            <div id="daftarBeritaAdmin">
-                <p>Memuat data berita...</p>
-            </div>
-            <div id="paginasiBerita"></div>
-        </div>
+        </main>
     </div>
 
     <div id="modalEdit" class="modal-overlay hidden">
         <div class="modal-box">
-            <h3>✏️ Edit Berita</h3>
+            <h3 style="color: #2980b9;">✏️ Edit Berita</h3>
             <div class="form-group">
                 <label>Judul Berita</label>
                 <input type="text" id="editJudul" required placeholder="Judul berita...">
@@ -569,7 +694,7 @@
                 <input type="text" id="editHashtags" placeholder="Contoh: pilkada, banten, viral">
             </div>
             <div class="form-group">
-                <label>Gambar Utama / Cover (Biarkan kosong jika tidak ingin mengubah)</label>
+                <label>Gambar Utama / Cover (Biarkan kosong jika tidak mengubah)</label>
                 <div style="margin-bottom: 10px;">
                     <img id="editPreviewGambar" src="" style="max-width: 150px; border-radius: 4px; display: none; border: 1px solid #ddd;">
                 </div>
@@ -578,10 +703,10 @@
             </div>
 
             <div class="blok-section">
-                <h4>📦 Blok Konten Artikel</h4>
-                <p class="blok-info">Edit blok foto dan teks. Blok kosong akan diabaikan saat disimpan.</p>
+                <h4 style="margin: 0 0 4px; color: #d32f2f; font-size: 14px;">📦 Blok Konten Artikel</h4>
+                <p class="blok-info" style="font-size: 12px; margin-bottom: 10px;">Edit blok foto dan teks. Blok kosong otomatis diabaikan.</p>
                 <div id="blokListEdit"></div>
-                <div class="blok-add-row">
+                <div style="display: flex; gap:10px; margin-top: 10px; flex-wrap:wrap;">
                     <button type="button" class="btn-add-blok btn-add-foto" onclick="tambahBlok('foto', 'blokListEdit')">🖼️ + Blok Foto</button>
                     <button type="button" class="btn-add-blok btn-add-teks" onclick="tambahBlok('teks', 'blokListEdit')">📝 + Blok Teks</button>
                 </div>
@@ -611,7 +736,7 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // App kedua khusus untuk membuat akun pengguna baru tanpa mengganti sesi login admin yang sedang aktif
+        // Secondary Auth untuk registrasi user
         const secondaryApp = initializeApp(firebaseConfig, "Secondary");
         const secondaryAuth = getAuth(secondaryApp);
 
@@ -622,7 +747,45 @@
         const modalEdit = document.getElementById("modalEdit");
 
         let idBeritaYangDiedit = null;
-        let currentUserRole = 'admin'; // default; akan diisi ulang setelah cek dokumen pengguna
+        let currentUserRole = 'admin'; 
+
+        // ===== TAB NAVIGATION LOGIC =====
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+        
+        function closeMobileSidebar() {
+            if (window.innerWidth <= 768) {
+                sidebar.classList.remove('open');
+                sidebarOverlay.classList.remove('open');
+            }
+        }
+
+        document.querySelectorAll('.sidebar-nav .nav-item').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                // Ubah state navigasi
+                document.querySelectorAll('.sidebar-nav .nav-item').forEach(n => n.classList.remove('active'));
+                e.target.classList.add('active');
+                
+                // Ubah state konten section
+                document.querySelectorAll('.content-section').forEach(sec => sec.classList.remove('active'));
+                const targetId = e.target.getAttribute('href').substring(1);
+                document.getElementById(targetId).classList.add('active');
+
+                // Tutup sidebar di mobile
+                closeMobileSidebar();
+            });
+        });
+
+        // Event listener Mobile Menu
+        document.getElementById('mobileMenuBtn').addEventListener('click', () => {
+            sidebar.classList.add('open');
+            sidebarOverlay.classList.add('open');
+        });
+        document.getElementById('closeSidebarBtn').addEventListener('click', closeMobileSidebar);
+        sidebarOverlay.addEventListener('click', closeMobileSidebar);
+
+        // ============================================
 
         document.getElementById("editGambar").addEventListener("change", function(e) {
             const file = e.target.files[0];
@@ -643,7 +806,12 @@
                 loginSection.classList.add("hidden");
                 dashboardSection.classList.remove("hidden");
 
-                // Cek role pengguna dari Firestore (koleksi 'pengguna', id dokumen = UID)
+                // Reset Tampilan Tab ke Tulis Berita
+                document.querySelectorAll('.sidebar-nav .nav-item').forEach(n => n.classList.remove('active'));
+                document.querySelectorAll('.content-section').forEach(sec => sec.classList.remove('active'));
+                document.querySelector('[href="#sec-tulis"]').classList.add('active');
+                document.getElementById('sec-tulis').classList.add('active');
+
                 let role = 'admin';
                 try {
                     const snapRole = await getDoc(doc(db, 'pengguna', user.uid));
@@ -651,16 +819,18 @@
                 } catch (e) { console.warn('Gagal cek role pengguna:', e.message); }
                 currentUserRole = role;
 
-                const adminOnly = document.getElementById('adminOnlySections');
+                const adminOnlyNav = document.getElementById('adminOnlyNav');
                 const roleBanner = document.getElementById('roleBanner');
+                roleBanner.classList.remove('hidden');
+
                 if (role === 'user') {
-                    adminOnly.classList.add('hidden');
+                    adminOnlyNav.classList.add('hidden');
                     roleBanner.className = 'role-banner user';
-                    roleBanner.innerHTML = `👤 Masuk sebagai <strong>User</strong> (${user.email}) — hanya bisa mengunggah & mengedit berita.`;
+                    roleBanner.innerHTML = `👤 Masuk sebagai <strong>User</strong> (${user.email}) — Akses terbatas pada kelola berita.`;
                 } else {
-                    adminOnly.classList.remove('hidden');
+                    adminOnlyNav.classList.remove('hidden');
                     roleBanner.className = 'role-banner admin';
-                    roleBanner.innerHTML = `🔑 Masuk sebagai <strong>Admin</strong> (${user.email}) — akses penuh ke seluruh pengaturan.`;
+                    roleBanner.innerHTML = `🔑 Masuk sebagai <strong>Admin</strong> (${user.email}) — Akses penuh.`;
                 }
 
                 muatDaftarBerita();
@@ -668,7 +838,7 @@
                 if (role === 'admin') {
                     muatDataIklan();
                     muatMediaPartner();
-                    muatStatistikAdmin(); // LOAD DATA STATISTIK
+                    muatStatistikAdmin();
                     muatDaftarPendaftar();
                     muatPengaturanWA();
                     muatDataRedaksi();
@@ -681,7 +851,7 @@
             }
         });
 
-        // B. FUNGSI TOMBOL LOGIN
+        // B. FUNGSI TOMBOL LOGIN & LOGOUT
         document.getElementById("loginForm").addEventListener("submit", (e) => {
             e.preventDefault();
             const email = document.getElementById("loginEmail").value;
@@ -699,10 +869,9 @@
                 });
         });
 
-        // C. FUNGSI TOMBOL LOGOUT
-        document.getElementById("btnLogout").addEventListener("click", () => {
-            signOut(auth).then(() => alert("Berhasil Logout!"));
-        });
+        const doLogout = () => signOut(auth).then(() => alert("Berhasil Logout!"));
+        document.getElementById("btnLogout").addEventListener("click", doLogout);
+        document.getElementById("mobileLogoutBtn").addEventListener("click", doLogout);
 
         // D. CLOUDINARY UPLOAD & PUBLISH BERITA
         const CLOUDINARY_CLOUD_NAME = "dc7guxgnm";
@@ -711,7 +880,7 @@
 
         async function uploadKeCloudinary(file) {
             if (file.size > MAX_FILE_SIZE) {
-                throw new Error(`Ukuran file "${file.name}" melebihi batas 2MB. Kompres dulu sebelum upload.`);
+                throw new Error(`Ukuran file "${file.name}" melebihi batas 2MB.`);
             }
             const formData = new FormData();
             formData.append("file", file);
@@ -739,9 +908,7 @@
 
                 await addDoc(collection(db, "berita"), {
                     judul, kategori, isi, hashtags, gambar: urlGambar, 
-                    blok_konten: blokData,
-                    status: 'aktif',
-                    tanggalDibuat: new Date()
+                    blok_konten: blokData, status: 'aktif', tanggalDibuat: new Date()
                 });
                 alert("✅ Berita berhasil dipublish!");
                 document.getElementById("uploadForm").reset();
@@ -760,12 +927,9 @@
             
             const imgPreview = document.getElementById("editPreviewGambar");
             if (gambarLama) {
-                imgPreview.src = gambarLama;
-                imgPreview.style.display = "block";
-                document.getElementById("editGambarLama").value = gambarLama;
+                imgPreview.src = gambarLama; imgPreview.style.display = "block"; document.getElementById("editGambarLama").value = gambarLama;
             } else {
-                imgPreview.style.display = "none";
-                document.getElementById("editGambarLama").value = "";
+                imgPreview.style.display = "none"; document.getElementById("editGambarLama").value = "";
             }
             document.getElementById("editGambar").value = "";
 
@@ -814,10 +978,8 @@
         });
 
 
-        // F. MENAMPILKAN & HAPUS BERITA (dengan Pagination & Filter)
-        let _semuaBerita = [];
-        let _halamanAktif = 1;
-        const BERITA_PER_HALAMAN = 6;
+        // F. MENAMPILKAN & HAPUS BERITA
+        let _semuaBerita = []; let _halamanAktif = 1; const BERITA_PER_HALAMAN = 8;
 
         function muatDaftarBerita() {
             const q = query(collection(db, "berita"), orderBy("tanggalDibuat", "desc"));
@@ -861,16 +1023,13 @@
             }
 
             halIni.forEach((data) => {
-                const beritaDocId = data.id;
-                const isAktif = data.status !== 'nonaktif';
-                const item = document.createElement("div");
-                item.className = "article-item";
-                item.style.opacity = isAktif ? '1' : '0.6';
+                const beritaDocId = data.id; const isAktif = data.status !== 'nonaktif';
+                const item = document.createElement("div"); item.className = "article-item"; item.style.opacity = isAktif ? '1' : '0.6';
                 const isAdmin = currentUserRole === 'admin';
                 item.innerHTML = `
                     <div class="article-info">
                         <span>${data.kategori}</span>
-                        <span class="${isAktif ? 'badge-aktif' : 'badge-nonaktif'}" style="padding:3px 8px;border-radius:3px;color:#fff;font-size:11px;display:inline-block;margin-right:4px;">${isAktif ? '🟢 Aktif' : '🔴 Nonaktif'}</span>
+                        <span class="${isAktif ? 'badge-aktif' : 'badge-nonaktif'}">${isAktif ? '🟢 Aktif' : '🔴 Nonaktif'}</span>
                         <span class="article-title">${data.judul}</span>
                     </div>
                     <div class="article-actions">
@@ -881,8 +1040,7 @@
                 `;
                 if (isAdmin) {
                     item.querySelector(".btn-toggle-" + (isAktif ? 'nonaktif' : 'aktif')).addEventListener("click", async (e) => {
-                        const idnya = e.target.getAttribute("data-id");
-                        const statusBaru = e.target.getAttribute("data-status") === 'aktif' ? 'nonaktif' : 'aktif';
+                        const idnya = e.target.getAttribute("data-id"); const statusBaru = e.target.getAttribute("data-status") === 'aktif' ? 'nonaktif' : 'aktif';
                         try { await updateDoc(doc(db, "berita", idnya), { status: statusBaru }); } catch(err) { alert("Gagal mengubah status: " + err.message); }
                     });
                 }
@@ -899,13 +1057,11 @@
             if (totalHalaman <= 1) return;
             const wrap = document.createElement('div'); wrap.className = 'pagination-wrap';
             const info = document.createElement('div'); info.className = 'pagination-info';
-            info.textContent = `Menampilkan ${mulai + 1}–${Math.min(mulai + BERITA_PER_HALAMAN, filtered.length)} dari ${filtered.length} berita`;
-            wrap.appendChild(info);
+            info.textContent = `Menampilkan ${mulai + 1}–${Math.min(mulai + BERITA_PER_HALAMAN, filtered.length)} dari ${filtered.length} berita`; wrap.appendChild(info);
 
             const btns = document.createElement('div'); btns.className = 'pagination-btns';
             const btnPrev = document.createElement('button'); btnPrev.className = 'btn-page'; btnPrev.textContent = '◀ Prev'; btnPrev.disabled = _halamanAktif === 1;
-            btnPrev.addEventListener('click', () => { _halamanAktif--; renderDaftarBerita(); window.scrollTo({top: document.getElementById('daftarBeritaAdmin').offsetTop - 20, behavior: 'smooth'}); });
-            btns.appendChild(btnPrev);
+            btnPrev.addEventListener('click', () => { _halamanAktif--; renderDaftarBerita(); document.getElementById('sec-kelola').scrollIntoView({behavior:'smooth'}); }); btns.appendChild(btnPrev);
 
             const jangkauan = 2; const halamanDitampilkan = [];
             for (let i = 1; i <= totalHalaman; i++) { if (i === 1 || i === totalHalaman || (i >= _halamanAktif - jangkauan && i <= _halamanAktif + jangkauan)) halamanDitampilkan.push(i); }
@@ -914,13 +1070,11 @@
             halamanDitampilkan.forEach(i => {
                 if (terakhir && i - terakhir > 1) { const ellipsis = document.createElement('span'); ellipsis.textContent = '...'; ellipsis.style.cssText = 'padding:6px 4px; color:#95a5a6; font-size:13px;'; btns.appendChild(ellipsis); }
                 const btn = document.createElement('button'); btn.className = 'btn-page' + (i === _halamanAktif ? ' active' : ''); btn.textContent = i;
-                btn.addEventListener('click', () => { _halamanAktif = i; renderDaftarBerita(); window.scrollTo({top: document.getElementById('daftarBeritaAdmin').offsetTop - 20, behavior: 'smooth'}); });
-                btns.appendChild(btn); terakhir = i;
+                btn.addEventListener('click', () => { _halamanAktif = i; renderDaftarBerita(); document.getElementById('sec-kelola').scrollIntoView({behavior:'smooth'}); }); btns.appendChild(btn); terakhir = i;
             });
 
             const btnNext = document.createElement('button'); btnNext.className = 'btn-page'; btnNext.textContent = 'Next ▶'; btnNext.disabled = _halamanAktif === totalHalaman;
-            btnNext.addEventListener('click', () => { _halamanAktif++; renderDaftarBerita(); window.scrollTo({top: document.getElementById('daftarBeritaAdmin').offsetTop - 20, behavior: 'smooth'}); });
-            btns.appendChild(btnNext);
+            btnNext.addEventListener('click', () => { _halamanAktif++; renderDaftarBerita(); document.getElementById('sec-kelola').scrollIntoView({behavior:'smooth'}); }); btns.appendChild(btnNext);
             wrap.appendChild(btns); paginasiEl.appendChild(wrap);
         }
 
@@ -929,9 +1083,7 @@
         document.getElementById('filterStatus').addEventListener('change', () => { _halamanAktif = 1; renderDaftarBerita(); });
         document.getElementById('btnResetFilter').addEventListener('click', () => { document.getElementById('filterJudul').value = ''; document.getElementById('filterKategori').value = ''; document.getElementById('filterStatus').value = ''; _halamanAktif = 1; renderDaftarBerita(); });
 
-        // ===============================================
-        // MENAMPILKAN & HAPUS DATA PENDAFTAR
-        // ===============================================
+        // MENAMPILKAN PENDAFTAR
         function muatDaftarPendaftar() {
             const q = query(collection(db, "pendaftar"), orderBy("tanggalDaftar", "desc"));
             onSnapshot(q, (snapshot) => {
@@ -960,14 +1112,8 @@
                             <button class="btn-delete" data-id="${id}">Hapus ❌</button>
                         </div>
                     `;
-                    if (!isApproved) {
-                        item.querySelector(".btn-approve").addEventListener("click", async () => {
-                            if (confirm(`Setujui pendaftar atas nama ${data.nama}?`)) { try { await updateDoc(doc(db, "pendaftar", id), { status: 'approved' }); } catch (error) { alert("Gagal menyetujui: " + error.message); } }
-                        });
-                    }
-                    item.querySelector(".btn-delete").addEventListener("click", async () => {
-                        if (confirm("Yakin ingin menghapus data pendaftar ini?")) { try { await deleteDoc(doc(db, "pendaftar", id)); } catch (error) { alert("Gagal menghapus data: " + error.message); } }
-                    });
+                    if (!isApproved) { item.querySelector(".btn-approve").addEventListener("click", async () => { if (confirm(`Setujui pendaftar atas nama ${data.nama}?`)) { try { await updateDoc(doc(db, "pendaftar", id), { status: 'approved' }); } catch (error) { alert("Gagal menyetujui: " + error.message); } } }); }
+                    item.querySelector(".btn-delete").addEventListener("click", async () => { if (confirm("Yakin ingin menghapus data pendaftar ini?")) { try { await deleteDoc(doc(db, "pendaftar", id)); } catch (error) { alert("Gagal menghapus data: " + error.message); } } });
                     daftarPendaftarAdmin.appendChild(item);
                 });
             });
@@ -1024,7 +1170,7 @@
                 const [arrAtas, arrKiri, arrSidebar, arrTengah, arrFooter] = await Promise.all([prosesUploadKategori('Atas'), prosesUploadKategori('Kiri'), prosesUploadKategori('Sidebar'), prosesUploadKategori('Tengah'), prosesUploadKategori('Footer')]);
                 await setDoc(doc(db, "pengaturan", "iklan"), { ads_top: arrAtas, ads_left: arrKiri, ads_sidebar: arrSidebar, ads_tengah: arrTengah, ads_footer: arrFooter, diupdate: new Date() });
                 alert("✅ Semua iklan disimpan!"); muatDataIklan();
-            } catch (err) { alert("❌ Gagal menyimpan iklan: " + err.message); } finally { btnSimpan.innerText = "💾 Simpan Semua Pengaturan Iklan"; btnSimpan.disabled = false; }
+            } catch (err) { alert("❌ Gagal menyimpan iklan: " + err.message); } finally { btnSimpan.innerText = "💾 Simpan Semua Iklan"; btnSimpan.disabled = false; }
         });
 
         // BLOCK BUILDER
@@ -1091,9 +1237,7 @@
             try { const snap = await getDocs(collection(db, 'media_partners')); if (snap.empty) { emptyEl.textContent = 'Belum ada media partner.'; return; } snap.forEach(d => _semuaPartner.push({ id: d.id, ...d.data() })); _halamanMP = 1; renderMediaPartner(); } catch (e) { emptyEl.textContent = 'Gagal memuat: ' + e.message; emptyEl.style.display = 'block'; }
         }
 
-        // ===============================================
-        // FUNGSI STATISTIK (DITAMBAHKAN DI SINI)
-        // ===============================================
+        // STATISTIK
         async function muatStatistikAdmin() {
             try {
                 const snap = await getDoc(doc(db, 'pengaturan', 'statistik'));
@@ -1106,26 +1250,15 @@
                 }
             } catch(e) {}
         }
-
         document.getElementById('btnSimpanStatistik').addEventListener('click', async () => {
-            const btn = document.getElementById('btnSimpanStatistik');
-            btn.innerText = '⏳ Menyimpan...'; btn.disabled = true;
+            const btn = document.getElementById('btnSimpanStatistik'); btn.innerText = '⏳ Menyimpan...'; btn.disabled = true;
             try {
                 await setDoc(doc(db, 'pengaturan', 'statistik'), {
-                    dpw: document.getElementById('statDpw').value || 0,
-                    dpc: document.getElementById('statDpc').value || 0,
-                    pac: document.getElementById('statPac').value || 0,
-                    anggota: document.getElementById('statAnggota').value || 0,
-                    diupdate: new Date()
-                });
-                alert('✅ Statistik berhasil disimpan!');
-            } catch(e) {
-                alert('❌ Gagal: ' + e.message);
-            } finally {
-                btn.innerText = '💾 Simpan Statistik'; btn.disabled = false;
-            }
+                    dpw: document.getElementById('statDpw').value || 0, dpc: document.getElementById('statDpc').value || 0,
+                    pac: document.getElementById('statPac').value || 0, anggota: document.getElementById('statAnggota').value || 0, diupdate: new Date()
+                }); alert('✅ Statistik berhasil disimpan!');
+            } catch(e) { alert('❌ Gagal: ' + e.message); } finally { btn.innerText = '💾 Simpan Statistik'; btn.disabled = false; }
         });
-        // ===============================================
 
         // PENGATURAN WHATSAPP
         async function muatPengaturanWA() {
@@ -1139,7 +1272,7 @@
         document.getElementById('btnSimpanWA').addEventListener('click', async () => {
             const btn = document.getElementById('btnSimpanWA'); const nomor = document.getElementById('inputNomorWA').value.trim().replace(/\D/g,''); const pesan = document.getElementById('inputPesanWA').value.trim();
             if (!nomor) { alert('Nomor WhatsApp tidak boleh kosong!'); return; } btn.innerText = '⏳ Menyimpan...'; btn.disabled = true;
-            try { await setDoc(doc(db, 'pengaturan', 'whatsapp'), { nomor, pesan }); alert('✅ Nomor WhatsApp berhasil disimpan!'); } catch(e) { alert('❌ Gagal: ' + e.message); } finally { btn.innerText = '💾 Simpan Nomor WhatsApp'; btn.disabled = false; }
+            try { await setDoc(doc(db, 'pengaturan', 'whatsapp'), { nomor, pesan }); alert('✅ Nomor WhatsApp berhasil disimpan!'); } catch(e) { alert('❌ Gagal: ' + e.message); } finally { btn.innerText = '💾 Simpan WA'; btn.disabled = false; }
         });
 
         document.getElementById('btnTambahPartner').addEventListener('click', () => { _semuaPartner.push({ id: '', nama: '', logo: '', link: '', _baru: true }); _halamanMP = Math.ceil(_semuaPartner.length / MP_PER_HALAMAN); renderMediaPartner(); });
@@ -1154,125 +1287,59 @@
                     if (!logoUrl) { alert(`Logo untuk "${nama}" belum ada!`); return; } const payload = { nama, logo: logoUrl, link };
                     if (row.dataset.mpId) { await updateDoc(doc(db, 'media_partners', row.dataset.mpId), payload); } else { const newDoc = await addDoc(collection(db, 'media_partners'), { ...payload, urutan: Date.now() }); row.dataset.mpId = newDoc.id; }
                 } alert('✅ Media partner berhasil disimpan!'); await muatMediaPartner();
-            } catch (e) { alert('❌ Gagal: ' + e.message); } finally { btn.innerText = '💾 Simpan Semua Media Partner'; btn.disabled = false; }
+            } catch (e) { alert('❌ Gagal: ' + e.message); } finally { btn.innerText = '💾 Simpan Media Partner'; btn.disabled = false; }
         });
 
-        // ===============================================
-        // PENGATURAN HALAMAN REDAKSI GENERIK (Dengan Update FOTO untuk Investigasi & DPW)
-        // ===============================================
+        // PENGATURAN HALAMAN REDAKSI GENERIK 
         const DEFAULT_REDAKSI = {
             judul_pendiri: "☆ Pendiri KJNI ☆", judul_pengurus_inti: "☆ Pengurus Inti DPP KJNI ☆", judul_dewan_pembina: "☆ Dewan Pembina & Penasehat ☆", judul_pimpinan_redaksi: "☆ Pimpinan Redaksi ☆", judul_investigasi: "☆ Bidang Investigasi PTI ☆", judul_dpw: "☆ Pengurus DPW/DPC ☆", judul_asosiasi: "☆ Asosiasi Wartawan / Jurnalis ☆"
         };
-
         function esc(str) { return String(str ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-
         function buatTombolUrutan(el) {
-            const wrap = document.createElement('div');
-            wrap.className = 'gen-order-btns';
+            const wrap = document.createElement('div'); wrap.className = 'gen-order-btns';
             wrap.innerHTML = `<button type="button" class="btn-gen-up" title="Naik">▲</button><button type="button" class="btn-gen-down" title="Turun">▼</button>`;
-            wrap.querySelector('.btn-gen-up').addEventListener('click', () => {
-                const prev = el.previousElementSibling;
-                if (prev) el.parentNode.insertBefore(el, prev);
-            });
-            wrap.querySelector('.btn-gen-down').addEventListener('click', () => {
-                const next = el.nextElementSibling;
-                if (next) el.parentNode.insertBefore(next, el);
-            });
-            return wrap;
+            wrap.querySelector('.btn-gen-up').addEventListener('click', () => { const prev = el.previousElementSibling; if (prev) el.parentNode.insertBefore(el, prev); });
+            wrap.querySelector('.btn-gen-down').addEventListener('click', () => { const next = el.nextElementSibling; if (next) el.parentNode.insertBefore(next, el); }); return wrap;
         }
 
         function buatBarisGenerik(wrapId, type, values = {}) {
-            const wrap = document.getElementById(wrapId);
-            const row = document.createElement('div');
-            row.className = 'gen-row';
-
+            const wrap = document.getElementById(wrapId); const row = document.createElement('div'); row.className = 'gen-row';
             if (type === '2col' || type === '1col-foto') {
-                row.classList.add('gen-2col');
-                const fotoSrc = values.foto || 'https://via.placeholder.com/54x54.png?text=Foto';
-                const isInvestigasi = type === '1col-foto';
+                row.classList.add('gen-2col'); const fotoSrc = values.foto || 'https://via.placeholder.com/54x54.png?text=Foto'; const isInvestigasi = type === '1col-foto';
                 row.innerHTML = `
-                    <div class="gen-foto-wrap">
-                        <img class="gen-foto-preview" src="${fotoSrc}" alt="foto">
-                        <input type="file" class="gen-foto-file" accept="image/*">
-                        <input type="hidden" class="gen-foto-url" value="${values.foto || ''}">
-                    </div>
-                    <div class="gen-fields-2col" style="${isInvestigasi ? 'justify-content:center;' : ''}">
-                        ${!isInvestigasi ? `<input type="text" class="gen-jabatan" placeholder="Jabatan (contoh: Ketua DPP)" value="${values.jabatan || ''}">` : ''}
-                        <input type="text" class="gen-nama" placeholder="${isInvestigasi ? 'Nama Anggota (Investigasi)' : 'Nama Lengkap'}" value="${values.nama || ''}">
-                    </div>
+                    <div class="gen-foto-wrap"><img class="gen-foto-preview" src="${fotoSrc}" alt="foto"><input type="file" class="gen-foto-file" accept="image/*"><input type="hidden" class="gen-foto-url" value="${values.foto || ''}"></div>
+                    <div class="gen-fields-2col" style="${isInvestigasi ? 'justify-content:center;' : ''}">${!isInvestigasi ? `<input type="text" class="gen-jabatan" placeholder="Jabatan (contoh: Ketua DPP)" value="${values.jabatan || ''}">` : ''}<input type="text" class="gen-nama" placeholder="${isInvestigasi ? 'Nama Anggota' : 'Nama Lengkap'}" value="${values.nama || ''}"></div>
                     <button type="button" class="btn-hapus-gen">Hapus ❌</button>
                 `;
-                row.querySelector('.gen-foto-file').addEventListener('change', (e) => {
-                    const file = e.target.files[0]; if (!file) return;
-                    const reader = new FileReader(); reader.onload = ev => { row.querySelector('.gen-foto-preview').src = ev.target.result; }; reader.readAsDataURL(file);
-                });
+                row.querySelector('.gen-foto-file').addEventListener('change', (e) => { const file = e.target.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = ev => { row.querySelector('.gen-foto-preview').src = ev.target.result; }; reader.readAsDataURL(file); });
                 row.insertBefore(buatTombolUrutan(row), row.firstChild);
             } else if (type === '1col') {
                 row.innerHTML = `<input type="text" class="gen-nama" placeholder="Nama / Teks" value="${values.nama || ''}"><button type="button" class="btn-hapus-gen">Hapus ❌</button>`;
                 row.insertBefore(buatTombolUrutan(row), row.firstChild);
             } else if (type === 'dpw') {
                 row.style.cssText = "flex-direction:column; align-items:stretch; background:#f9f9f9; padding:15px; border:1px solid #dcdcdc;";
-                const perangkat = (values.perangkat && values.perangkat.length) ? values.perangkat : [
-                    { jabatan: 'Ketua', nama: '', foto: '' },
-                    { jabatan: 'Sekretaris', nama: '', foto: '' },
-                    { jabatan: 'Bendahara', nama: '', foto: '' }
-                ];
-
+                const perangkat = (values.perangkat && values.perangkat.length) ? values.perangkat : [ { jabatan: 'Ketua', nama: '', foto: '' }, { jabatan: 'Sekretaris', nama: '', foto: '' }, { jabatan: 'Bendahara', nama: '', foto: '' } ];
                 row.innerHTML = `
-                    <div style="display:flex; gap:10px; margin-bottom:10px; align-items:flex-start;">
-                        <div class="gen-order-btns"><button type="button" class="btn-gen-up" title="Naik">▲</button><button type="button" class="btn-gen-down" title="Turun">▼</button></div>
-                        <input type="text" class="gen-dpw-label" placeholder="Label (Cth: DPW / DPC)" value="${values.label || 'DPW'}" style="font-weight:bold; width:110px; flex-shrink:0;">
-                        <input type="text" class="gen-dpw-nama" placeholder="Nama Wilayah (Cth: Jawa Barat / Kota Tangerang)" value="${values.nama || ''}" style="font-weight:bold; flex:1;">
-                    </div>
-                    <div class="gen-dpw-perangkat"></div>
-                    <button type="button" class="btn-tambah-perangkat" style="background:#e8f5e9; color:#2e7d32; border:1px dashed #2e7d32; padding:8px 12px; cursor:pointer; border-radius:4px; font-weight:bold; font-size:12px; margin-top:5px;">+ Tambah Jabatan / Perangkat</button>
-                    <button type="button" class="btn-hapus-gen" style="align-self:flex-end; margin-top:8px;">Hapus DPW/DPC ❌</button>
+                    <div style="display:flex; gap:10px; margin-bottom:10px; align-items:flex-start;"><div class="gen-order-btns"><button type="button" class="btn-gen-up" title="Naik">▲</button><button type="button" class="btn-gen-down" title="Turun">▼</button></div><input type="text" class="gen-dpw-label" placeholder="Label (Cth: DPW / DPC)" value="${values.label || 'DPW'}" style="font-weight:bold; width:110px; flex-shrink:0;"><input type="text" class="gen-dpw-nama" placeholder="Nama Wilayah (Cth: Jawa Barat / Kota Tangerang)" value="${values.nama || ''}" style="font-weight:bold; flex:1;"></div>
+                    <div class="gen-dpw-perangkat"></div><button type="button" class="btn-tambah-perangkat" style="background:#e8f5e9; color:#2e7d32; border:1px dashed #2e7d32; padding:8px 12px; cursor:pointer; border-radius:4px; font-weight:bold; font-size:12px; margin-top:5px;">+ Tambah Jabatan / Perangkat</button><button type="button" class="btn-hapus-gen" style="align-self:flex-end; margin-top:8px;">Hapus DPW/DPC ❌</button>
                 `;
-
-                row.querySelector('.btn-gen-up').addEventListener('click', () => {
-                    const prev = row.previousElementSibling;
-                    if (prev) row.parentNode.insertBefore(row, prev);
-                });
-                row.querySelector('.btn-gen-down').addEventListener('click', () => {
-                    const next = row.nextElementSibling;
-                    if (next) row.parentNode.insertBefore(next, row);
-                });
-
+                row.querySelector('.btn-gen-up').addEventListener('click', () => { const prev = row.previousElementSibling; if (prev) row.parentNode.insertBefore(row, prev); });
+                row.querySelector('.btn-gen-down').addEventListener('click', () => { const next = row.nextElementSibling; if (next) row.parentNode.insertBefore(next, row); });
                 const perangkatWrap = row.querySelector('.gen-dpw-perangkat');
-
                 const buatBarisPerangkat = (p = {}) => {
-                    const prow = document.createElement('div');
+                    const prow = document.createElement('div'); prow.style.cssText = "display:flex; align-items:center; gap:10px; background:#fff; padding:10px; border-radius:4px; border:1px solid #eee; margin-bottom:5px; flex-wrap:wrap;";
                     prow.className = 'gen-dpw-prow';
-                    prow.style.cssText = "display:flex; align-items:center; gap:10px; background:#fff; padding:10px; border-radius:4px; border:1px solid #eee; margin-bottom:5px; flex-wrap:wrap;";
                     prow.innerHTML = `
-                        <div class="gen-order-btns"><button type="button" class="btn-gen-up" title="Naik">▲</button><button type="button" class="btn-gen-down" title="Turun">▼</button></div>
-                        <input type="text" class="prow-jabatan" placeholder="Jabatan (Cth: Ketua / Wakil Ketua)" value="${esc(p.jabatan || '')}" style="width:160px; padding:6px; font-size:13px; margin:0;">
-                        <img class="prow-preview" src="${p.foto || 'https://via.placeholder.com/40x40.png?text=Foto'}" style="width:40px; height:40px; border-radius:0; object-fit:cover; flex-shrink:0;">
-                        <div style="display:flex; flex-direction:column; gap:5px; flex:1; min-width:160px;">
-                            <input type="text" class="prow-nama" placeholder="Nama Lengkap" value="${esc(p.nama || '')}" style="padding:6px; font-size:13px; margin:0; width:100%;">
-                            <input type="file" class="prow-file" accept="image/*" style="font-size:11px;">
-                            <input type="hidden" class="prow-url" value="${p.foto || ''}">
-                        </div>
+                        <div class="gen-order-btns"><button type="button" class="btn-gen-up" title="Naik">▲</button><button type="button" class="btn-gen-down" title="Turun">▼</button></div><input type="text" class="prow-jabatan" placeholder="Jabatan" value="${esc(p.jabatan || '')}" style="width:160px; padding:6px; font-size:13px; margin:0;"><img class="prow-preview" src="${p.foto || 'https://via.placeholder.com/40x40.png?text=Foto'}" style="width:40px; height:40px; border-radius:0; object-fit:cover; flex-shrink:0;">
+                        <div style="display:flex; flex-direction:column; gap:5px; flex:1; min-width:160px;"><input type="text" class="prow-nama" placeholder="Nama Lengkap" value="${esc(p.nama || '')}" style="padding:6px; font-size:13px; margin:0; width:100%;"><input type="file" class="prow-file" accept="image/*" style="font-size:11px;"><input type="hidden" class="prow-url" value="${p.foto || ''}"></div>
                         <button type="button" class="btn-hapus-prow" style="background:#ffebee; color:#d32f2f; border:none; padding:6px 10px; cursor:pointer; border-radius:4px; font-weight:bold; flex-shrink:0;">❌</button>
                     `;
-                    prow.querySelector('.prow-file').addEventListener('change', e => {
-                        const file = e.target.files[0]; if (!file) return;
-                        const r = new FileReader(); r.onload = ev => { prow.querySelector('.prow-preview').src = ev.target.result; }; r.readAsDataURL(file);
-                    });
+                    prow.querySelector('.prow-file').addEventListener('change', e => { const file = e.target.files[0]; if (!file) return; const r = new FileReader(); r.onload = ev => { prow.querySelector('.prow-preview').src = ev.target.result; }; r.readAsDataURL(file); });
                     prow.querySelector('.btn-hapus-prow').addEventListener('click', () => prow.remove());
-                    prow.querySelector('.btn-gen-up').addEventListener('click', () => {
-                        const prev = prow.previousElementSibling;
-                        if (prev) prow.parentNode.insertBefore(prow, prev);
-                    });
-                    prow.querySelector('.btn-gen-down').addEventListener('click', () => {
-                        const next = prow.nextElementSibling;
-                        if (next) prow.parentNode.insertBefore(next, prow);
-                    });
-                    perangkatWrap.appendChild(prow);
+                    prow.querySelector('.btn-gen-up').addEventListener('click', () => { const prev = prow.previousElementSibling; if (prev) prow.parentNode.insertBefore(prow, prev); });
+                    prow.querySelector('.btn-gen-down').addEventListener('click', () => { const next = prow.nextElementSibling; if (next) prow.parentNode.insertBefore(next, prow); }); perangkatWrap.appendChild(prow);
                 };
-
                 perangkat.forEach(p => buatBarisPerangkat(p));
-
                 row.querySelector('.btn-tambah-perangkat').addEventListener('click', () => buatBarisPerangkat());
             }
             row.querySelector('.btn-hapus-gen').addEventListener('click', () => row.remove()); wrap.appendChild(row);
@@ -1282,32 +1349,19 @@
             const rows = document.querySelectorAll(`#${wrapId} .gen-row`); const hasil = [];
             for (const row of rows) {
                 if (type === '2col' || type === '1col-foto') {
-                    const nama = row.querySelector('.gen-nama').value.trim();
-                    if (!nama && type==='1col-foto') continue;
-                    let obj = { nama };
-                    if (type === '2col') {
-                        const jabatan = row.querySelector('.gen-jabatan').value.trim();
-                        if (!jabatan && !nama) continue;
-                        obj.jabatan = jabatan;
-                    }
-                    let foto = row.querySelector('.gen-foto-url').value;
-                    const file = row.querySelector('.gen-foto-file').files[0];
+                    const nama = row.querySelector('.gen-nama').value.trim(); if (!nama && type==='1col-foto') continue; let obj = { nama };
+                    if (type === '2col') { const jabatan = row.querySelector('.gen-jabatan').value.trim(); if (!jabatan && !nama) continue; obj.jabatan = jabatan; }
+                    let foto = row.querySelector('.gen-foto-url').value; const file = row.querySelector('.gen-foto-file').files[0];
                     if (file) { if (btnStatus) btnStatus.innerText = `⏳ Upload foto "${nama}"...`; foto = await uploadKeCloudinary(file); row.querySelector('.gen-foto-url').value = foto; }
                     obj.foto = foto; hasil.push(obj);
                 } else if (type === '1col') {
                     const nama = row.querySelector('.gen-nama').value.trim(); if (nama) hasil.push(nama);
                 } else if (type === 'dpw') {
-                    const label = row.querySelector('.gen-dpw-label').value.trim() || 'DPW';
-                    const nama = row.querySelector('.gen-dpw-nama').value.trim();
-                    if (!nama) continue;
-                    const perangkat = [];
-                    const prows = row.querySelectorAll('.gen-dpw-prow');
+                    const label = row.querySelector('.gen-dpw-label').value.trim() || 'DPW'; const nama = row.querySelector('.gen-dpw-nama').value.trim(); if (!nama) continue;
+                    const perangkat = []; const prows = row.querySelectorAll('.gen-dpw-prow');
                     for (const prow of prows) {
-                        const jabatan = prow.querySelector('.prow-jabatan').value.trim();
-                        const namaPerangkat = prow.querySelector('.prow-nama').value.trim();
-                        if (!jabatan && !namaPerangkat) continue;
-                        let foto = prow.querySelector('.prow-url').value;
-                        const file = prow.querySelector('.prow-file').files[0];
+                        const jabatan = prow.querySelector('.prow-jabatan').value.trim(); const namaPerangkat = prow.querySelector('.prow-nama').value.trim(); if (!jabatan && !namaPerangkat) continue;
+                        let foto = prow.querySelector('.prow-url').value; const file = prow.querySelector('.prow-file').files[0];
                         if (file) { if (btnStatus) btnStatus.innerText = `⏳ Upload foto ${jabatan || ''} ${nama}...`; foto = await uploadKeCloudinary(file); prow.querySelector('.prow-url').value = foto; }
                         perangkat.push({ jabatan, nama: namaPerangkat, foto });
                     }
@@ -1319,44 +1373,14 @@
         document.querySelectorAll('.btn-tambah[data-target]').forEach(btn => { btn.addEventListener('click', () => { buatBarisGenerik(btn.dataset.target, btn.dataset.type); }); });
 
         async function muatDataRedaksi() {
-            let data = DEFAULT_REDAKSI;
-            try { const snap = await getDoc(doc(db, 'pengaturan', 'redaksi')); if (snap.exists()) data = { ...DEFAULT_REDAKSI, ...snap.data() }; } catch (e) {}
-
+            let data = DEFAULT_REDAKSI; try { const snap = await getDoc(doc(db, 'pengaturan', 'redaksi')); if (snap.exists()) data = { ...DEFAULT_REDAKSI, ...snap.data() }; } catch (e) {}
             document.getElementById('redJudulPendiri').value = data.judul_pendiri || DEFAULT_REDAKSI.judul_pendiri; document.getElementById('redJudulPengurus').value = data.judul_pengurus_inti || DEFAULT_REDAKSI.judul_pengurus_inti; document.getElementById('redJudulPembina').value = data.judul_dewan_pembina || DEFAULT_REDAKSI.judul_dewan_pembina; document.getElementById('redJudulPimpinan').value = data.judul_pimpinan_redaksi || DEFAULT_REDAKSI.judul_pimpinan_redaksi; document.getElementById('redJudulInvestigasi').value = data.judul_investigasi || DEFAULT_REDAKSI.judul_investigasi; document.getElementById('redJudulDPW').value = data.judul_dpw || DEFAULT_REDAKSI.judul_dpw; document.getElementById('redJudulAsosiasi').value = data.judul_asosiasi || DEFAULT_REDAKSI.judul_asosiasi;
-
             const leg = data.legalitas || {}; document.getElementById('redLegalNama').value = leg.nama || ''; document.getElementById('redLegalAkte').value = leg.akte || ''; document.getElementById('redLegalSK').value = leg.sk || ''; document.getElementById('redLegalDaftar').value = leg.daftar_perseroan || ''; document.getElementById('redLegalNpwp').value = leg.npwp || '';
-
-            const isiList = (wrapId, arr, type) => {
-                const wrap = document.getElementById(wrapId); wrap.innerHTML = '';
-                (arr || []).forEach(item => { const values = (type === '1col') ? { nama: item } : item; buatBarisGenerik(wrapId, type, values); });
-            };
+            const isiList = (wrapId, arr, type) => { const wrap = document.getElementById(wrapId); wrap.innerHTML = ''; (arr || []).forEach(item => { const values = (type === '1col') ? { nama: item } : item; buatBarisGenerik(wrapId, type, values); }); };
             isiList('wrapPendiri', data.pendiri, '2col'); isiList('wrapPengurus', data.pengurus_inti, '2col'); isiList('wrapPembina', data.dewan_pembina, '2col'); isiList('wrapPimpinan', data.pimpinan_redaksi, '2col'); 
-            
-            // Konversi struktur investigasi & dpw agar mendukung format object (kompatibilitas dengan data string lama)
-            const invData = (data.investigasi || []).map(i => typeof i === 'string' ? {nama: i, foto: ''} : i);
-            isiList('wrapInvestigasi', invData, '1col-foto');
-
-            const dpwData = (data.dpw || []).map(p => {
-                if (p.perangkat) {
-                    return { label: p.label || 'DPW', nama: p.nama || p.provinsi || '', perangkat: p.perangkat };
-                }
-                const toRole = (r, jabatan) => {
-                    const obj = typeof r === 'string' ? { nama: r, foto: '' } : (r || {});
-                    return { jabatan, nama: obj.nama || '', foto: obj.foto || '' };
-                };
-                return {
-                    label: 'DPW',
-                    nama: p.provinsi || '',
-                    perangkat: [
-                        toRole(p.ketua, 'Ketua'),
-                        toRole(p.sekretaris, 'Sekretaris'),
-                        toRole(p.bendahara, 'Bendahara')
-                    ]
-                };
-            });
-            isiList('wrapDPW', dpwData, 'dpw');
-            
-            isiList('wrapAsosiasi', data.asosiasi, '1col'); document.getElementById('redPemberitahuan').value = data.pemberitahuan || '';
+            const invData = (data.investigasi || []).map(i => typeof i === 'string' ? {nama: i, foto: ''} : i); isiList('wrapInvestigasi', invData, '1col-foto');
+            const dpwData = (data.dpw || []).map(p => { if (p.perangkat) { return { label: p.label || 'DPW', nama: p.nama || p.provinsi || '', perangkat: p.perangkat }; } const toRole = (r, jabatan) => { const obj = typeof r === 'string' ? { nama: r, foto: '' } : (r || {}); return { jabatan, nama: obj.nama || '', foto: obj.foto || '' }; }; return { label: 'DPW', nama: p.provinsi || '', perangkat: [ toRole(p.ketua, 'Ketua'), toRole(p.sekretaris, 'Sekretaris'), toRole(p.bendahara, 'Bendahara') ] }; });
+            isiList('wrapDPW', dpwData, 'dpw'); isiList('wrapAsosiasi', data.asosiasi, '1col'); document.getElementById('redPemberitahuan').value = data.pemberitahuan || '';
         }
 
         document.getElementById('btnSimpanRedaksi').addEventListener('click', async () => {
@@ -1366,146 +1390,53 @@
                     judul_pendiri: document.getElementById('redJudulPendiri').value.trim(), judul_pengurus_inti: document.getElementById('redJudulPengurus').value.trim(), judul_dewan_pembina: document.getElementById('redJudulPembina').value.trim(), judul_pimpinan_redaksi: document.getElementById('redJudulPimpinan').value.trim(), judul_investigasi: document.getElementById('redJudulInvestigasi').value.trim(), judul_dpw: document.getElementById('redJudulDPW').value.trim(), judul_asosiasi: document.getElementById('redJudulAsosiasi').value.trim(),
                     legalitas: { nama: document.getElementById('redLegalNama').value.trim(), akte: document.getElementById('redLegalAkte').value.trim(), sk: document.getElementById('redLegalSK').value.trim(), daftar_perseroan: document.getElementById('redLegalDaftar').value.trim(), npwp: document.getElementById('redLegalNpwp').value.trim() },
                     pendiri: await kumpulkanGenerik('wrapPendiri', '2col', btn), pengurus_inti: await kumpulkanGenerik('wrapPengurus', '2col', btn), dewan_pembina: await kumpulkanGenerik('wrapPembina', '2col', btn), pimpinan_redaksi: await kumpulkanGenerik('wrapPimpinan', '2col', btn), 
-                    investigasi: await kumpulkanGenerik('wrapInvestigasi', '1col-foto', btn), 
-                    dpw: await kumpulkanGenerik('wrapDPW', 'dpw', btn), 
-                    asosiasi: await kumpulkanGenerik('wrapAsosiasi', '1col'), pemberitahuan: document.getElementById('redPemberitahuan').value.trim(), diupdate: new Date()
+                    investigasi: await kumpulkanGenerik('wrapInvestigasi', '1col-foto', btn), dpw: await kumpulkanGenerik('wrapDPW', 'dpw', btn), asosiasi: await kumpulkanGenerik('wrapAsosiasi', '1col'), pemberitahuan: document.getElementById('redPemberitahuan').value.trim(), diupdate: new Date()
                 };
                 await setDoc(doc(db, 'pengaturan', 'redaksi'), payload); alert('✅ Pengaturan Redaksi berhasil disimpan!');
             } catch (e) { alert('❌ Gagal menyimpan: ' + e.message); } finally { btn.innerText = '💾 Simpan Pengaturan Redaksi'; btn.disabled = false; }
         });
 
-        // ===============================================
-        // PENGATURAN HALAMAN TENTANG KAMI & KONTAK
-        // ===============================================
-        document.getElementById('inputFotoFilosofi').addEventListener('change', (e) => {
-            const file = e.target.files[0]; if (!file) return;
-            const reader = new FileReader();
-            reader.onload = ev => {
-                const img = document.getElementById('previewFoto');
-                img.src = ev.target.result;
-                img.style.display = 'block';
-                document.getElementById('btnHapusFotoFilosofi').style.display = 'inline-block';
-            };
-            reader.readAsDataURL(file);
-        });
-
-        document.getElementById('btnHapusFotoFilosofi').addEventListener('click', () => {
-            document.getElementById('inputFotoFilosofi').value = '';
-            document.getElementById('urlFotoLama').value = '';
-            const img = document.getElementById('previewFoto');
-            img.src = ''; img.style.display = 'none';
-            document.getElementById('btnHapusFotoFilosofi').style.display = 'none';
-        });
-
-        async function muatPengaturanKontak() {
-            try {
-                const snap = await getDoc(doc(db, 'pengaturan', 'halaman_kontak'));
-                if (snap.exists()) {
-                    const data = snap.data();
-                    document.getElementById('inputSejarah').value = data.sejarah || '';
-                    document.getElementById('inputFilosofi').value = data.filosofi || '';
-
-                    if (data.fotoFilosofi) {
-                        const img = document.getElementById('previewFoto');
-                        img.src = data.fotoFilosofi;
-                        img.style.display = 'block';
-                        document.getElementById('urlFotoLama').value = data.fotoFilosofi;
-                        document.getElementById('btnHapusFotoFilosofi').style.display = 'inline-block';
-                    }
-                }
-            } catch(e) { console.warn("Gagal memuat kontak:", e.message); }
-        }
-
+        // TENTANG KAMI
+        document.getElementById('inputFotoFilosofi').addEventListener('change', (e) => { const file = e.target.files[0]; if (!file) return; const reader = new FileReader(); reader.onload = ev => { const img = document.getElementById('previewFoto'); img.src = ev.target.result; img.style.display = 'block'; document.getElementById('btnHapusFotoFilosofi').style.display = 'inline-block'; }; reader.readAsDataURL(file); });
+        document.getElementById('btnHapusFotoFilosofi').addEventListener('click', () => { document.getElementById('inputFotoFilosofi').value = ''; document.getElementById('urlFotoLama').value = ''; const img = document.getElementById('previewFoto'); img.src = ''; img.style.display = 'none'; document.getElementById('btnHapusFotoFilosofi').style.display = 'none'; });
+        async function muatPengaturanKontak() { try { const snap = await getDoc(doc(db, 'pengaturan', 'halaman_kontak')); if (snap.exists()) { const data = snap.data(); document.getElementById('inputSejarah').value = data.sejarah || ''; document.getElementById('inputFilosofi').value = data.filosofi || ''; if (data.fotoFilosofi) { const img = document.getElementById('previewFoto'); img.src = data.fotoFilosofi; img.style.display = 'block'; document.getElementById('urlFotoLama').value = data.fotoFilosofi; document.getElementById('btnHapusFotoFilosofi').style.display = 'inline-block'; } } } catch(e) {} }
         document.getElementById('btnSimpanKontak').addEventListener('click', async () => {
-            const btn = document.getElementById('btnSimpanKontak');
-            btn.innerText = '⏳ Menyimpan...';
-            btn.disabled = true;
+            const btn = document.getElementById('btnSimpanKontak'); btn.innerText = '⏳ Menyimpan...'; btn.disabled = true;
             try {
-                let fotoFilosofi = document.getElementById('urlFotoLama').value;
-                const fileFoto = document.getElementById('inputFotoFilosofi').files[0];
+                let fotoFilosofi = document.getElementById('urlFotoLama').value; const fileFoto = document.getElementById('inputFotoFilosofi').files[0];
                 if (fileFoto) { btn.innerText = '⏳ Upload foto...'; fotoFilosofi = await uploadKeCloudinary(fileFoto); document.getElementById('urlFotoLama').value = fotoFilosofi; }
-
-                const payload = {
-                    sejarah: document.getElementById('inputSejarah').value.trim(),
-                    filosofi: document.getElementById('inputFilosofi').value.trim(),
-                    fotoFilosofi: fotoFilosofi,
-                    diupdate: new Date()
-                };
-                await setDoc(doc(db, 'pengaturan', 'halaman_kontak'), payload);
-                alert('✅ Pengaturan Tentang Kami & Kontak berhasil disimpan!');
-            } catch (e) {
-                alert('❌ Gagal menyimpan: ' + e.message);
-            } finally {
-                btn.innerText = '💾 Simpan Pengaturan Tentang Kami & Kontak';
-                btn.disabled = false;
-            }
+                const payload = { sejarah: document.getElementById('inputSejarah').value.trim(), filosofi: document.getElementById('inputFilosofi').value.trim(), fotoFilosofi: fotoFilosofi, diupdate: new Date() };
+                await setDoc(doc(db, 'pengaturan', 'halaman_kontak'), payload); alert('✅ Pengaturan Tentang Kami & Kontak berhasil disimpan!');
+            } catch (e) { alert('❌ Gagal menyimpan: ' + e.message); } finally { btn.innerText = '💾 Simpan Pengaturan Halaman'; btn.disabled = false; }
         });
 
-        // ===============================================
-        // KELOLA PENGGUNA (ADMIN & USER)
-        // ===============================================
+        // KELOLA PENGGUNA
         document.getElementById('formTambahPengguna').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const btn = document.getElementById('btnTambahPengguna');
-            const email = document.getElementById('puEmail').value.trim();
-            const password = document.getElementById('puPassword').value;
-            const role = document.getElementById('puRole').value;
-
+            e.preventDefault(); const btn = document.getElementById('btnTambahPengguna'); const email = document.getElementById('puEmail').value.trim(); const password = document.getElementById('puPassword').value; const role = document.getElementById('puRole').value;
             btn.innerText = '⏳ Membuat akun...'; btn.disabled = true;
             try {
-                // Gunakan instance Firebase Auth kedua agar sesi login admin saat ini tidak terganti
-                const cred = await createUserWithEmailAndPassword(secondaryAuth, email, password);
-                const uid = cred.user.uid;
-
-                await setDoc(doc(db, 'pengguna', uid), { email, role, dibuat: new Date() });
-
-                await signOut(secondaryAuth); // bersihkan sesi sementara di instance kedua
-
-                alert(`✅ Akun "${email}" berhasil dibuat dengan role ${role.toUpperCase()}.`);
-                document.getElementById('formTambahPengguna').reset();
-                muatDaftarPengguna();
-            } catch (err) {
-                alert('❌ Gagal membuat akun: ' + err.message);
-            } finally {
-                btn.innerText = '➕ Buat Akun Pengguna'; btn.disabled = false;
-            }
+                const cred = await createUserWithEmailAndPassword(secondaryAuth, email, password); const uid = cred.user.uid;
+                await setDoc(doc(db, 'pengguna', uid), { email, role, dibuat: new Date() }); await signOut(secondaryAuth); 
+                alert(`✅ Akun "${email}" berhasil dibuat dengan role ${role.toUpperCase()}.`); document.getElementById('formTambahPengguna').reset(); muatDaftarPengguna();
+            } catch (err) { alert('❌ Gagal membuat akun: ' + err.message); } finally { btn.innerText = '➕ Buat Akun Pengguna'; btn.disabled = false; }
         });
 
         async function muatDaftarPengguna() {
             const wrap = document.getElementById('daftarPengguna');
             try {
                 const snap = await getDocs(collection(db, 'pengguna'));
-                if (snap.empty) {
-                    wrap.innerHTML = '<p style="color:#7f8c8d; font-size:13px;">Belum ada pengguna tambahan terdaftar. Akun login utama tetap berlaku sebagai Admin.</p>';
-                    return;
-                }
+                if (snap.empty) { wrap.innerHTML = '<p style="color:#7f8c8d; font-size:13px;">Belum ada pengguna tambahan terdaftar. Akun login utama tetap berlaku sebagai Admin.</p>'; return; }
                 wrap.innerHTML = '';
                 snap.forEach(docSnap => {
-                    const d = docSnap.data(); const uid = docSnap.id;
-                    const row = document.createElement('div');
-                    row.className = 'user-row';
-                    row.innerHTML = `
-                        <span class="user-email">${esc(d.email || uid)}</span>
-                        <span class="role-badge ${d.role === 'admin' ? 'admin' : 'user'}">${d.role === 'admin' ? 'Admin' : 'User'}</span>
-                        <select class="pu-role-select">
-                            <option value="user" ${d.role !== 'admin' ? 'selected' : ''}>User</option>
-                            <option value="admin" ${d.role === 'admin' ? 'selected' : ''}>Admin</option>
-                        </select>
-                        <button type="button" class="btn-tambah pu-simpan-role" style="padding:8px 12px; font-size:12px;">💾 Simpan Role</button>
-                    `;
+                    const d = docSnap.data(); const uid = docSnap.id; const row = document.createElement('div'); row.className = 'user-row';
+                    row.innerHTML = `<span class="user-email">${esc(d.email || uid)}</span><span class="role-badge ${d.role === 'admin' ? 'admin' : 'user'}">${d.role === 'admin' ? 'Admin' : 'User'}</span><select class="pu-role-select"><option value="user" ${d.role !== 'admin' ? 'selected' : ''}>User</option><option value="admin" ${d.role === 'admin' ? 'selected' : ''}>Admin</option></select><button type="button" class="btn-tambah pu-simpan-role" style="padding:8px 12px; font-size:12px; margin-bottom:0; width:auto;">💾 Simpan</button>`;
                     row.querySelector('.pu-simpan-role').addEventListener('click', async () => {
                         const newRole = row.querySelector('.pu-role-select').value;
-                        try {
-                            await setDoc(doc(db, 'pengguna', uid), { email: d.email || '', role: newRole, dibuat: d.dibuat || new Date() });
-                            alert(`✅ Role "${d.email}" diubah menjadi ${newRole.toUpperCase()}.`);
-                            muatDaftarPengguna();
-                        } catch (err) { alert('❌ Gagal mengubah role: ' + err.message); }
+                        try { await setDoc(doc(db, 'pengguna', uid), { email: d.email || '', role: newRole, dibuat: d.dibuat || new Date() }); alert(`✅ Role "${d.email}" diubah menjadi ${newRole.toUpperCase()}.`); muatDaftarPengguna(); } catch (err) { alert('❌ Gagal mengubah role: ' + err.message); }
                     });
                     wrap.appendChild(row);
                 });
-            } catch (e) {
-                wrap.innerHTML = `<p style="color:#d32f2f; font-size:13px;">Gagal memuat data pengguna: ${esc(e.message)}</p>`;
-            }
+            } catch (e) { wrap.innerHTML = `<p style="color:#d32f2f; font-size:13px;">Gagal memuat data pengguna: ${esc(e.message)}</p>`; }
         }
     </script>
 </body>
