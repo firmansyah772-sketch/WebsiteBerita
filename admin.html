@@ -32,6 +32,7 @@
         .form-group input, .form-group textarea, .form-group select { 
             width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box; font-family: inherit;
         }
+        .preview-img { display: none; max-width: 220px; max-height: 140px; object-fit: cover; border-radius: 6px; border: 1px solid #ddd; margin-top: 10px; background: #f5f5f5; }
         
         .btn { 
             background: #d32f2f; color: white; padding: 10px 20px; border: none; border-radius: 4px; 
@@ -394,6 +395,35 @@
 
             <hr style="border: 1px solid #eceff1; margin: 40px 0;">
 
+            <h3>🏢 Pengaturan Tentang Kami & Kontak</h3>
+            <p style="font-size: 13px; color: #7f8c8d;">Atur teks Sejarah, Filosofi Logo, dan informasi Kontak yang tampil di halaman Tentang Kami & Kontak.</p>
+
+            <div class="ad-section">
+                <h4 style="margin-top:0; color:#d32f2f;">📝 Sejarah & Filosofi</h4>
+                <div class="form-group">
+                    <label>Sejarah Singkat KJNI</label>
+                    <textarea id="inputSejarah" rows="5" placeholder="Tulis sejarah KJNI..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Foto di Atas Filosofi Logo</label>
+                    <input type="file" id="inputFotoFilosofi" accept="image/*">
+                    <img id="previewFoto" class="preview-img">
+                    <input type="hidden" id="urlFotoLama" value="">
+                    <button type="button" id="btnHapusFotoFilosofi" class="btn" style="background:#95a5a6; margin-top:8px; display:none; font-size:12px; padding:6px 12px;">❌ Hapus Foto</button>
+                    <small style="color:#7f8c8d; margin-top:4px; display:block;">Foto ini akan tampil di atas judul "Filosofi Logo" pada halaman Tentang Kami. Kosongkan jika tidak ingin menampilkan foto.</small>
+                </div>
+
+                <div class="form-group">
+                    <label>Filosofi Logo</label>
+                    <textarea id="inputFilosofi" rows="6" placeholder="Tulis filosofi logo..."></textarea>
+                </div>
+            </div>
+
+            <div class="ad-section">
+                <button type="button" id="btnSimpanKontak" class="btn" style="width:100%; font-size:16px; padding:15px;">💾 Simpan Pengaturan Tentang Kami & Kontak</button>
+            </div>
+
             <h3>🗑️ Kelola Berita Saat Ini</h3>
             <p style="font-size: 13px; color: #7f8c8d;">Klik <strong>Edit ✏️</strong> untuk mengubah isi berita, atau <strong>Hapus ❌</strong> untuk menghapus secara permanen.</p>
             
@@ -538,6 +568,7 @@
                 muatDaftarPendaftar();
                 muatPengaturanWA();
                 muatDataRedaksi();
+                muatPengaturanKontak();
             } else {
                 loginSection.classList.remove("hidden");
                 dashboardSection.classList.add("hidden");
@@ -1196,6 +1227,72 @@
                 };
                 await setDoc(doc(db, 'pengaturan', 'redaksi'), payload); alert('✅ Pengaturan Redaksi berhasil disimpan!');
             } catch (e) { alert('❌ Gagal menyimpan: ' + e.message); } finally { btn.innerText = '💾 Simpan Pengaturan Redaksi'; btn.disabled = false; }
+        });
+        // ===============================================
+        // PENGATURAN HALAMAN TENTANG KAMI & KONTAK
+        // ===============================================
+        document.getElementById('inputFotoFilosofi').addEventListener('change', (e) => {
+            const file = e.target.files[0]; if (!file) return;
+            const reader = new FileReader();
+            reader.onload = ev => {
+                const img = document.getElementById('previewFoto');
+                img.src = ev.target.result;
+                img.style.display = 'block';
+                document.getElementById('btnHapusFotoFilosofi').style.display = 'inline-block';
+            };
+            reader.readAsDataURL(file);
+        });
+
+        document.getElementById('btnHapusFotoFilosofi').addEventListener('click', () => {
+            document.getElementById('inputFotoFilosofi').value = '';
+            document.getElementById('urlFotoLama').value = '';
+            const img = document.getElementById('previewFoto');
+            img.src = ''; img.style.display = 'none';
+            document.getElementById('btnHapusFotoFilosofi').style.display = 'none';
+        });
+
+        async function muatPengaturanKontak() {
+            try {
+                const snap = await getDoc(doc(db, 'pengaturan', 'halaman_kontak'));
+                if (snap.exists()) {
+                    const data = snap.data();
+                    document.getElementById('inputSejarah').value = data.sejarah || '';
+                    document.getElementById('inputFilosofi').value = data.filosofi || '';
+
+                    if (data.fotoFilosofi) {
+                        const img = document.getElementById('previewFoto');
+                        img.src = data.fotoFilosofi;
+                        img.style.display = 'block';
+                        document.getElementById('urlFotoLama').value = data.fotoFilosofi;
+                        document.getElementById('btnHapusFotoFilosofi').style.display = 'inline-block';
+                    }
+                }
+            } catch(e) { console.warn("Gagal memuat kontak:", e.message); }
+        }
+
+        document.getElementById('btnSimpanKontak').addEventListener('click', async () => {
+            const btn = document.getElementById('btnSimpanKontak');
+            btn.innerText = '⏳ Menyimpan...';
+            btn.disabled = true;
+            try {
+                let fotoFilosofi = document.getElementById('urlFotoLama').value;
+                const fileFoto = document.getElementById('inputFotoFilosofi').files[0];
+                if (fileFoto) { btn.innerText = '⏳ Upload foto...'; fotoFilosofi = await uploadKeCloudinary(fileFoto); document.getElementById('urlFotoLama').value = fotoFilosofi; }
+
+                const payload = {
+                    sejarah: document.getElementById('inputSejarah').value.trim(),
+                    filosofi: document.getElementById('inputFilosofi').value.trim(),
+                    fotoFilosofi: fotoFilosofi,
+                    diupdate: new Date()
+                };
+                await setDoc(doc(db, 'pengaturan', 'halaman_kontak'), payload);
+                alert('✅ Pengaturan Tentang Kami & Kontak berhasil disimpan!');
+            } catch (e) {
+                alert('❌ Gagal menyimpan: ' + e.message);
+            } finally {
+                btn.innerText = '💾 Simpan Pengaturan Tentang Kami & Kontak';
+                btn.disabled = false;
+            }
         });
     </script>
 </body>
