@@ -84,6 +84,7 @@
         .about-subtitle { color: var(--red); font-size: 18px; font-weight: 700; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
         .about-subtitle::before { content: ''; display: block; width: 4px; height: 16px; background: var(--red); border-radius: 2px; }
         .about-text { font-size: 15px; color: var(--text); line-height: 1.8; white-space: pre-wrap; text-align: justify; margin-bottom: 15px; }
+        .about-image { width: 100%; max-width: 320px; display: block; margin: 0 auto 18px; border-radius: 8px; box-shadow: var(--shadow); border: 1px solid var(--border); }
         
         .contact-card { background: var(--gray-light); padding: 20px; border-radius: 8px; border: 1px solid var(--border); margin-bottom: 20px; }
         .contact-item { display: flex; gap: 12px; margin-bottom: 15px; align-items: flex-start; }
@@ -200,6 +201,7 @@
                         </div>
 
                         <div class="about-section">
+                            <img id="filosofiFoto" class="about-image hidden" src="" alt="Filosofi Logo KJNI">
                             <h2 class="about-subtitle">Filosofi Logo</h2>
                             <div class="about-text" id="filosofiText"></div>
                         </div>
@@ -326,6 +328,14 @@ Menegaskan identitas kuat dan kesatuan visi: menjadi wadah jurnalis Nusantara ya
 
                 document.getElementById('sejarahText').innerText = data.sejarah || defaultSejarah;
                 document.getElementById('filosofiText').innerText = data.filosofi || defaultFilosofi;
+
+                const fotoEl = document.getElementById('filosofiFoto');
+                if (data.fotoFilosofi) {
+                    fotoEl.src = data.fotoFilosofi;
+                    fotoEl.classList.remove('hidden');
+                } else {
+                    fotoEl.classList.add('hidden');
+                }
                 
 
                 document.getElementById('loadingState').classList.add('hidden');
