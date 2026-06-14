@@ -23,6 +23,16 @@
     word-wrap: break-word; /* Memaksa teks panjang turun ke baris baru */
         }
         .hidden { display: none !important; }
+
+        .role-badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: bold; text-transform: uppercase; letter-spacing: .5px; }
+        .role-badge.admin { background: #ffebee; color: #d32f2f; }
+        .role-badge.user { background: #e3f2fd; color: #1565c0; }
+        .user-row { display: flex; align-items: center; gap: 10px; background: #fff; padding: 10px; border: 1px solid #ddd; border-radius: 6px; margin-bottom: 8px; flex-wrap: wrap; }
+        .user-row .user-email { flex: 1; min-width: 160px; font-size: 13px; font-weight: bold; word-break: break-all; }
+        .user-row select { padding: 6px; border: 1px solid #ccc; border-radius: 4px; font-size: 12px; font-family: inherit; }
+        .role-banner { padding: 10px 14px; border-radius: 6px; font-size: 13px; margin-bottom: 20px; border-left: 4px solid; }
+        .role-banner.admin { background: #ffebee; border-color: #d32f2f; color: #b71c1c; }
+        .role-banner.user { background: #e3f2fd; border-color: #1565c0; color: #0d47a1; }
         
         h2 { margin-top: 0; color: #d32f2f; border-bottom: 2px solid #eceff1; padding-bottom: 10px; }
         h3 { margin-top: 30px; color: #2c3e50; }
@@ -181,6 +191,8 @@
                 <button id="btnLogout" class="btn btn-logout" style="background:#d32f2f">Keluar (Logout)</button>
             </div>
 
+            <div id="roleBanner" class="role-banner hidden"></div>
+
             <h3>➕ Tambah Berita Baru</h3>
             <form id="uploadForm">
                 <div class="form-group">
@@ -237,6 +249,7 @@
                 <button type="submit" id="btnPublish" class="btn" >🚀 Publish Berita</button>
             </form>
 
+            <div id="adminOnlySections" class="admin-only">
             <hr style="border: 1px solid #eceff1; margin: 40px 0;">
             <h3>📢 Pengaturan Iklan Banner (Multiple)</h3>
             <p style="font-size: 13px; color: #7f8c8d;">Tambahkan sebanyak mungkin iklan di masing-masing posisi. Iklan akan tersusun ke bawah.(Max 2MB)</p>
@@ -424,6 +437,41 @@
                 <button type="button" id="btnSimpanKontak" class="btn" style="width:100%; font-size:16px; padding:15px;">💾 Simpan Pengaturan Tentang Kami & Kontak</button>
             </div>
 
+            <hr style="border: 1px solid #eceff1; margin: 40px 0;">
+
+            <h3>👥 Kelola Pengguna (Admin & User)</h3>
+            <p style="font-size: 13px; color: #7f8c8d;">Buat akun baru untuk admin lain atau staf yang hanya boleh mengunggah & mengedit berita. Role <strong>Admin</strong> memiliki akses penuh, role <strong>User</strong> hanya bisa mengelola berita.</p>
+
+            <div class="ad-section">
+                <h4 style="margin-top:0; color:#d32f2f;">➕ Tambah Pengguna Baru</h4>
+                <form id="formTambahPengguna">
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" id="puEmail" required placeholder="staf@kjni.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Password (minimal 6 karakter)</label>
+                        <input type="password" id="puPassword" required placeholder="Minimal 6 karakter">
+                    </div>
+                    <div class="form-group" style="margin-bottom:0;">
+                        <label>Role</label>
+                        <select id="puRole">
+                            <option value="user">User (hanya upload & edit berita)</option>
+                            <option value="admin">Admin (akses penuh)</option>
+                        </select>
+                    </div>
+                    <button type="submit" id="btnTambahPengguna" class="btn" style="margin-top:14px;">➕ Buat Akun Pengguna</button>
+                </form>
+            </div>
+
+            <div class="ad-section">
+                <h4 style="margin-top:0; color:#d32f2f;">📜 Daftar Pengguna</h4>
+                <div id="daftarPengguna"><p style="color:#7f8c8d; font-size:13px;">Memuat data pengguna...</p></div>
+            </div>
+            </div>
+
+            <hr style="border: 1px solid #eceff1; margin: 40px 0;">
+
             <h3>🗑️ Kelola Berita Saat Ini</h3>
             <p style="font-size: 13px; color: #7f8c8d;">Klik <strong>Edit ✏️</strong> untuk mengubah isi berita, atau <strong>Hapus ❌</strong> untuk menghapus secara permanen.</p>
             
@@ -520,7 +568,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, collection, addDoc, deleteDoc, updateDoc, doc, onSnapshot, query, orderBy, setDoc, getDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -536,6 +584,10 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
+        // App kedua khusus untuk membuat akun pengguna baru tanpa mengganti sesi login admin yang sedang aktif
+        const secondaryApp = initializeApp(firebaseConfig, "Secondary");
+        const secondaryAuth = getAuth(secondaryApp);
+
         const loginSection = document.getElementById("loginSection");
         const dashboardSection = document.getElementById("dashboardSection");
         const daftarBeritaAdmin = document.getElementById("daftarBeritaAdmin");
@@ -543,6 +595,7 @@
         const modalEdit = document.getElementById("modalEdit");
 
         let idBeritaYangDiedit = null;
+        let currentUserRole = 'admin'; // default; akan diisi ulang setelah cek dokumen pengguna
 
         document.getElementById("editGambar").addEventListener("change", function(e) {
             const file = e.target.files[0];
@@ -558,17 +611,43 @@
         });
 
         // A. CEK STATUS LOGIN REALTIME
-        onAuthStateChanged(auth, (user) => {
+        onAuthStateChanged(auth, async (user) => {
             if (user) {
                 loginSection.classList.add("hidden");
                 dashboardSection.classList.remove("hidden");
+
+                // Cek role pengguna dari Firestore (koleksi 'pengguna', id dokumen = UID)
+                // Jika dokumen tidak ditemukan, anggap sebagai admin (kompatibilitas akun lama)
+                let role = 'admin';
+                try {
+                    const snapRole = await getDoc(doc(db, 'pengguna', user.uid));
+                    if (snapRole.exists() && snapRole.data().role === 'user') role = 'user';
+                } catch (e) { console.warn('Gagal cek role pengguna:', e.message); }
+                currentUserRole = role;
+
+                const adminOnly = document.getElementById('adminOnlySections');
+                const roleBanner = document.getElementById('roleBanner');
+                if (role === 'user') {
+                    adminOnly.classList.add('hidden');
+                    roleBanner.className = 'role-banner user';
+                    roleBanner.innerHTML = `👤 Masuk sebagai <strong>User</strong> (${user.email}) — hanya bisa mengunggah & mengedit berita.`;
+                } else {
+                    adminOnly.classList.remove('hidden');
+                    roleBanner.className = 'role-banner admin';
+                    roleBanner.innerHTML = `🔑 Masuk sebagai <strong>Admin</strong> (${user.email}) — akses penuh ke seluruh pengaturan.`;
+                }
+
                 muatDaftarBerita();
-                muatDataIklan();
-                muatMediaPartner();
-                muatDaftarPendaftar();
-                muatPengaturanWA();
-                muatDataRedaksi();
-                muatPengaturanKontak();
+
+                if (role === 'admin') {
+                    muatDataIklan();
+                    muatMediaPartner();
+                    muatDaftarPendaftar();
+                    muatPengaturanWA();
+                    muatDataRedaksi();
+                    muatPengaturanKontak();
+                    muatDaftarPengguna();
+                }
             } else {
                 loginSection.classList.remove("hidden");
                 dashboardSection.classList.add("hidden");
@@ -760,6 +839,7 @@
                 const item = document.createElement("div");
                 item.className = "article-item";
                 item.style.opacity = isAktif ? '1' : '0.6';
+                const isAdmin = currentUserRole === 'admin';
                 item.innerHTML = `
                     <div class="article-info">
                         <span>${data.kategori}</span>
@@ -767,20 +847,24 @@
                         <span class="article-title">${data.judul}</span>
                     </div>
                     <div class="article-actions">
-                        <button class="btn-toggle-${isAktif ? 'nonaktif' : 'aktif'}" data-id="${beritaDocId}" data-status="${isAktif ? 'aktif' : 'nonaktif'}">${isAktif ? '⏸️ Nonaktifkan' : '▶️ Aktifkan'}</button>
+                        ${isAdmin ? `<button class="btn-toggle-${isAktif ? 'nonaktif' : 'aktif'}" data-id="${beritaDocId}" data-status="${isAktif ? 'aktif' : 'nonaktif'}">${isAktif ? '⏸️ Nonaktifkan' : '▶️ Aktifkan'}</button>` : ''}
                         <button class="btn-edit" data-id="${beritaDocId}">Edit ✏️</button>
-                        <button class="btn-delete" data-id="${beritaDocId}">Hapus ❌</button>
+                        ${isAdmin ? `<button class="btn-delete" data-id="${beritaDocId}">Hapus ❌</button>` : ''}
                     </div>
                 `;
-                item.querySelector(".btn-toggle-" + (isAktif ? 'nonaktif' : 'aktif')).addEventListener("click", async (e) => {
-                    const idnya = e.target.getAttribute("data-id");
-                    const statusBaru = e.target.getAttribute("data-status") === 'aktif' ? 'nonaktif' : 'aktif';
-                    try { await updateDoc(doc(db, "berita", idnya), { status: statusBaru }); } catch(err) { alert("Gagal mengubah status: " + err.message); }
-                });
+                if (isAdmin) {
+                    item.querySelector(".btn-toggle-" + (isAktif ? 'nonaktif' : 'aktif')).addEventListener("click", async (e) => {
+                        const idnya = e.target.getAttribute("data-id");
+                        const statusBaru = e.target.getAttribute("data-status") === 'aktif' ? 'nonaktif' : 'aktif';
+                        try { await updateDoc(doc(db, "berita", idnya), { status: statusBaru }); } catch(err) { alert("Gagal mengubah status: " + err.message); }
+                    });
+                }
                 item.querySelector(".btn-edit").addEventListener("click", () => bukaModalEdit(beritaDocId, data.judul, data.kategori, data.isi, data.blok_konten || [], data.gambar, data.hashtags || ""));
-                item.querySelector(".btn-delete").addEventListener("click", async (e) => {
-                    if (confirm("Yakin ingin menghapus berita ini permanen?")) await deleteDoc(doc(db, "berita", e.target.getAttribute("data-id")));
-                });
+                if (isAdmin) {
+                    item.querySelector(".btn-delete").addEventListener("click", async (e) => {
+                        if (confirm("Yakin ingin menghapus berita ini permanen?")) await deleteDoc(doc(db, "berita", e.target.getAttribute("data-id")));
+                    });
+                }
                 daftarBeritaAdmin.appendChild(item);
             });
 
@@ -1294,6 +1378,73 @@
                 btn.disabled = false;
             }
         });
+
+        // ===============================================
+        // KELOLA PENGGUNA (ADMIN & USER)
+        // ===============================================
+        document.getElementById('formTambahPengguna').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btnTambahPengguna');
+            const email = document.getElementById('puEmail').value.trim();
+            const password = document.getElementById('puPassword').value;
+            const role = document.getElementById('puRole').value;
+
+            btn.innerText = '⏳ Membuat akun...'; btn.disabled = true;
+            try {
+                // Gunakan instance Firebase Auth kedua agar sesi login admin saat ini tidak terganti
+                const cred = await createUserWithEmailAndPassword(secondaryAuth, email, password);
+                const uid = cred.user.uid;
+
+                await setDoc(doc(db, 'pengguna', uid), { email, role, dibuat: new Date() });
+
+                await signOut(secondaryAuth); // bersihkan sesi sementara di instance kedua
+
+                alert(`✅ Akun "${email}" berhasil dibuat dengan role ${role.toUpperCase()}.`);
+                document.getElementById('formTambahPengguna').reset();
+                muatDaftarPengguna();
+            } catch (err) {
+                alert('❌ Gagal membuat akun: ' + err.message);
+            } finally {
+                btn.innerText = '➕ Buat Akun Pengguna'; btn.disabled = false;
+            }
+        });
+
+        async function muatDaftarPengguna() {
+            const wrap = document.getElementById('daftarPengguna');
+            try {
+                const snap = await getDocs(collection(db, 'pengguna'));
+                if (snap.empty) {
+                    wrap.innerHTML = '<p style="color:#7f8c8d; font-size:13px;">Belum ada pengguna tambahan terdaftar. Akun login utama tetap berlaku sebagai Admin.</p>';
+                    return;
+                }
+                wrap.innerHTML = '';
+                snap.forEach(docSnap => {
+                    const d = docSnap.data(); const uid = docSnap.id;
+                    const row = document.createElement('div');
+                    row.className = 'user-row';
+                    row.innerHTML = `
+                        <span class="user-email">${esc(d.email || uid)}</span>
+                        <span class="role-badge ${d.role === 'admin' ? 'admin' : 'user'}">${d.role === 'admin' ? 'Admin' : 'User'}</span>
+                        <select class="pu-role-select">
+                            <option value="user" ${d.role !== 'admin' ? 'selected' : ''}>User</option>
+                            <option value="admin" ${d.role === 'admin' ? 'selected' : ''}>Admin</option>
+                        </select>
+                        <button type="button" class="btn-tambah pu-simpan-role" style="padding:8px 12px; font-size:12px;">💾 Simpan Role</button>
+                    `;
+                    row.querySelector('.pu-simpan-role').addEventListener('click', async () => {
+                        const newRole = row.querySelector('.pu-role-select').value;
+                        try {
+                            await setDoc(doc(db, 'pengguna', uid), { email: d.email || '', role: newRole, dibuat: d.dibuat || new Date() });
+                            alert(`✅ Role "${d.email}" diubah menjadi ${newRole.toUpperCase()}.`);
+                            muatDaftarPengguna();
+                        } catch (err) { alert('❌ Gagal mengubah role: ' + err.message); }
+                    });
+                    wrap.appendChild(row);
+                });
+            } catch (e) {
+                wrap.innerHTML = `<p style="color:#d32f2f; font-size:13px;">Gagal memuat data pengguna: ${esc(e.message)}</p>`;
+            }
+        }
     </script>
 </body>
 </html>
