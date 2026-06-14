@@ -179,7 +179,7 @@
         .soc-card .cnt { font-size: 14px; font-weight: 700; }
         .soc-fb { background: #3b5998; } .soc-tw { background: #1da1f2; } .soc-yt { background: #ff0000; } .soc-ig { background: #e1306c; }
 
-        /* MEDIA PARTNER */
+        /* MEDIA PARTNER & STATISTIK */
         .media-partner { background: var(--white); padding: 16px 14px 14px; margin-top: 14px; border-radius: 6px; box-shadow: var(--shadow); overflow: hidden; }
         .mp-marquee-wrap { width: 100%; overflow: hidden; position: relative; margin-top: 10px; }
         .mp-marquee-wrap::before,
@@ -192,6 +192,12 @@
         .partner-logo { display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
         .partner-logo img { max-height: 38px; max-width: 110px; object-fit: contain; transition: filter .3s, transform .3s; }
         .partner-logo:hover img { filter: grayscale(0) opacity(1); transform: scale(1.08); }
+
+        .stat-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 8px; }
+        @media(min-width: 600px) { .stat-grid { grid-template-columns: repeat(4, 1fr); } }
+        .stat-card { background: var(--gray-light); border: 1px solid var(--border); border-radius: 6px; padding: 16px 10px; text-align: center; }
+        .stat-num { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 900; color: var(--red); margin-bottom: 4px; line-height: 1; }
+        .stat-lbl { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: .5px; }
 
         /* AD */
         #dynamicAdFooter { text-align: center; padding: 14px 0; }
@@ -278,7 +284,7 @@
 </head>
 <body>
 
-<a href="https://wa.me/6283817591582" target="_blank" class="wa-float" title="Hubungi Redaksi" id="waFloatBtn">    <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5 -.669 -.51 -.173 -.008 -.371 -.01 -.57 -.01 -.198 0 -.52 .074 -.792 .372 -.272 .297 -1.04 1.016 -1.04 2.479 0 1.462 1.065 2.875 1.2₁₃ 3.074 .₁₄₉ .₁₉₈ ₂₀₉₆ ₃.₂ ₅.₀₇₇ ₄.₄₈₇ .₇₀₉ .₃₀₆ ₁₂₆₂ .₄₈₉ ₁.₆₉₄ .₆₂⁵ .₇₁₂ .₂₂⁷ ₁³⁶ .₁⁹⁵ ₁.₈⁷₁ .₁₁⁸ .៥⁷¹ -." fill="currentColor"/></svg>
+  <a href="https://wa.me/6281234567890" target="_blank" class="wa-float" title="Hubungi Redaksi" id="waFloatBtn">    <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
 </a>
 
 <header class="site-header">
@@ -347,9 +353,7 @@
         <aside class="sidebar-left" id="dynamicAdLeft" style="display:none;"></aside>
 
         <main>
-            <div class="filter-strip" id="filterBar">
-                
-            </div>
+            <div class="filter-strip" id="filterBar"></div>
             <div id="searchResultsArea" style="display:none;"></div>
             <div id="heroArea"></div>
             <div class="sec-label" id="secLabel">Berita Terbaru</div>
@@ -367,6 +371,14 @@
                     <p style="color:var(--text-muted);font-size:13px;text-align:center;padding:8px 0;">Memuat...</p>
                 </div>
             </div>
+
+            <div class="media-partner" style="margin-top: 14px; padding-bottom: 20px;">
+                <div class="sec-label" style="margin:0 0 14px;">Statistik Jaringan KJNI</div>
+                <div class="stat-grid" id="statistikWrap">
+                    <p style="color:var(--text-muted);font-size:13px;text-align:center;padding:8px 0;width:100%;">Memuat...</p>
+                </div>
+            </div>
+
         </main>
         
         <aside>
@@ -426,7 +438,7 @@
                     <a class="fsb-fb" href="#" target="_blank"><svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>FB</a>
                     <a class="fsb-ig" href="#" target="_blank"><svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>IG</a>
                     <a class="fsb-yt" href="#" target="_blank"><svg viewBox="0 0 24 24"><path d="M23.495 6.205a3.007 3.007 0 0 0-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 0 0 .527 6.205a31.247 31.247 0 0 0-.522 5.805 31.247 31.247 0 0 0 .522 5.783 3.007 3.007 0 0 0 2.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 0 0 2.088-2.088 31.247 31.247 0 0 0 .5-5.783 31.247 31.247 0 0 0-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/></svg>YT</a>
-                    <a class="fsb-wa" href="https://wa.me/6283817591582" target="_blank"><svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>WA</a>
+                    <a class="fsb-wa" href="https://wa.me/6283817591582" target="_blank"><svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" fill="currentColor"/></svg>WA</a>
                     <a class="fsb-tg" href="#" target="_blank"><svg viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>TG</a>
                 </div>
             </div>
@@ -437,10 +449,8 @@
                     <li><a href="KontakKami.html">Kontak Kami</a></li>
                     <li><a href="PedomanMediaSiber.html">Pedoman Media Siber</a></li>
                     <li><a href="Disclaimer.html">Disclaimer</a></li>
-                    
                 </ul>
             </div>
-
         </div>
         <div class="footer-bottom"><p>&copy; 2026 KJNI.my.id &mdash; Portal Berita Tangerang, Banten &amp; Indonesia.</p></div>
     </div>
@@ -468,15 +478,12 @@
     </div>
 </div>
 
-
-
 <script>
     document.getElementById('themeBtn').addEventListener('click', () => {
         const h = document.documentElement;
         h.getAttribute('data-theme') === 'dark' ? h.removeAttribute('data-theme') : h.setAttribute('data-theme','dark');
     });
     
-    /* LOGIKA MENU DROPDOWN HAMBURGER */
     const hamburgerBtn = document.getElementById('hamburgerBtn'), 
           hDropdown = document.getElementById('hamburgerDropdown');
 
@@ -496,7 +503,6 @@
             hDropdown.classList.remove('open');
         }
     });
-    /* AKHIR LOGIKA DROPDOWN */
 
     const searchDrop = document.getElementById('searchDrop');
     document.getElementById('searchToggleBtn').addEventListener('click', () => {
@@ -555,26 +561,6 @@
     document.getElementById('modalClose').addEventListener('click', () => modal.classList.remove('open'));
     modal.addEventListener('click', e => { if(e.target===modal) modal.classList.remove('open'); });
 
-    function bukaArtikel(data) {
-        document.getElementById('modalKategori').textContent = data.kategori;
-        document.getElementById('modalJudul').textContent = data.judul;
-        let tgl='Baru saja';
-        if(data.tanggalDibuat&&data.tanggalDibuat.seconds) tgl=new Date(data.tanggalDibuat.seconds*1000).toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'});
-        const penulis=data.penulis||'Redaksi KJNI';
-        const menit=Math.ceil((data.isi||'').trim().split(/\s+/).length/200)+' menit';
-        document.getElementById('modalMeta').innerHTML=`<span class="author">&#x270D;&#xFE0F; ${penulis}</span><span>&#x1F4C5; ${tgl}</span><span>&#x23F1; ${menit} baca</span>`;
-        const img=document.getElementById('modalGambar');
-        if(data.gambar){img.src=data.gambar;img.alt=data.judul;img.style.display='block';}else{img.style.display='none';}
-        document.getElementById('modalIsi').innerHTML='<p>'+(data.isi||'').replace(/\n\n+/g,'</p><p>').replace(/\n/g,'<br>')+'</p>';
-        const url=encodeURIComponent(window.location.href),judul=encodeURIComponent(data.judul);
-        document.getElementById('shareFb').href=`https://www.facebook.com/sharer.php?u=${url}`;
-        document.getElementById('shareTw').href=`https://twitter.com/share?url=${url}&text=${judul}`;
-        document.getElementById('shareWa').href=`https://wa.me/?text=${judul}%20${url}`;
-        document.getElementById('shareTg').href=`https://t.me/share/url?url=${url}&text=${judul}`;
-        modal.classList.add('open');
-        modal.querySelector('.modal-box').scrollTop=0;
-    }
-
     document.addEventListener('click', e => {
         const card=e.target.closest('[data-id]');
         if(!card) return;
@@ -599,14 +585,11 @@
         semuaBerita=snapshot.docs.map(d=>({id:d.id,...d.data()})).filter(b => b.status !== 'nonaktif');
         beritaMap={}; semuaBerita.forEach(b=>beritaMap[b.id]=b); window._beritaMap=beritaMap;
         
-        // --- KODE TAMBAHAN UNTUK MEMBACA KATEGORI DARI URL ---
         const params = new URLSearchParams(window.location.search);
         const katDariUrl = params.get('kategori');
 
         if (katDariUrl) {
             window._filterAktif = katDariUrl;
-            
-            // Mengubah status tombol navigasi agar menyala merah (active) sesuai kategori
             document.querySelectorAll('.cat-nav-inner a').forEach(a => {
                 a.classList.toggle('active', a.dataset.kat === katDariUrl);
             });
@@ -614,8 +597,6 @@
                 p.classList.toggle('active', p.dataset.kat === katDariUrl);
             });
         }
-        // -----------------------------------------------------
-
         renderBerita(); renderSidebar(); updateTicker();
     }, err => {
         document.getElementById('newsGrid').innerHTML=`<div class="empty-state"><div class="ico">&#x26A0;&#xFE0F;</div><p>Gagal memuat berita.</p><p style="font-size:11px;margin-top:6px;">${err.message}</p></div>`;
@@ -627,35 +608,30 @@
             if(!ds.exists()) return; 
             const data=ds.data();
             
-            // Sidebar Kanan
             const ws=document.getElementById("dynamicAdSidebar");
             if(data.ads_sidebar&&data.ads_sidebar.length>0){
                 ws.style.display="block";
                 ws.innerHTML=`<p style="font-size:10px;color:var(--text-muted);text-transform:uppercase;text-align:center;margin-bottom:6px;">Advertisement</p>`+data.ads_sidebar.map(ad=>`<a href="${ad.link||'#'}" target="_blank" style="display:block;margin-bottom:10px;"><img src="${ad.img}" alt="Ad" style="width:100%;border-radius:4px;"></a>`).join('');
             }
             
-            // Footer (Bawah)
             const wf=document.getElementById("dynamicAdFooter");
             if(data.ads_footer&&data.ads_footer.length>0){
                 wf.style.display="block";
                 wf.innerHTML=`<p class="ad-lbl">Advertisement</p>`+data.ads_footer.map(ad=>`<a href="${ad.link||'#'}" target="_blank"><img src="${ad.img}" alt="Ad" style="max-width:728px;width:100%;border-radius:4px; margin: 0 auto;"></a>`).join('');
             }
 
-            // Top (Atas)
             const wt=document.getElementById("dynamicAdTop");
             if(data.ads_top&&data.ads_top.length>0){
                 wt.style.display="block";
                 wt.innerHTML=`<p class="ad-lbl">Advertisement</p>`+data.ads_top.map(ad=>`<a href="${ad.link||'#'}" target="_blank" style="display:block;margin-bottom:10px;"><img src="${ad.img}" alt="Ad" style="max-width:970px;width:100%;border-radius:4px; margin: 0 auto; max-height:250px; object-fit:contain;"></a>`).join('');
             }
 
-            // Sidebar Kiri (Left)
             const wl=document.getElementById("dynamicAdLeft");
             if(data.ads_left&&data.ads_left.length>0){
                 wl.style.display="block";
                 document.getElementById('mainLayout').classList.add('has-left-ad');
                 wl.innerHTML=`<div style="position:sticky;top:112px;"><p style="font-size:10px;color:var(--text-muted);text-transform:uppercase;text-align:center;margin-bottom:6px;">Advertisement</p>`+data.ads_left.map(ad=>`<a href="${ad.link||'#'}" target="_blank" style="display:block;margin-bottom:10px;"><img src="${ad.img}" alt="Ad" style="width:100%;border-radius:4px;"></a>`).join('')+`</div>`;
             }
-
         } catch(e){}
     }
     muatIklan();
@@ -683,29 +659,41 @@
         }
     }
     renderMediaPartner();
+
+    // =============== FITUR STATISTIK ================
+    async function muatStatistik() {
+        const wrap = document.getElementById('statistikWrap');
+        try {
+            const snap = await getDoc(doc(db, 'pengaturan', 'statistik'));
+            let data = { dpw: 0, dpc: 0, pac: 0, anggota: 0 };
+            if (snap.exists()) data = { ...data, ...snap.data() };
+            
+            wrap.innerHTML = `
+                <div class="stat-card"><div class="stat-num">${data.dpw}</div><div class="stat-lbl">DPW</div></div>
+                <div class="stat-card"><div class="stat-num">${data.dpc}</div><div class="stat-lbl">DPC</div></div>
+                <div class="stat-card"><div class="stat-num">${data.pac}</div><div class="stat-lbl">PAC</div></div>
+                <div class="stat-card"><div class="stat-num">${data.anggota}</div><div class="stat-lbl">Anggota</div></div>
+            `;
+        } catch (e) {
+            wrap.innerHTML = '<p style="color:var(--text-muted);font-size:13px;text-align:center;width:100%;grid-column:1/-1;">Gagal memuat statistik.</p>';
+        }
+    }
+    muatStatistik();
+    // ================================================
     
     let sliderInterval=null;
 
     function buildSlider(slides) {
-        let cur=0;
-        const total=slides.length;
-        if(!total) return;
-
+        let cur=0; const total=slides.length; if(!total) return;
         const dotsHtml = total>1 ? slides.map((_,i)=>`<button class="slider-dot${i===0?' active':''}" data-idx="${i}"></button>`).join('') : '';
-
-        // Semua slide di dalam wrap (gambar saja, absolute stacked)
         const slidesHtml = slides.map((b,i)=>`<div class="hero-slide${i===0?' active':''}" data-id="${b.id}">${b.gambar?`<img class="hero-slide-img" src="${b.gambar}" alt="${b.judul}" loading="lazy">`:`<div class="hero-slide-placeholder">&#x1F4F0;</div>`}</div>`).join('');
-
-        // Info panel pertama
         const firstInfo = slides[0];
         const infoHtml = `<div class="hero-slide-info" id="sliderInfo"><span class="cat-badge">${firstInfo.kategori}</span><div class="hero-slide-title">${firstInfo.judul}</div><div class="hero-slide-meta"><span class="author">&#x270D;&#xFE0F; ${firstInfo.penulis||'Redaksi KJNI'}</span><span>&#x1F4C5; ${formatTgl(firstInfo.tanggalDibuat)}</span></div></div>`;
 
         const html = `<div class="hero-slider" id="heroSlider">`
             + `<div class="hero-slider-wrap">${slidesHtml}</div>`
             + (total>1 ? `<button class="slider-arrow prev" id="sliderPrev">&#8249;</button><button class="slider-arrow next" id="sliderNext">&#8250;</button>` : '')
-            + infoHtml
-            + (total>1 ? `<div class="slider-dots">${dotsHtml}</div>` : '')
-            + `</div>`;
+            + infoHtml + (total>1 ? `<div class="slider-dots">${dotsHtml}</div>` : '') + `</div>`;
 
         document.getElementById('heroArea').innerHTML = html;
         if(total<=1) return;
@@ -716,7 +704,6 @@
             cur = (n+total)%total;
             prevSlides[cur].classList.add('active');
             document.querySelectorAll('.slider-dot').forEach((d,i)=>d.classList.toggle('active',i===cur));
-            // Update info panel
             const b = slides[cur];
             document.getElementById('sliderInfo').innerHTML = `<span class="cat-badge">${b.kategori}</span><div class="hero-slide-title">${b.judul}</div><div class="hero-slide-meta"><span class="author">&#x270D;&#xFE0F; ${b.penulis||'Redaksi KJNI'}</span><span>&#x1F4C5; ${formatTgl(b.tanggalDibuat)}</span></div>`;
         }
@@ -724,13 +711,9 @@
         document.getElementById('sliderPrev').onclick = e=>{e.stopPropagation();goTo(cur-1);resetAuto();};
         document.getElementById('sliderNext').onclick = e=>{e.stopPropagation();goTo(cur+1);resetAuto();};
         document.querySelectorAll('.slider-dot').forEach(d=>d.addEventListener('click',e=>{e.stopPropagation();goTo(+d.dataset.idx);resetAuto();}));
-
-        // Click slide → buka artikel
         document.querySelectorAll('#heroSlider .hero-slide').forEach(s=>s.addEventListener('click',()=>{window.location.href=`artikel.html?id=${s.dataset.id}`;}));
 
-        // Swipe
-        let tx=0;
-        const wrap = document.querySelector('#heroSlider .hero-slider-wrap');
+        let tx=0; const wrap = document.querySelector('#heroSlider .hero-slider-wrap');
         wrap.addEventListener('touchstart',e=>{tx=e.touches[0].clientX;},{passive:true});
         wrap.addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-tx;if(Math.abs(dx)>40){goTo(dx<0?cur+1:cur-1);resetAuto();}},{passive:true});
 
@@ -747,7 +730,6 @@
         if(!list.length){heroArea.innerHTML='';newsGrid.innerHTML=`<div class="empty-state"><div class="ico">&#x1F4ED;</div><p>Belum ada berita untuk kategori ini.</p></div>`;return;}
         
         if(fa==='Semua') {
-            // Tampilkan slider dari 5 berita teratas
             const sliderItems=list.slice(0,5);
             buildSlider(sliderItems);
             const sisa=list.slice(5);
@@ -767,42 +749,23 @@
         const top5=semuaBerita.slice(0,5);
         document.getElementById('sidebarNews').innerHTML=!top5.length?'<p style="color:var(--text-muted);font-size:13px;padding:6px 0;">Belum ada berita.</p>':top5.map((b,i)=>`<div class="pop-item" data-id="${b.id}"><div class="pop-num">${String(i+1).padStart(2,'0')}</div><div class="pop-title">${b.judul}</div></div>`).join('');
     }
-    
     function updateTicker() { document.getElementById('tickerText').textContent=semuaBerita.map(b=>b.judul).join('  \u2022  '); }
-    // ===== LOAD NOMOR WA DINAMIS =====
-(async () => {
-    try {
-        const snap = await getDoc(doc(db, 'pengaturan', 'whatsapp'));
-        if (snap.exists()) {
-            const { nomor, pesan } = snap.data();
-            if (nomor) {
-                const url = 'https://wa.me/' + nomor + (pesan ? '?text=' + encodeURIComponent(pesan) : '');
-                const waBtn = document.getElementById('waFloatBtn');
-                if (waBtn) waBtn.href = url;
-                // Update juga tombol WA di share bar jika ada
-                const fsb = document.querySelector('.fsb-wa');
-                if (fsb) fsb.href = url;
+
+    (async () => {
+        try {
+            const snap = await getDoc(doc(db, 'pengaturan', 'whatsapp'));
+            if (snap.exists()) {
+                const { nomor, pesan } = snap.data();
+                if (nomor) {
+                    const url = 'https://wa.me/' + nomor + (pesan ? '?text=' + encodeURIComponent(pesan) : '');
+                    const waBtn = document.getElementById('waFloatBtn');
+                    if (waBtn) waBtn.href = url;
+                    const fsb = document.querySelector('.fsb-wa');
+                    if (fsb) fsb.href = url;
+                }
             }
-        }
-    } catch(e) { console.warn('Gagal load WA settings:', e.message); }
-})();
-// ===== LOAD NOMOR WA DINAMIS =====
-(async () => {
-    try {
-        const snap = await getDoc(doc(db, 'pengaturan', 'whatsapp'));
-        if (snap.exists()) {
-            const { nomor, pesan } = snap.data();
-            if (nomor) {
-                const url = 'https://wa.me/' + nomor + (pesan ? '?text=' + encodeURIComponent(pesan) : '');
-                const waBtn = document.getElementById('waFloatBtn');
-                if (waBtn) waBtn.href = url;
-                // Update juga tombol WA di share bar jika ada
-                const fsb = document.querySelector('.fsb-wa');
-                if (fsb) fsb.href = url;
-            }
-        }
-    } catch(e) { console.warn('Gagal load WA settings:', e.message); }
-})();
+        } catch(e) { console.warn('Gagal load WA settings:', e.message); }
+    })();
 </script>
 </body>
 </html>
