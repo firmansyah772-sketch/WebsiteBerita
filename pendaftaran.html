@@ -31,7 +31,7 @@
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         
         html, body { width: 100%;  }
-        body { font-family: 'Source Sans 3', sans-serif; background: var(--gray-light); color: var(--text); transition: background .3s, color .3s; line-height: 1.6; }
+        body { font-family: 'Source Sans 3', sans-serif; background: var(--gray-light); color: var(--text); transition: background .3s, color .3s; overflow-wrap: break-word; word-wrap: break-word; line-height: 1.6; }
         a { text-decoration: none; color: inherit; }
         img { max-width: 100%; height: auto; display: block; }
 
@@ -49,27 +49,40 @@
         .header-logo { flex: 1; display: flex; justify-content: center; }
         .header-logo img { height: 90px; width: auto; object-fit: contain; }
         .header-left, .header-right { display: flex; align-items: center; gap: 6px; min-width: 80px; }
-        .header-right { justify-content: flex-end; }
+        .header-right { justify-content: flex-end; position: relative; }
         .hdr-btn { background: rgba(255,255,255,.18); border: none; border-radius: 4px; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: red; font-size: 16px; transition: background .2s; }
         .hdr-btn:hover { background: rgba(255,255,255,.3); }
         .hamburger-lines { display: flex; flex-direction: column; gap: 5px; width: 20px; }
-        .hamburger-lines span { display: block; width: 100%; height: 2px; background: currentColor; border-radius: 2px; transition: all .3s; }
+        .hamburger-lines span { display: block; width: 100%; height: 2px; background: black; border-radius: 2px; transition: all .3s; }
         [data-theme="dark"] .hamburger-lines span { background: var(--text); }
+        .hdr-btn.open .hamburger-lines span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+        .hdr-btn.open .hamburger-lines span:nth-child(2) { opacity: 0; }
+        .hdr-btn.open .hamburger-lines span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
-        /* FORM STYLES */
-        .f-group { margin-bottom: 16px; color: var(--text); }
-        .f-label { display: block; font-size: 13px; font-weight: 700; margin-bottom: 6px; }
-        .f-label em { color: var(--red); font-style: normal; }
-        .f-input, .f-textarea { width: 100%; padding: 10px 12px; border: 1.5px solid var(--border); border-radius: 5px; font-size: 14px; font-family: inherit; background: var(--gray-light); color: var(--text); outline: none; transition: border-color .2s; }
-        .f-input:focus, .f-textarea:focus { border-color: var(--red); }
-        .f-textarea { resize: vertical; min-height: 90px; }
-        .f-submit { width: 100%; padding: 12px; background: var(--red); color: #fff; border: none; border-radius: 5px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit; transition: background .2s; margin-top: 10px; }
-        .f-submit:hover { background: var(--red-dark); }
-        .f-submit:disabled { background: #95a5a6; cursor: not-allowed; }
+        /* DROPDOWN HAMBURGER */
+        .h-dropdown { position: absolute; top: 50px; right: 0; background: var(--white); width: 180px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); border-radius: 6px; z-index: 900; opacity: 0; pointer-events: none; transform: translateY(-10px); transition: all .2s ease; border: 1px solid var(--border); overflow: hidden; }
+        .h-dropdown.open { opacity: 1; pointer-events: all; transform: translateY(0); }
+        .h-drop-link { display: block; padding: 12px 16px; font-size: 13.5px; font-weight: 600; color: var(--text); border-bottom: 1px solid var(--border); transition: background .2s, color .2s; }
+        .h-drop-link:last-child { border-bottom: none; }
+        .h-drop-link:hover { background: var(--red); color: #fff; }
+
+        /* SEARCH DROP */
+        .search-bar-drop { background: var(--red-dark); padding: 10px 12px; display: none; }
+        .search-bar-drop.open { display: flex; gap: 0; max-width: 1100px; margin: 0 auto; }
+        .search-bar-drop input { flex: 1; padding: 9px 12px; border: none; outline: none; font-size: 14px; font-family: inherit; border-radius: 4px 0 0 4px; background: #fff; color: #111; }
+        .search-bar-drop button { padding: 9px 16px; background: var(--black); color: #fff; border: none; font-weight: 700; font-size: 13px; cursor: pointer; font-family: inherit; border-radius: 0 4px 4px 0; }
+
+        /* CATEGORY NAV */
+        .cat-nav { background: var(--black); overflow-x: auto; scrollbar-width: none; }
+        .cat-nav::-webkit-scrollbar { display: none; }
+        .cat-nav-inner { display: flex; white-space: nowrap; padding: 0 4px; max-width: 1100px; margin: 0 auto; }
+        .cat-nav-inner a { display: inline-block; padding: 10px 13px; font-size: 12px; font-weight: 700; color: #aaa; text-transform: uppercase; letter-spacing: .4px; border-bottom: 2px solid transparent; transition: color .2s, border-color .2s; }
+        .cat-nav-inner a:hover, .cat-nav-inner a.active { color: #fff; border-bottom-color: var(--red); }
 
         /* LAYOUT & ADS */
-        .page-body { padding: 16px 0 24px; }
-        .layout { display: grid; grid-template-columns: 1fr; gap: 16px; max-width: 1100px; margin: 0 auto; padding: 0 12px; transition: max-width .3s; }
+        .page-body { padding: 20px 0 24px; }
+        .layout { display: grid; grid-template-columns: 1fr; gap: 0; max-width: 1100px; margin: 0 auto; padding: 0 12px; transition: max-width .3s; }
+        .layout > * { min-width: 0; }
         @media(min-width: 900px) { .layout { grid-template-columns: 1fr 290px; gap: 18px; padding: 0 16px; } }
         
         .layout.has-left-ad { max-width: 1300px; }
@@ -79,23 +92,44 @@
         @media(max-width: 1023px) { #dynamicAdLeft { display: none !important; } }
         #dynamicAdTop { text-align: center; margin: 0 auto 15px auto; max-width: 1100px; padding: 0 12px; }
         .layout.has-left-ad #dynamicAdTop { max-width: 1300px; }
-        
-        article { background: var(--white); padding: 24px; border-radius: 6px; box-shadow: var(--shadow); border: 1px solid var(--border); max-width: 100%; overflow: hidden; }
+        #dynamicAdFooter { text-align: center; padding: 14px 0; margin-top: 10px; }
+        .ad-lbl { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
+
+        /* ARTICLE & FORM STYLES */
+        article { background: var(--white); padding: 24px; border-radius: 6px; box-shadow: var(--shadow); border: 1px solid var(--border); max-width: 100%; overflow: hidden; margin-bottom: 16px; }
         @media (max-width: 480px) { article { padding: 16px; } }
         .article-title { font-family: 'Playfair Display', serif; font-size: 26px; font-weight: 700; line-height: 1.3; margin-bottom: 8px; color: var(--text); }
+        .cat-badge { display: inline-block; background: var(--red); color: #fff; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 2px; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 12px; }
 
-        /* WIDGET STYLES */
+        .f-group { margin-bottom: 16px; color: var(--text); }
+        .f-label { display: block; font-size: 13px; font-weight: 700; margin-bottom: 6px; }
+        .f-label em { color: var(--red); font-style: normal; }
+        .f-input, .f-textarea { width: 100%; padding: 10px 12px; border: 1.5px solid var(--border); border-radius: 5px; font-size: 14px; font-family: inherit; background: var(--gray-light); color: var(--text); outline: none; transition: border-color .2s; }
+        .f-input:focus, .f-textarea:focus { border-color: var(--red); }
+        [data-theme="dark"] .f-input, [data-theme="dark"] .f-textarea { background: #111; color: var(--text); }
+        .f-textarea { resize: vertical; min-height: 90px; }
+        .f-submit { width: 100%; padding: 12px; background: var(--red); color: #fff; border: none; border-radius: 5px; font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit; transition: background .2s; margin-top: 10px; }
+        .f-submit:hover { background: var(--red-dark); }
+        .f-submit:disabled { background: #95a5a6; cursor: not-allowed; }
+
+        /* WIDGET & SIDEBAR STYLES */
         .widget { background: var(--white); border-radius: 6px; overflow: hidden; margin-bottom: 16px; box-shadow: var(--shadow); border: 1px solid var(--border); }
         .widget-head { background: var(--black); color: #fff; font-size: 11.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .8px; padding: 9px 14px; }
         .widget-body { padding: 12px 14px; }
-        .pop-item { display: flex; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--border); cursor: pointer; align-items: flex-start; text-decoration: none; color: var(--text); }
+        .pop-item { display: flex; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--border); cursor: pointer; align-items: flex-start; text-decoration: none; color: var(--text); transition: background .15s; }
         .pop-item:last-child { border-bottom: none; padding-bottom: 0; }
         .pop-num { font-size: 20px; font-weight: 900; color: var(--red); opacity: .25; line-height: 1; flex-shrink: 0; min-width: 26px; }
-        .pop-title { font-size: 13px; font-weight: 700; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+        .pop-title { font-size: 13px; font-weight: 700; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; transition: color .2s; }
         .pop-item:hover .pop-title { color: var(--red); }
         .cat-cloud { display: flex; flex-wrap: wrap; gap: 7px; }
         .cat-tag { background: var(--gray-light); border: 1px solid var(--border); color: var(--text-muted); font-size: 12px; font-weight: 600; padding: 4px 11px; border-radius: 3px; cursor: pointer; transition: all .2s; text-decoration: none; }
         .cat-tag:hover { background: var(--red); border-color: var(--red); color: #fff; }
+
+        .soc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
+        .soc-card { color: #fff; padding: 9px 10px; border-radius: 4px; font-size: 11px; display: flex; flex-direction: column; gap: 2px; text-decoration: none; transition: opacity .2s; }
+        .soc-card:hover { opacity: 0.85; }
+        .soc-card .cnt { font-size: 14px; font-weight: 700; }
+        .soc-fb { background: #3b5998; } .soc-tw { background: #1da1f2; } .soc-yt { background: #ff0000; } .soc-ig { background: #e1306c; }
 
         /* FOOTER */
         footer { background: var(--black); color: #fff; padding: 30px 0 16px; margin-top: 20px; font-size: 13px; text-align: center; }
@@ -109,15 +143,31 @@
         .footer-links li { margin-bottom: 8px; }
         .footer-links a { color: #999; transition: color .2s; }
         .footer-links a:hover { color: #fff; }
+        .footer-soc { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+        .footer-soc a { display: flex; align-items: center; gap: 5px; padding: 6px 10px; border-radius: 4px; font-size: 11px; font-weight: 700; color: #fff; transition: opacity .2s; }
+        .footer-soc a:hover { opacity: .85; color: #fff; }
+        .footer-soc svg { width: 13px; height: 13px; fill: #fff; flex-shrink: 0; }
+        .fsb-ig { background: linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888); }
+        .fsb-fb { background: #1877f2; } .fsb-yt { background: #ff0000; } .fsb-x { background: #1a1a1a; border: 1px solid #333; } .fsb-wa { background: #25d366; } .fsb-tg { background: #0088cc; }
         .footer-bottom { border-top: 1px solid #1e1e1e; padding-top: 16px; text-align: center; color: #555; font-size: 12px; }
+
+        /* WA FLOAT */
+        .wa-float { position: fixed; bottom: 20px; right: 16px; z-index: 3000; width: 50px; height: 50px; background: #25d366; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 3px 12px rgba(37,211,102,.5); transition: transform .2s; animation: waPulse 2.5s infinite; }
+        .wa-float:hover { transform: scale(1.1); }
+        .wa-float svg { width: 26px; height: 26px; fill: #fff; }
+        @keyframes waPulse { 0%,100%{box-shadow:0 3px 12px rgba(37,211,102,.5)} 50%{box-shadow:0 3px 22px rgba(37,211,102,.8),0 0 0 8px rgba(37,211,102,.12)} }
     </style>
 </head>
 <body>
 
+    <a href="https://wa.me/6281234567890" target="_blank" class="wa-float" title="Hubungi Redaksi" id="waFloatBtn">
+        <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    </a>
+
     <header class="site-header">
         <div class="ticker-bar">
             <div class="ticker-inner">
-                <span class="ticker-label">Breaking</span>
+                <span class="ticker-label">BREAKING NEWS</span>
                 <div class="ticker-scroll"><span class="ticker-text" id="tickerText">Memuat berita terbaru...</span></div>
             </div>
         </div>
@@ -131,9 +181,44 @@
                 </a>
             </div>
             <div class="header-right">
-                <a href="index.html" class="hdr-btn" title="Home">🏠</a>
+                <button class="hdr-btn" id="searchToggleBtn" title="Cari">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="22" y2="22"/></svg>
+                </button>
+                <button class="hdr-btn" id="hamburgerBtn" title="Menu">
+                    <div class="hamburger-lines"><span></span><span></span><span></span></div>
+                </button>
+                
+                <div class="h-dropdown" id="hamburgerDropdown">
+                    <a href="index.html" class="h-drop-link">Beranda</a>
+                    <a href="KontakKami.html" class="h-drop-link">Tentang Kami</a>
+                    <a href="SusunanPengurus.html" class="h-drop-link">Redaksi</a>
+                    <a href="pendaftaran.html" class="h-drop-link">Pendaftaran</a>
+                </div>
             </div>
         </div>
+        <div class="search-bar-drop" id="searchDrop">
+            <input type="text" id="searchInput" placeholder="Cari berita..." autocomplete="off">
+            <button id="searchBtn" onclick="window.location.href='index.html'">Cari</button>
+        </div>
+        <nav class="cat-nav">
+            <div class="cat-nav-inner">
+                <a href="index.html">Semua</a>
+                <a href="index.html?kategori=Nasional">Nasional</a>
+                <a href="index.html?kategori=Tangerang Raya">Tangerang Raya</a>
+                <a href="index.html?kategori=Banten">Banten</a>
+                <a href="index.html?kategori=Serang">Serang</a>
+                <a href="index.html?kategori=Peristiwa">Peristiwa</a>
+                <a href="index.html?kategori=Politik">Politik</a>
+                <a href="index.html?kategori=Hukum dan Kriminal">Hukum dan Kriminal</a>
+                <a href="index.html?kategori=Ekonomi">Ekonomi</a>
+                <a href="index.html?kategori=Pendidikan">Pendidikan</a>
+                <a href="index.html?kategori=Olahraga">Olahraga</a>
+                <a href="index.html?kategori=Teknologi">Teknologi</a>
+                <a href="index.html?kategori=Hiburan">Hiburan</a>
+                <a href="index.html?kategori=Lifestyle">Lifestyle</a>
+                <a href="index.html?kategori=Opini">Opini</a>
+            </div>
+        </nav>
     </header>
 
     <div class="page-body">
@@ -143,56 +228,67 @@
             <aside class="sidebar-left" id="dynamicAdLeft" style="display:none;"></aside>
 
             <main style="max-width: 100%; overflow: hidden;">
-                <div id="mainContent">
-                    <article>
-                        <h1 class="article-title">Formulir Pendaftaran KJNI</h1>
-                        <p style="color: var(--text-muted); margin-bottom: 24px; border-bottom: 1px solid var(--border); padding-bottom: 16px;">
-                            Silakan lengkapi formulir di bawah ini dengan data yang valid. Tim kami akan segera menghubungi Anda setelah data diverifikasi.
-                        </p>
-                        
-                        <form id="formPendaftaranHalaman">
-                            <div class="f-group">
-                                <label class="f-label">Nama Lengkap <em>*</em></label>
-                                <input type="text" id="regNama" class="f-input" required placeholder="Masukkan nama lengkap Anda">
-                            </div>
-                            
-                            <div class="f-group">
-                                <label class="f-label">Tempat, Tanggal Lahir <em>*</em></label>
-                                <input type="text" id="regTTL" class="f-input" required placeholder="Contoh: Tangerang, 17 Agustus 1990">
-                            </div>
-
-                            <div class="f-group">
-                                <label class="f-label">Nomor WhatsApp <em>*</em></label>
-                                <input type="tel" id="regWa" class="f-input" required placeholder="Contoh: 081234567890">
-                            </div>
-
-                            <div class="f-group">
-                                <label class="f-label">Email <em>*</em></label>
-                                <input type="email" id="regEmail" class="f-input" required placeholder="contoh@email.com">
-                            </div>
-
-                            <div class="f-group">
-                                <label class="f-label">Alamat Lengkap <em>*</em></label>
-                                <textarea id="regAlamat" class="f-textarea" required placeholder="Alamat domisili saat ini..."></textarea>
-                            </div>
-                            
-                            <button type="submit" id="btnKirimPendaftaran" class="f-submit">Kirim Pendaftaran 🚀</button>
-                        </form>
-                        
-                        <div id="pesanSukses" style="display:none; text-align:center; padding: 40px 10px;">
-                            <div style="font-size: 50px; margin-bottom:15px;">🎉</div>
-                            <h2 style="font-family: 'Playfair Display', serif; font-size: 24px; color: var(--text);">Pendaftaran Berhasil!</h2>
-                            <p style="color: var(--text-muted); margin-top: 10px; font-size: 15px;">Terima kasih, data Anda telah tersimpan di sistem kami dengan aman.</p>
-                            <button onclick="location.reload()" style="margin-top: 20px; background: var(--red); color: white; border: none; padding: 10px 20px; border-radius: 4px; font-weight: bold; cursor: pointer;">Daftar Lagi</button>
-                        </div>
-                    </article>
+                <article>
+                    <span class="cat-badge">Keanggotaan</span>
+                    <h1 class="article-title">Formulir Pendaftaran KJNI</h1>
+                    <p style="color: var(--text-muted); margin-bottom: 24px; border-bottom: 1px solid var(--border); padding-bottom: 16px;">
+                        Silakan lengkapi formulir di bawah ini dengan data yang valid. Tim kami akan segera menghubungi Anda setelah data diverifikasi.
+                    </p>
                     
-                    <div id="dynamicAdFooter" style="display:none; margin-top: 20px;"></div>
-                </div>
+                    <form id="formPendaftaranHalaman">
+                        <div class="f-group">
+                            <label class="f-label">Nama Lengkap <em>*</em></label>
+                            <input type="text" id="regNama" class="f-input" required placeholder="Masukkan nama lengkap Anda">
+                        </div>
+                        
+                        <div class="f-group">
+                            <label class="f-label">Tempat, Tanggal Lahir <em>*</em></label>
+                            <input type="text" id="regTTL" class="f-input" required placeholder="Contoh: Tangerang, 17 Agustus 1990">
+                        </div>
+
+                        <div class="f-group">
+                            <label class="f-label">Nomor WhatsApp <em>*</em></label>
+                            <input type="tel" id="regWa" class="f-input" required placeholder="Contoh: 081234567890">
+                        </div>
+
+                        <div class="f-group">
+                            <label class="f-label">Email <em>*</em></label>
+                            <input type="email" id="regEmail" class="f-input" required placeholder="contoh@email.com">
+                        </div>
+
+                        <div class="f-group">
+                            <label class="f-label">Alamat Lengkap <em>*</em></label>
+                            <textarea id="regAlamat" class="f-textarea" required placeholder="Alamat domisili saat ini..."></textarea>
+                        </div>
+                        
+                        <button type="submit" id="btnKirimPendaftaran" class="f-submit">Kirim Pendaftaran 🚀</button>
+                    </form>
+                    
+                    <div id="pesanSukses" style="display:none; text-align:center; padding: 40px 10px;">
+                        <div style="font-size: 50px; margin-bottom:15px;">🎉</div>
+                        <h2 style="font-family: 'Playfair Display', serif; font-size: 24px; color: var(--text);">Pendaftaran Berhasil!</h2>
+                        <p style="color: var(--text-muted); margin-top: 10px; font-size: 15px;">Terima kasih, data Anda telah tersimpan di sistem kami dengan aman.</p>
+                        <button onclick="location.reload()" style="margin-top: 20px; background: var(--red); color: white; border: none; padding: 10px 20px; border-radius: 4px; font-weight: bold; cursor: pointer; transition: background .2s;">Daftar Lagi</button>
+                    </div>
+                </article>
+                
+                <div id="dynamicAdFooter" style="display:none;"></div>
             </main>
 
-            <aside id="sidebarSection" style="max-width: 100%;">
-                <div style="position:sticky;top:80px;">
+            <aside>
+                <div style="position:sticky;top:112px;">
+                    <div style="height:12px;"></div>
+                    <div class="widget">
+                        <div class="widget-head">Sosial Media</div>
+                         <div class="widget-body">
+                            <div class="soc-grid">
+                                <a href="#" class="soc-card soc-fb"><span>Facebook</span><span class="cnt">3.5K</span></a>
+                                <a href="#" class="soc-card soc-tw"><span>Twitter</span><span class="cnt">1.7K</span></a>
+                                <a href="#" class="soc-card soc-yt"><span>YouTube</span><span class="cnt">2.8K</span></a>
+                                <a href="#" class="soc-card soc-ig"><span>Instagram</span><span class="cnt">849</span></a>
+                            </div>
+                        </div>
+                    </div>
                     <div class="widget">
                         <div class="widget-head">Berita Populer</div>
                         <div class="widget-body" style="padding:4px 14px 12px;">
@@ -203,15 +299,24 @@
                         <div class="widget-head">Kategori</div>
                         <div class="widget-body">
                             <div class="cat-cloud" id="tagCloud">
-                                <a href="index.html" class="cat-tag">Nasional</a>
-                                <a href="index.html" class="cat-tag">Tangerang Raya</a>
-                                <a href="index.html" class="cat-tag">Banten</a>
-                                <a href="index.html" class="cat-tag">Politik</a>
-                                <a href="index.html" class="cat-tag">Ekonomi</a>
+                                <a href="index.html?kategori=Nasional" class="cat-tag">Nasional</a>
+                                <a href="index.html?kategori=Tangerang Raya" class="cat-tag">Tangerang Raya</a>
+                                <a href="index.html?kategori=Banten" class="cat-tag">Banten</a>
+                                <a href="index.html?kategori=Serang" class="cat-tag">Serang</a>
+                                <a href="index.html?kategori=Peristiwa" class="cat-tag">Peristiwa</a>
+                                <a href="index.html?kategori=Politik" class="cat-tag">Politik</a>
+                                <a href="index.html?kategori=Ekonomi" class="cat-tag">Ekonomi</a>
+                                <a href="index.html?kategori=Pendidikan" class="cat-tag">Pendidikan</a>
+                                <a href="index.html?kategori=Olahraga" class="cat-tag">Olahraga</a>
+                                <a href="index.html?kategori=Teknologi" class="cat-tag">Teknologi</a>
+                                <a href="index.html?kategori=Hiburan" class="cat-tag">Hiburan</a>
+                                <a href="index.html?kategori=Lifestyle" class="cat-tag">Lifestyle</a>
+                                <a href="index.html?kategori=Opini" class="cat-tag">Opini</a>
                             </div>
                         </div>
                     </div>
-                    <div id="dynamicAdSidebar" style="display:none; overflow: hidden; max-width: 100%;"></div>
+                    
+                    <div id="dynamicAdSidebar" style="display:none;"></div>
                 </div>
             </aside>
         </div>
@@ -223,21 +328,21 @@
                 <div>
                     <img class="footer-logo-img" src="https://res.cloudinary.com/dc7guxgnm/image/upload/q_auto/f_auto/v1780932379/1000305700_b9k0wb.jpg" alt="KJNI">
                     <p class="footer-desc">Portal berita terpercaya menyajikan informasi aktual seputar Tangerang, Banten, dan Indonesia.</p>
+                    <div class="footer-soc">
+                        <a class="fsb-fb" href="#" target="_blank"><svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>FB</a>
+                        <a class="fsb-ig" href="#" target="_blank"><svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>IG</a>
+                        <a class="fsb-yt" href="#" target="_blank"><svg viewBox="0 0 24 24"><path d="M23.495 6.205a3.007 3.007 0 0 0-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 0 0 .527 6.205a31.247 31.247 0 0 0-.522 5.805 31.247 31.247 0 0 0 .522 5.783 3.007 3.007 0 0 0 2.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 0 0 2.088-2.088 31.247 31.247 0 0 0 .5-5.783 31.247 31.247 0 0 0-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/></svg>YT</a>
+                        <a class="fsb-wa" href="https://wa.me/6281234567890" target="_blank"><svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>WA</a>
+                        <a class="fsb-tg" href="#" target="_blank"><svg viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>TG</a>
+                    </div>
                 </div>
                 <div class="footer-widget">
                     <h4>Halaman</h4>
                     <ul class="footer-links">
-                        <li><a href="index.html">Beranda</a></li>
-                        <li><a href="tentangkami.html">Tentang Kami</a></li>
-                        <li><a href="kontak.html">Kontak Kami</a></li>
-                    </ul>
-                </div>
-                <div class="footer-widget">
-                    <h4>Kategori</h4>
-                    <ul class="footer-links">
-                        <li><a href="index.html">Nasional</a></li>
-                        <li><a href="index.html">Tangerang Raya</a></li>
-                        <li><a href="index.html">Banten</a></li>
+                        <li><a href="SusunanPengurus.html">Susunan Pengurus</a></li>
+                        <li><a href="KontakKami.html">Kontak Kami</a></li>
+                        <li><a href="PedomanMediaSiber.html">Pedoman Media Siber</a></li>
+                        <li><a href="Disclaimer.html">Disclaimer</a></li>
                     </ul>
                 </div>
             </div>
@@ -259,11 +364,42 @@
                 h.setAttribute('data-theme', 'dark'); localStorage.setItem('theme', 'dark');
             }
         });
+
+        /* LOGIKA MENU DROPDOWN HAMBURGER */
+        const hamburgerBtn = document.getElementById('hamburgerBtn'), 
+              hDropdown = document.getElementById('hamburgerDropdown');
+
+        function toggleDropdown() {
+            hamburgerBtn.classList.toggle('open');
+            hDropdown.classList.toggle('open');
+        }
+
+        hamburgerBtn.addEventListener('click', e => {
+            e.stopPropagation();
+            toggleDropdown();
+        });
+
+        document.addEventListener('click', e => {
+            if (!hDropdown.contains(e.target) && !hamburgerBtn.contains(e.target)) {
+                hamburgerBtn.classList.remove('open');
+                hDropdown.classList.remove('open');
+            }
+        });
+
+        // Search Dropdown
+        const searchDrop = document.getElementById('searchDrop');
+        document.getElementById('searchToggleBtn').addEventListener('click', () => {
+            searchDrop.classList.toggle('open');
+            if (searchDrop.classList.contains('open')) document.getElementById('searchInput').focus();
+        });
+        document.getElementById('searchInput').addEventListener('keydown', e => { 
+            if(e.key==='Enter') window.location.href='index.html'; 
+        });
     </script>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, addDoc, query, orderBy, limit, onSnapshot, doc, getDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCCOOmXPfLhbDdSoil1UHfld5731689HVw",
@@ -306,23 +442,26 @@
         });
 
         // 2. Load Berita Populer (Sidebar) & Ticker
-        const q = query(collection(db, "berita"), orderBy("tanggalDibuat", "desc"));
-        onSnapshot(q, (snapshot) => {
-            const semuaBerita = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+        const qBerita = query(collection(db, "berita"), orderBy("tanggalDibuat", "desc"));
+        onSnapshot(qBerita, (snapshot) => {
+            const semuaBerita = snapshot.docs.map(d => ({ id: d.id, ...d.data() })).filter(b => b.status !== 'nonaktif');
+            
+            // Ticker Update
             if(semuaBerita.length > 0) {
                 document.getElementById('tickerText').innerText = semuaBerita.map(b => b.judul).join('  •  ');
             }
+            
+            // Sidebar Populer Update
             const sidebarContainer = document.getElementById('sidebarNews');
-            let listHtml = '';
-            semuaBerita.slice(0, 5).forEach((b, index) => {
-                listHtml += `
+            const top5 = semuaBerita.slice(0, 5);
+            sidebarContainer.innerHTML = !top5.length 
+                ? '<p style="font-size:13px; color:var(--text-muted); padding:6px 0;">Belum ada berita.</p>' 
+                : top5.map((b, i) => `
                     <a href="artikel.html?id=${b.id}" class="pop-item">
-                        <div class="pop-num">${String(index + 1).padStart(2, '0')}</div>
+                        <div class="pop-num">${String(i + 1).padStart(2, '0')}</div>
                         <div class="pop-title">${b.judul}</div>
                     </a>
-                `;
-            });
-            sidebarContainer.innerHTML = listHtml || '<p style="font-size:13px; color:var(--text-muted)">Belum ada berita.</p>';
+                `).join('');
         });
 
         // 3. Load Iklan Dinamis
@@ -335,31 +474,48 @@
                     const ws=document.getElementById("dynamicAdSidebar");
                     if(data.ads_sidebar&&data.ads_sidebar.length>0){
                         ws.style.display="block";
-                        ws.innerHTML=`<p style="font-size:10px;color:var(--text-muted);text-transform:uppercase;text-align:center;margin-bottom:6px;">Advertisement</p>`+data.ads_sidebar.map(ad=>`<a href="${ad.link||'#'}" target="_blank" style="display:block;margin-bottom:10px;"><img src="${ad.img}" alt="Ad" style="max-width:100%;border-radius:4px;"></a>`).join('');
+                        ws.innerHTML=`<p style="font-size:10px;color:var(--text-muted);text-transform:uppercase;text-align:center;margin-bottom:6px;">Advertisement</p>`+data.ads_sidebar.map(ad=>`<a href="${ad.link||'#'}" target="_blank" style="display:block;margin-bottom:10px;"><img src="${ad.img}" alt="Ad" style="width:100%;border-radius:4px;"></a>`).join('');
                     }
                     
                     const wf=document.getElementById("dynamicAdFooter");
                     if(data.ads_footer&&data.ads_footer.length>0){
                         wf.style.display="block";
-                        wf.innerHTML=`<p style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;">Advertisement</p>`+data.ads_footer.map(ad=>`<a href="${ad.link||'#'}" target="_blank"><img src="${ad.img}" alt="Ad" style="max-width:100%;border-radius:4px; margin: 0 auto;"></a>`).join('');
+                        wf.innerHTML=`<p class="ad-lbl">Advertisement</p>`+data.ads_footer.map(ad=>`<a href="${ad.link||'#'}" target="_blank"><img src="${ad.img}" alt="Ad" style="max-width:728px;width:100%;border-radius:4px; margin: 0 auto;"></a>`).join('');
                     }
 
                     const wt=document.getElementById("dynamicAdTop");
                     if(data.ads_top&&data.ads_top.length>0){
                         wt.style.display="block";
-                        wt.innerHTML=`<p style="font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:5px;">Advertisement</p>`+data.ads_top.map(ad=>`<a href="${ad.link||'#'}" target="_blank" style="display:block;margin-bottom:10px;"><img src="${ad.img}" alt="Ad" style="max-width:100%;border-radius:4px; margin: 0 auto; max-height:250px; object-fit:contain;"></a>`).join('');
+                        wt.innerHTML=`<p class="ad-lbl">Advertisement</p>`+data.ads_top.map(ad=>`<a href="${ad.link||'#'}" target="_blank" style="display:block;margin-bottom:10px;"><img src="${ad.img}" alt="Ad" style="max-width:970px;width:100%;border-radius:4px; margin: 0 auto; max-height:250px; object-fit:contain;"></a>`).join('');
                     }
 
                     const wl=document.getElementById("dynamicAdLeft");
                     if(data.ads_left&&data.ads_left.length>0){
                         wl.style.display="block";
                         document.getElementById('mainLayout').classList.add('has-left-ad');
-                        wl.innerHTML=`<div style="position:sticky;top:80px;"><p style="font-size:10px;color:var(--text-muted);text-transform:uppercase;text-align:center;margin-bottom:6px;">Advertisement</p>`+data.ads_left.map(ad=>`<a href="${ad.link||'#'}" target="_blank" style="display:block;margin-bottom:10px;"><img src="${ad.img}" alt="Ad" style="max-width:100%;border-radius:4px;"></a>`).join('')+`</div>`;
+                        wl.innerHTML=`<div style="position:sticky;top:112px;"><p style="font-size:10px;color:var(--text-muted);text-transform:uppercase;text-align:center;margin-bottom:6px;">Advertisement</p>`+data.ads_left.map(ad=>`<a href="${ad.link||'#'}" target="_blank" style="display:block;margin-bottom:10px;"><img src="${ad.img}" alt="Ad" style="width:100%;border-radius:4px;"></a>`).join('')+`</div>`;
                     }
                 }
             } catch (error) { console.error("Gagal memuat iklan dinamis:", error); }
         }
         muatIklan();
+
+        // 4. Load Nomor WhatsApp Dinamis (Wa Float & Footer)
+        (async () => {
+            try {
+                const snap = await getDoc(doc(db, 'pengaturan', 'whatsapp'));
+                if (snap.exists()) {
+                    const { nomor, pesan } = snap.data();
+                    if (nomor) {
+                        const url = 'https://wa.me/' + nomor + (pesan ? '?text=' + encodeURIComponent(pesan) : '');
+                        const waBtn = document.getElementById('waFloatBtn');
+                        if (waBtn) waBtn.href = url;
+                        const fsb = document.querySelector('.fsb-wa');
+                        if (fsb) fsb.href = url;
+                    }
+                }
+            } catch(e) { console.warn('Gagal load WA settings:', e.message); }
+        })();
     </script>
 </body>
 </html>
