@@ -195,7 +195,7 @@
         .dpw-card { background: var(--gray-light); border: 1px solid var(--border); border-radius: 4px; padding: 12px 14px; }
         .dpw-card h4 { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .6px; color: var(--red); margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px dashed var(--border); }
         
-        .dpw-role-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 14px; }
+        .dpw-role-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); gap: 10px; margin-top: 14px; }
         .dpw-role-item { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 6px; }
         .dpw-role-item > div { display: flex; flex-direction: column; align-items: center; }
         .dpw-role-foto { width: 56px; height: 56px; border-radius: 0; object-fit: cover; border: 2px solid var(--red); background: var(--white); flex-shrink: 0; }
@@ -348,7 +348,7 @@
                     </div>
 
                     <div class="redaksi-section">
-                        <div class="redaksi-section-title" id="judulDPW">☆ Pengurus DPW Provinsi ☆</div>
+                        <div class="redaksi-section-title" id="judulDPW">☆ Pengurus DPW/DPC ☆</div>
                         <div class="dpw-grid" id="redaksiDPW"></div>
                     </div>
 
@@ -466,7 +466,7 @@
             judul_dewan_pembina: "☆ Dewan Pembina & Penasehat ☆",
             judul_pimpinan_redaksi: "☆ Pimpinan Redaksi ☆",
             judul_investigasi: "☆ Bidang Investigasi PTI ☆",
-            judul_dpw: "☆ Pengurus DPW Provinsi ☆",
+            judul_dpw: "☆ Pengurus DPW/DPC ☆",
             judul_asosiasi: "☆ Asosiasi Wartawan / Jurnalis ☆",
             legalitas: { nama: "Komite Jurnalis Nusantara Independen", akte: "EVA KURNIASIH, S.H., M.Kn.", sk: "AHU-0049584.AH.01.01.TAHUN.2021", daftar_perseroan: "AHU-0003690.AH.01.07.TAHUN 2026", npwp: "1000 0000 0989 2975" },
             pendiri: [ { jabatan: "Pendiri 1", nama: "NURUL QOMAR, C. BJ., PTI" }, { jabatan: "Pendiri 2", nama: "HERIYANTO" }, { jabatan: "Pendiri 3", nama: "YOGA KUMALA" } ],
@@ -475,8 +475,8 @@
             pimpinan_redaksi: [ { jabatan: "Pimpinan Redaksi", nama: "ARUL / NURUL QOMAR, C. BJ., PTI" } ],
             investigasi: [ { nama: "RAHMAT TOLETOLE", foto: "" }, { nama: "WAHYUDIN", foto: "" }, { nama: "TAMRIN", foto: "" }, { nama: "IMAM RAMADANI", foto: "" }, { nama: "SANGKUT", foto: "" } ],
             dpw: [
-                { provinsi: "Jawa Barat", ketua: {nama: "", foto: ""}, sekretaris: {nama: "", foto: ""}, bendahara: {nama: "", foto: ""} },
-                { provinsi: "Banten", ketua: {nama: "", foto: ""}, sekretaris: {nama: "", foto: ""}, bendahara: {nama: "", foto: ""} }
+                { label: "DPW", nama: "Jawa Barat", perangkat: [ {jabatan: "Ketua", nama: "", foto: ""}, {jabatan: "Sekretaris", nama: "", foto: ""}, {jabatan: "Bendahara", nama: "", foto: ""} ] },
+                { label: "DPW", nama: "Banten", perangkat: [ {jabatan: "Ketua", nama: "", foto: ""}, {jabatan: "Sekretaris", nama: "", foto: ""}, {jabatan: "Bendahara", nama: "", foto: ""} ] }
             ],
             asosiasi: [ "Perkumpulan Pemimpin Redaksi Independent Indonesia (PPRI)", "Persatuan Pewarta Warga Indonesia (PPWI)", "Komite Jurnalis Nusantara Independen (KJNI)" ],
             pemberitahuan: "Seluruh Pengurus KJNI dilegitimasi dengan <strong>KTA dan SURAT TUGAS</strong> serta namanya tercantum di Box Redaksi dan Kepengurusan."
@@ -522,40 +522,51 @@
             }).join('');
         }
 
-        // Render DPW (mendukung struktur string lama maupun object foto yang baru)
+        // Render DPW/DPC (mendukung struktur lama provinsi/ketua/sekretaris/bendahara maupun struktur baru label/nama/perangkat dinamis)
         function renderDPW(arr) {
             const el = document.getElementById('redaksiDPW');
             if (!arr || !arr.length) { el.innerHTML = '<p style="color:var(--text-muted);font-size:13px;padding:14px;grid-column:1/-1;">Belum ada data DPW.</p>'; return; }
-            
+
+            const renderPerangkat = (p) => {
+                const jabatan = (p && p.jabatan) || '';
+                const nama = (p && p.nama && p.nama.trim()) ? p.nama : '—';
+                const foto = (p && p.foto) || '';
+
+                const validNama = (nama !== '—');
+                const inisial = validNama ? nama.trim().charAt(0).toUpperCase() : '?';
+
+                const fotoHtml = foto
+                    ? `<img class="dpw-role-foto" src="${esc(foto)}" alt="${esc(nama)}" loading="lazy">`
+                    : `<span class="dpw-role-foto-placeholder">${esc(inisial)}</span>`;
+
+                return `<div class="dpw-role-item">
+                    ${fotoHtml}
+                    <div>
+                        <div class="dpw-role-nama">${esc(nama)}</div>
+                        <div class="dpw-role-jabatan">${esc(jabatan)}</div>
+                    </div>
+                </div>`;
+            };
+
             el.innerHTML = arr.map(p => {
-                const renderRole = (roleData, roleName) => {
-                    let nama = '—'; let foto = '';
-                    if (typeof roleData === 'string') { nama = roleData; }
-                    else if (roleData) { nama = roleData.nama || '—'; foto = roleData.foto || ''; }
+                let label = p.label || 'DPW';
+                let nama = p.nama || p.provinsi || '';
+                let perangkat = p.perangkat;
 
-                    const validNama = (nama !== '—' && nama.trim() !== '');
-                    const inisial = validNama ? nama.trim().charAt(0).toUpperCase() : '?';
-
-                    const fotoHtml = foto
-                        ? `<img class="dpw-role-foto" src="${esc(foto)}" alt="${esc(nama)}" loading="lazy">`
-                        : `<span class="dpw-role-foto-placeholder">${esc(inisial)}</span>`;
-
-                    return `<div class="dpw-role-item">
-                        ${fotoHtml}
-                        <div>
-                            <div class="dpw-role-nama">${esc(nama)}</div>
-                            <div class="dpw-role-jabatan">${roleName}</div>
-                        </div>
-                    </div>`;
-                };
+                // Kompatibilitas dengan struktur lama (provinsi + ketua/sekretaris/bendahara)
+                if (!perangkat) {
+                    const toRole = (r, jabatan) => {
+                        const obj = typeof r === 'string' ? { nama: r, foto: '' } : (r || {});
+                        return { jabatan, nama: obj.nama || '', foto: obj.foto || '' };
+                    };
+                    perangkat = [ toRole(p.ketua, 'Ketua'), toRole(p.sekretaris, 'Sekretaris'), toRole(p.bendahara, 'Bendahara') ];
+                }
 
                 return `
                 <div class="dpw-card">
-                    <h4>DPW ${esc(p.provinsi)}</h4>
+                    <h4>${esc(label)} ${esc(nama)}</h4>
                     <div class="dpw-role-grid">
-                        ${renderRole(p.ketua, 'Ketua')}
-                        ${renderRole(p.sekretaris, 'Sekretaris')}
-                        ${renderRole(p.bendahara, 'Bendahara')}
+                        ${perangkat.map(renderPerangkat).join('')}
                     </div>
                 </div>`;
             }).join('');
