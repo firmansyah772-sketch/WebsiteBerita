@@ -143,6 +143,10 @@
         .gen-row .btn-hapus-gen { background: #ffebee; color: #d32f2f; border: none; padding: 8px 12px; cursor: pointer; border-radius: 4px; font-weight: bold; flex-shrink: 0; }
         .gen-empty-info { font-size: 12px; color: #95a5a6; text-align: center; padding: 6px 0; }
         .gen-row.gen-2col { align-items: flex-start; }
+        .gen-order-btns { display: flex; flex-direction: column; gap: 4px; flex-shrink: 0; }
+        .gen-order-btns .btn-gen-up, .gen-order-btns .btn-gen-down { background: #f0f4f8; color: #34495e; border: 1px solid #ccd6dd; padding: 5px 9px; cursor: pointer; border-radius: 4px; font-size: 12px; line-height: 1; transition: 0.2s; }
+        .gen-order-btns .btn-gen-up:hover, .gen-order-btns .btn-gen-down:hover { background: #d5e8f7; border-color: #2980b9; color: #1a5276; }
+        .gen-order-btns .btn-gen-up:disabled, .gen-order-btns .btn-gen-down:disabled { opacity: .35; cursor: not-allowed; }
         .gen-foto-wrap { display: flex; flex-direction: column; align-items: center; gap: 5px; flex-shrink: 0; }
         .gen-foto-preview { width: 54px; height: 54px; border-radius: 50%; object-fit: cover; border: 1px solid #ddd; background: #f5f5f5; }
         .gen-foto-wrap input[type="file"] { font-size: 11px; width: 92px; }
@@ -984,6 +988,22 @@
 
         function esc(str) { return String(str ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
+        // Buat elemen tombol naik/turun untuk mengubah urutan baris di dalam parent-nya
+        function buatTombolUrutan(el) {
+            const wrap = document.createElement('div');
+            wrap.className = 'gen-order-btns';
+            wrap.innerHTML = `<button type="button" class="btn-gen-up" title="Naik">▲</button><button type="button" class="btn-gen-down" title="Turun">▼</button>`;
+            wrap.querySelector('.btn-gen-up').addEventListener('click', () => {
+                const prev = el.previousElementSibling;
+                if (prev) el.parentNode.insertBefore(el, prev);
+            });
+            wrap.querySelector('.btn-gen-down').addEventListener('click', () => {
+                const next = el.nextElementSibling;
+                if (next) el.parentNode.insertBefore(next, el);
+            });
+            return wrap;
+        }
+
         function buatBarisGenerik(wrapId, type, values = {}) {
             const wrap = document.getElementById(wrapId);
             const row = document.createElement('div');
@@ -1009,8 +1029,10 @@
                     const file = e.target.files[0]; if (!file) return;
                     const reader = new FileReader(); reader.onload = ev => { row.querySelector('.gen-foto-preview').src = ev.target.result; }; reader.readAsDataURL(file);
                 });
+                row.insertBefore(buatTombolUrutan(row), row.firstChild);
             } else if (type === '1col') {
                 row.innerHTML = `<input type="text" class="gen-nama" placeholder="Nama / Teks" value="${values.nama || ''}"><button type="button" class="btn-hapus-gen">Hapus ❌</button>`;
+                row.insertBefore(buatTombolUrutan(row), row.firstChild);
             } else if (type === 'dpw') {
                 row.style.cssText = "flex-direction:column; align-items:stretch; background:#f9f9f9; padding:15px; border:1px solid #dcdcdc;";
                 const perangkat = (values.perangkat && values.perangkat.length) ? values.perangkat : [
@@ -1020,7 +1042,8 @@
                 ];
 
                 row.innerHTML = `
-                    <div style="display:flex; gap:10px; margin-bottom:10px;">
+                    <div style="display:flex; gap:10px; margin-bottom:10px; align-items:flex-start;">
+                        <div class="gen-order-btns"><button type="button" class="btn-gen-up" title="Naik">▲</button><button type="button" class="btn-gen-down" title="Turun">▼</button></div>
                         <input type="text" class="gen-dpw-label" placeholder="Label (Cth: DPW / DPC)" value="${values.label || 'DPW'}" style="font-weight:bold; width:110px; flex-shrink:0;">
                         <input type="text" class="gen-dpw-nama" placeholder="Nama Wilayah (Cth: Jawa Barat / Kota Tangerang)" value="${values.nama || ''}" style="font-weight:bold; flex:1;">
                     </div>
@@ -1029,6 +1052,15 @@
                     <button type="button" class="btn-hapus-gen" style="align-self:flex-end; margin-top:8px;">Hapus DPW/DPC ❌</button>
                 `;
 
+                row.querySelector('.btn-gen-up').addEventListener('click', () => {
+                    const prev = row.previousElementSibling;
+                    if (prev) row.parentNode.insertBefore(row, prev);
+                });
+                row.querySelector('.btn-gen-down').addEventListener('click', () => {
+                    const next = row.nextElementSibling;
+                    if (next) row.parentNode.insertBefore(next, row);
+                });
+
                 const perangkatWrap = row.querySelector('.gen-dpw-perangkat');
 
                 const buatBarisPerangkat = (p = {}) => {
@@ -1036,6 +1068,7 @@
                     prow.className = 'gen-dpw-prow';
                     prow.style.cssText = "display:flex; align-items:center; gap:10px; background:#fff; padding:10px; border-radius:4px; border:1px solid #eee; margin-bottom:5px; flex-wrap:wrap;";
                     prow.innerHTML = `
+                        <div class="gen-order-btns"><button type="button" class="btn-gen-up" title="Naik">▲</button><button type="button" class="btn-gen-down" title="Turun">▼</button></div>
                         <input type="text" class="prow-jabatan" placeholder="Jabatan (Cth: Ketua / Wakil Ketua)" value="${esc(p.jabatan || '')}" style="width:160px; padding:6px; font-size:13px; margin:0;">
                         <img class="prow-preview" src="${p.foto || 'https://via.placeholder.com/40x40.png?text=Foto'}" style="width:40px; height:40px; border-radius:0; object-fit:cover; flex-shrink:0;">
                         <div style="display:flex; flex-direction:column; gap:5px; flex:1; min-width:160px;">
@@ -1050,6 +1083,14 @@
                         const r = new FileReader(); r.onload = ev => { prow.querySelector('.prow-preview').src = ev.target.result; }; r.readAsDataURL(file);
                     });
                     prow.querySelector('.btn-hapus-prow').addEventListener('click', () => prow.remove());
+                    prow.querySelector('.btn-gen-up').addEventListener('click', () => {
+                        const prev = prow.previousElementSibling;
+                        if (prev) prow.parentNode.insertBefore(prow, prev);
+                    });
+                    prow.querySelector('.btn-gen-down').addEventListener('click', () => {
+                        const next = prow.nextElementSibling;
+                        if (next) prow.parentNode.insertBefore(next, prow);
+                    });
                     perangkatWrap.appendChild(prow);
                 };
 
