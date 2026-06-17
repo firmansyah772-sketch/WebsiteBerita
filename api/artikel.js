@@ -116,7 +116,7 @@ module.exports = async (req, res) => {
   const fullUrl = `${proto}://${host}${req.url}`;
 
   try {
-    const slug = (req.query && req.query.slug) || "";
+    const slug = (req.query && (req.query.slug || req.query.id)) || "";
 
     const templateResp = await fetch(appUrl);
     let html = await templateResp.text();
