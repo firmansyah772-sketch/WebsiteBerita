@@ -4,6 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Memuat Artikel... - KJNI</title>
+    <meta name="description" id="metaDescription" content="Portal berita terpercaya menyajikan informasi aktual seputar Tangerang, Banten, dan Indonesia.">
+    <link rel="canonical" id="metaCanonical" href="https://kjni.my.id/artikel.html">
+
+    <!-- Open Graph (dibaca oleh WhatsApp, Facebook, Telegram, dll saat link di-share) -->
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="KJNI">
+    <meta property="og:locale" content="id_ID">
+    <meta property="og:url" id="metaOgUrl" content="https://kjni.my.id/artikel.html">
+    <meta property="og:title" id="metaOgTitle" content="KJNI - Portal Berita Tangerang, Banten & Indonesia">
+    <meta property="og:description" id="metaOgDesc" content="Portal berita terpercaya menyajikan informasi aktual seputar Tangerang, Banten, dan Indonesia.">
+    <meta property="og:image" id="metaOgImage" content="https://res.cloudinary.com/dc7guxgnm/image/upload/q_auto/f_auto/v1780978628/1000305972_ynq9xo.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+
+    <!-- Twitter / X Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" id="metaTwTitle" content="KJNI - Portal Berita Tangerang, Banten & Indonesia">
+    <meta name="twitter:description" id="metaTwDesc" content="Portal berita terpercaya menyajikan informasi aktual seputar Tangerang, Banten, dan Indonesia.">
+    <meta name="twitter:image" id="metaTwImage" content="https://res.cloudinary.com/dc7guxgnm/image/upload/q_auto/f_auto/v1780978628/1000305972_ynq9xo.png">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
@@ -133,28 +153,17 @@
         }
         .article-img { width: 100%; height: auto; max-height: 450px; object-fit: cover; display: block; }
         
-        /* FIX TUMPAH DI ISI ARTIKEL 
-           (Mengatasi gambar inline, iframe youtube, atau URL panjang dari Database)
-        */
+        /* FIX TUMPAH DI ISI ARTIKEL */
         .article-body { 
             font-size: 15px; color: var(--text); line-height: 1.8; 
-            word-wrap: break-word; overflow-wrap: break-word; word-break: break-word; /* Tangani URL panjang */
+            word-wrap: break-word; overflow-wrap: break-word; word-break: break-word; 
         }
         .article-body p { margin-bottom: 14px; text-align: justify; }
         .article-body img, .article-body iframe, .article-body video { 
-            max-width: 100% !important; /* Paksa gambar/video tidak melebihi HP */
-            height: auto !important; 
-            display: block; 
-            border-radius: 4px;
-            margin: 10px auto;
+            max-width: 100% !important; height: auto !important; display: block; border-radius: 4px; margin: 10px auto;
         }
-        .article-body table { 
-            width: 100% !important; max-width: 100%; 
-            display: block; overflow-x: auto; /* Jika tabel kepanjangan, akan bisa discroll ke samping, tidak merusak layout */
-        } 
-        .article-body pre, .article-body code { 
-            white-space: pre-wrap; word-break: break-word; 
-        }
+        .article-body table { width: 100% !important; max-width: 100%; display: block; overflow-x: auto; } 
+        .article-body pre, .article-body code { white-space: pre-wrap; word-break: break-word; }
 
         .ad-tengah-wrapper { margin: 24px 0; text-align: center; border-top: 1px dashed var(--border); border-bottom: 1px dashed var(--border); padding: 12px 0; overflow: hidden; }
         .ad-lbl { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; display: block; text-align: center; }
@@ -163,36 +172,15 @@
         #blokKontenContainer { margin-top: 8px; }
         .blok-foto-wrap { margin: 22px 0; }
         .blok-figure { margin: 0; }
-        .blok-foto-img { 
-            width: 100%; height: auto; max-height: 500px; object-fit: cover;
-            border-radius: 6px; display: block;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.12);
-        }
-        .blok-caption-txt {
-            font-size: 12px; color: var(--text-muted); text-align: center;
-            margin-top: 7px; font-style: italic; line-height: 1.5;
-            padding: 0 8px;
-        }
+        .blok-foto-img { width: 100%; height: auto; max-height: 500px; object-fit: cover; border-radius: 6px; display: block; box-shadow: 0 2px 8px rgba(0,0,0,0.12); }
+        .blok-caption-txt { font-size: 12px; color: var(--text-muted); text-align: center; margin-top: 7px; font-style: italic; line-height: 1.5; padding: 0 8px; }
         .blok-teks-wrap { margin: 16px 0; }
         .blok-teks-wrap p { margin-bottom: 14px; text-align: justify; font-size: 15px; color: var(--text); line-height: 1.8; word-wrap: break-word; overflow-wrap: break-word; }
 
         /* FITUR BARU: Gaya Paparan Hashtags */
         .article-hashtags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 25px; margin-bottom: 15px; }
-        .article-hashtags .hashtag-item { 
-            background: rgba(204, 0, 0, 0.07); 
-            color: var(--red); 
-            font-size: 12px; 
-            font-weight: 600; 
-            padding: 5px 11px; 
-            border-radius: 4px; 
-            transition: all .2s; 
-            display: inline-block;
-            cursor: pointer;
-        }
-        .article-hashtags .hashtag-item:hover { 
-            background: var(--red); 
-            color: #fff; 
-        }
+        .article-hashtags .hashtag-item { background: rgba(204, 0, 0, 0.07); color: var(--red); font-size: 12px; font-weight: 600; padding: 5px 11px; border-radius: 4px; transition: all .2s; display: inline-block; cursor: pointer; }
+        .article-hashtags .hashtag-item:hover { background: var(--red); color: #fff; }
 
         /* SHARE ROW */
         .share-row { display: flex; gap: 7px; margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--border); flex-wrap: wrap; align-items: center; }
@@ -409,7 +397,7 @@
 
                 <div id="errorState" class="status-container hidden">
                     <h2 class="status-title" id="errorTitle">Artikel Tidak Ditemukan</h2>
-                    <p id="errorDesc" style="color: var(--text-muted)">ID Artikel tidak valid atau telah dihapus oleh admin.</p>
+                    <p id="errorDesc" style="color: var(--text-muted)">Artikel tidak valid atau telah dihapus oleh admin.</p>
                     <a href="index.html" class="btn-error-home">Kembali ke Beranda</a>
                 </div>
 
@@ -616,7 +604,7 @@
                 (b.isi || '').toLowerCase().includes(keyword) ||
                 (b.kategori || '').toLowerCase().includes(keyword) ||
                 (b.penulis || '').toLowerCase().includes(keyword) ||
-                (b.hashtags || '').toLowerCase().includes(keyword) // TAMBAHAN: Cari berdasarkan hashtags juga
+                (b.hashtags || '').toLowerCase().includes(keyword)
             );
 
             mainContentEl.classList.add('hidden');
@@ -643,7 +631,7 @@
                             <button class="sr-clear" id="clearSearch">✕ Bersihkan</button>
                         </div>
                         ${hasil.map(b => `
-                            <div class="sr-item" data-id="${b.id}">
+                            <div class="sr-item" data-slug="${b.slug || b.id}">
                                 <div class="sr-thumb">
                                     ${b.gambar ? `<img src="${b.gambar}" alt="${b.judul}">` : '📰'}
                                 </div>
@@ -658,7 +646,7 @@
 
             area.querySelectorAll('.sr-item').forEach(item => {
                 item.addEventListener('click', () => {
-                    window.location.href = `artikel.html?id=${item.dataset.id}`;
+                    window.location.href = `artikel.html?slug=${item.dataset.slug}`;
                 });
             });
 
@@ -681,7 +669,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, doc, getDoc, getDocs, collection, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, getDocs, collection, query, orderBy, onSnapshot, where, limit } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyCCOOmXPfLhbDdSoil1UHfld5731689HVw",
@@ -696,9 +684,9 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        function getArtikelId() {
+        function getArtikelSlug() {
             const params = new URLSearchParams(window.location.search);
-            return params.get('id');
+            return params.get('slug');
         }
 
         function hitungWaktuBaca(text) {
@@ -709,28 +697,70 @@
         }
 
         async function muatArtikel() {
-            const id = getArtikelId();
+            const slug = getArtikelSlug();
             const loadingEl = document.getElementById('loadingState');
             const errorEl = document.getElementById('errorState');
             const mainContentEl = document.getElementById('mainContent');
             const sidebarSection = document.getElementById('sidebarSection');
 
-            if (!id) {
+            if (!slug) {
                 loadingEl.classList.add('hidden');
                 errorEl.classList.remove('hidden');
-                document.getElementById('errorTitle').innerText = "ID Artikel Tidak Ditemukan";
+                document.getElementById('errorTitle').innerText = "Artikel Tidak Ditemukan";
                 document.getElementById('errorDesc').innerText = "Silahkan pilih berita valid dari halaman utama.";
                 return;
             }
 
             try {
-                const docRef = doc(db, "berita", id);
-                const docSnap = await getDoc(docRef);
+                // Mencari berdasarkan Field Slug
+                const q = query(collection(db, "berita"), where("slug", "==", slug), limit(1));
+                const querySnapshot = await getDocs(q);
 
-                if (docSnap.exists()) {
+                let docSnap;
+                if (!querySnapshot.empty) {
+                    docSnap = querySnapshot.docs[0];
+                } else {
+                    // Fallback jika URL masih menggunakan ID lama
+                    const docRef = doc(db, "berita", slug);
+                    const fallbackSnap = await getDoc(docRef);
+                    if (fallbackSnap.exists()) {
+                        docSnap = fallbackSnap;
+                    }
+                }
+
+                if (docSnap && docSnap.exists()) {
                     const data = docSnap.data();
 
                     document.title = `${data.judul} - KJNI`;
+
+                    // ===== Update Meta Tag (Open Graph / Twitter) secara dinamis =====
+                    // Catatan: ini berguna untuk tab browser & Web Share API, TAPI bot
+                    // WhatsApp/Facebook/Telegram TIDAK menjalankan JavaScript, jadi untuk
+                    // preview saat link di-share, perbaikan utama ada di server (lihat
+                    // api/artikel.js atau netlify/functions/artikel.js).
+                    (function atualisasiMetaTag() {
+                        const isiBersih = (data.isi || '').replace(/\s+/g, ' ').trim();
+                        const deskripsi = isiBersih.length > 160 ? isiBersih.slice(0, 157) + '...' : isiBersih;
+                        const gambarMeta = data.gambar || 'https://res.cloudinary.com/dc7guxgnm/image/upload/q_auto/f_auto/v1780978628/1000305972_ynq9xo.png';
+                        const urlSekarang = window.location.href;
+
+                        const setMeta = (id, val) => {
+                            const el = document.getElementById(id);
+                            if (!el) return;
+                            if (el.tagName === 'LINK') el.href = val; else el.setAttribute('content', val);
+                        };
+
+                        setMeta('metaDescription', deskripsi);
+                        setMeta('metaCanonical', urlSekarang);
+                        setMeta('metaOgUrl', urlSekarang);
+                        setMeta('metaOgTitle', data.judul);
+                        setMeta('metaOgDesc', deskripsi);
+                        setMeta('metaOgImage', gambarMeta);
+                        setMeta('metaTwTitle', data.judul);
+                        setMeta('metaTwDesc', deskripsi);
+                        setMeta('metaTwImage', gambarMeta);
+                    })();
+
                     document.getElementById('artKategori').innerText = data.kategori || 'Umum';
                     document.getElementById('artJudul').innerText = data.judul || 'Tanpa Judul';
                     document.getElementById('artPenulis').innerText = data.penulis || 'Redaksi KJNI';
@@ -802,24 +832,22 @@
                         tagsArray.forEach(tag => {
                             const cleanTag = tag.trim();
                             if (cleanTag !== '') {
-                                // Memastikan simbol '#' ada di hadapan teks tag
                                 const displayTag = cleanTag.startsWith('#') ? cleanTag : '#' + cleanTag;
                                 const tagBtn = document.createElement('a');
                                 tagBtn.href = '#';
                                 tagBtn.className = 'hashtag-item';
                                 tagBtn.innerText = displayTag;
                                 
-                                // Event click untuk cari berita berasaskan hashtag
                                 tagBtn.addEventListener('click', (e) => {
                                     e.preventDefault();
                                     const searchInput = document.getElementById('searchInput');
                                     const searchDrop = document.getElementById('searchDrop');
-                                    searchInput.value = cleanTag.replace('#', ''); // Masukkan kata kunci tanpa '#'
+                                    searchInput.value = cleanTag.replace('#', ''); 
                                     if (!searchDrop.classList.contains('open')) {
                                         searchDrop.classList.add('open');
                                     }
                                     window.scrollTo({ top: 0, behavior: 'smooth' });
-                                    lakukan_search(); // Jalankan fungsi pencarian global
+                                    lakukan_search(); 
                                 });
                                 hashtagsContainer.appendChild(tagBtn);
                             }
@@ -869,10 +897,13 @@
                 const sidebarContainer = document.getElementById('sidebarNews');
                 let listHtml = '';
                 let index = 0;
+                const currentSlug = getArtikelSlug();
+                
                 semuaBerita.forEach((b) => {
-                    if (b.id !== getArtikelId() && index < 5) {
+                    // Update Pengecekan Link agar menggunakan slug
+                    if (b.slug !== currentSlug && b.id !== currentSlug && index < 5) {
                         listHtml += `
-                            <a href="artikel.html?id=${b.id}" class="pop-item">
+                            <a href="artikel.html?slug=${b.slug || b.id}" class="pop-item">
                                 <div class="pop-num">${String(index + 1).padStart(2, '0')}</div>
                                 <div class="pop-title">${b.judul}</div>
                             </a>
