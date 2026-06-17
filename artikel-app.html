@@ -686,7 +686,8 @@
 
         function getArtikelSlug() {
             const params = new URLSearchParams(window.location.search);
-            return params.get('slug');
+            // Dukung link lama yang pakai ?id=... selain link baru yang pakai ?slug=...
+            return params.get('slug') || params.get('id');
         }
 
         function hitungWaktuBaca(text) {
