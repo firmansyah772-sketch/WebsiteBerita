@@ -30,6 +30,7 @@
         }
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
         
+        /* FIX TUMPAH: Tambahkan overflow-x: hidden untuk cegah halaman bergeser ke samping */
         html, body { width: 100%;  }
         body { font-family: 'Source Sans 3', sans-serif; background: var(--gray-light); color: var(--text); transition: background .3s, color .3s; line-height: 1.6; }
         a { text-decoration: none; color: inherit; }
@@ -49,7 +50,7 @@
         .header-logo { flex: 1; display: flex; justify-content: center; }
         .header-logo img { height: 90px; width: auto; object-fit: contain; }
         .header-left, .header-right { display: flex; align-items: center; gap: 6px; min-width: 80px; }
-        .header-right { justify-content: flex-end; position: relative; } 
+        .header-right { justify-content: flex-end; position: relative; } /* Updated position for Dropdown */
         .hdr-btn { background: rgba(255,255,255,.18); border: none; border-radius: 4px; width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; cursor: pointer; color: black; font-size: 16px; transition: background .2s; }
         .hdr-btn:hover { background: rgba(255,255,255,.3); }
         .hamburger-lines { display: flex; flex-direction: column; gap: 5px; width: 20px; }
@@ -96,6 +97,7 @@
         #dynamicAdTop { text-align: center; margin: 0 auto 15px auto; max-width: 1100px; padding: 0 12px; }
         .layout.has-left-ad #dynamicAdTop { max-width: 1300px; }
         
+        /* Pastikan Iklan tidak tumpah */
         #dynamicAdTop img, #dynamicAdSidebar img, #dynamicAdLeft img, #adTengahContainer img {
             max-width: 100% !important; height: auto;
         }
@@ -104,7 +106,7 @@
         article {
             background: var(--white); padding: 24px; border-radius: 6px;
             box-shadow: var(--shadow); border: 1px solid var(--border);
-            max-width: 100%; overflow: hidden;
+            max-width: 100%; overflow: hidden; /* FIX: Jaga kontainer agar isinya tidak tumpah */
         }
         @media (max-width: 480px) { article { padding: 16px; } }
         
@@ -113,6 +115,7 @@
         .article-title {
             font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 700;
             line-height: 1.3; margin-bottom: 12px; color: var(--text);
+            /* FIX TUMPAH: Pastikan judul panjang tidak melebar keluar batas */
             word-wrap: break-word; overflow-wrap: break-word; word-break: break-word;
         }
         @media (max-width: 480px) { .article-title { font-size: 22px; } }
@@ -130,16 +133,28 @@
         }
         .article-img { width: 100%; height: auto; max-height: 450px; object-fit: cover; display: block; }
         
+        /* FIX TUMPAH DI ISI ARTIKEL 
+           (Mengatasi gambar inline, iframe youtube, atau URL panjang dari Database)
+        */
         .article-body { 
             font-size: 15px; color: var(--text); line-height: 1.8; 
-            word-wrap: break-word; overflow-wrap: break-word; word-break: break-word; 
+            word-wrap: break-word; overflow-wrap: break-word; word-break: break-word; /* Tangani URL panjang */
         }
         .article-body p { margin-bottom: 14px; text-align: justify; }
         .article-body img, .article-body iframe, .article-body video { 
-            max-width: 100% !important; height: auto !important; display: block; border-radius: 4px; margin: 10px auto;
+            max-width: 100% !important; /* Paksa gambar/video tidak melebihi HP */
+            height: auto !important; 
+            display: block; 
+            border-radius: 4px;
+            margin: 10px auto;
         }
-        .article-body table { width: 100% !important; max-width: 100%; display: block; overflow-x: auto; } 
-        .article-body pre, .article-body code { white-space: pre-wrap; word-break: break-word; }
+        .article-body table { 
+            width: 100% !important; max-width: 100%; 
+            display: block; overflow-x: auto; /* Jika tabel kepanjangan, akan bisa discroll ke samping, tidak merusak layout */
+        } 
+        .article-body pre, .article-body code { 
+            white-space: pre-wrap; word-break: break-word; 
+        }
 
         .ad-tengah-wrapper { margin: 24px 0; text-align: center; border-top: 1px dashed var(--border); border-bottom: 1px dashed var(--border); padding: 12px 0; overflow: hidden; }
         .ad-lbl { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; display: block; text-align: center; }
@@ -148,21 +163,45 @@
         #blokKontenContainer { margin-top: 8px; }
         .blok-foto-wrap { margin: 22px 0; }
         .blok-figure { margin: 0; }
-        .blok-foto-img { width: 100%; height: auto; max-height: 500px; object-fit: cover; border-radius: 6px; display: block; box-shadow: 0 2px 8px rgba(0,0,0,0.12); }
-        .blok-caption-txt { font-size: 12px; color: var(--text-muted); text-align: center; margin-top: 7px; font-style: italic; line-height: 1.5; padding: 0 8px; }
+        .blok-foto-img { 
+            width: 100%; height: auto; max-height: 500px; object-fit: cover;
+            border-radius: 6px; display: block;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+        }
+        .blok-caption-txt {
+            font-size: 12px; color: var(--text-muted); text-align: center;
+            margin-top: 7px; font-style: italic; line-height: 1.5;
+            padding: 0 8px;
+        }
         .blok-teks-wrap { margin: 16px 0; }
         .blok-teks-wrap p { margin-bottom: 14px; text-align: justify; font-size: 15px; color: var(--text); line-height: 1.8; word-wrap: break-word; overflow-wrap: break-word; }
 
+        /* FITUR BARU: Gaya Paparan Hashtags */
         .article-hashtags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 25px; margin-bottom: 15px; }
-        .article-hashtags .hashtag-item { background: rgba(204, 0, 0, 0.07); color: var(--red); font-size: 12px; font-weight: 600; padding: 5px 11px; border-radius: 4px; transition: all .2s; display: inline-block; cursor: pointer; }
-        .article-hashtags .hashtag-item:hover { background: var(--red); color: #fff; }
+        .article-hashtags .hashtag-item { 
+            background: rgba(204, 0, 0, 0.07); 
+            color: var(--red); 
+            font-size: 12px; 
+            font-weight: 600; 
+            padding: 5px 11px; 
+            border-radius: 4px; 
+            transition: all .2s; 
+            display: inline-block;
+            cursor: pointer;
+        }
+        .article-hashtags .hashtag-item:hover { 
+            background: var(--red); 
+            color: #fff; 
+        }
 
+        /* SHARE ROW */
         .share-row { display: flex; gap: 7px; margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--border); flex-wrap: wrap; align-items: center; }
         .share-btn { display: inline-flex; align-items: center; gap: 6px; padding: 7px 13px; color: #fff; font-size: 12px; font-weight: 600; border-radius: 4px; transition: opacity .2s; text-decoration: none; }
         .share-btn:hover { opacity: .85; }
         .share-btn svg { width: 15px; height: 15px; fill: #fff; flex-shrink: 0; }
         .btn-fb { background: #1877f2; } .btn-tw { background: #000; } .btn-wa { background: #25d366; } .btn-tg { background: #0088cc; }
 
+        /* WIDGET STYLES */
         .widget { background: var(--white); border-radius: 6px; overflow: hidden; margin-bottom: 16px; box-shadow: var(--shadow); border: 1px solid var(--border); }
         .widget-head { background: var(--black); color: #fff; font-size: 11.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .8px; padding: 9px 14px; }
         .widget-body { padding: 12px 14px; }
@@ -182,11 +221,13 @@
         .soc-card .cnt { font-size: 14px; font-weight: 700; }
         .soc-fb { background: #3b5998; } .soc-tw { background: #1da1f2; } .soc-yt { background: #ff0000; } .soc-ig { background: #e1306c; }
 
+        /* STATUS STATES */
         .status-container { text-align: center; padding: 40px 20px; background: var(--white); border-radius: 6px; box-shadow: var(--shadow); border: 1px solid var(--border); }
         .status-title { font-family: 'Playfair Display', serif; font-size: 22px; margin-bottom: 10px; color: var(--text); }
         .btn-error-home { display: inline-block; margin-top: 12px; background-color: var(--red); color: white; padding: 8px 16px; border-radius: 4px; font-weight: 600; font-size: 13px; text-decoration: none; }
         .hidden { display: none !important; }
 
+        /* SEARCH RESULTS AREA */
         .sr-box { background: var(--white); border-radius: 6px; overflow: hidden; box-shadow: var(--shadow); margin-bottom: 12px; border: 1px solid var(--border); }
         .sr-hdr { padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border); font-size: 13px; font-weight: 700; }
         .sr-clear { background: none; border: none; color: var(--red); font-size: 12px; cursor: pointer; font-family: inherit; font-weight: 600; }
@@ -198,6 +239,7 @@
         .sr-title { font-size: 13px; font-weight: 700; line-height: 1.4; margin-bottom: 3px; color: var(--text); }
         .sr-meta { font-size: 11px; color: var(--text-muted); }
 
+        /* FOOTER */
         footer { background: var(--black); color: #fff; padding: 30px 0 16px; margin-top: 20px; font-size: 13px; text-align: center; }
         .footer-inner { max-width: 1100px; margin: 0 auto; padding: 0 16px; overflow: hidden; }
         .footer-grid { display: grid; grid-template-columns: 1fr; gap: 24px; margin-bottom: 22px; text-align: left; }
@@ -222,15 +264,18 @@
         #dynamicAdFooter { text-align: center; padding: 14px 0; margin-bottom: 10px; overflow: hidden; }
         #dynamicAdFooter img { max-width: 100% !important; height: auto; }
 
+        /* WA FLOAT */
         .wa-float { position: fixed; bottom: 20px; right: 16px; z-index: 3000; width: 50px; height: 50px; background: #25d366; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 3px 12px rgba(37,211,102,.5); transition: transform .2s; animation: waPulse 2.5s infinite; }
         .wa-float:hover { transform: scale(1.1); }
         .wa-float svg { width: 26px; height: 26px; fill: #fff; }
         @keyframes waPulse { 0%,100%{box-shadow:0 3px 12px rgba(37,211,102,.5)} 50%{box-shadow:0 3px 22px rgba(37,211,102,.8),0 0 0 8px rgba(37,211,102,.12)} }
 
+        /* MEDIA PARTNER */
         .sec-label::before { content: ''; display: block; width: 4px; height: 16px; background: var(--red); border-radius: 2px; flex-shrink: 0; }
         .media-partner { background: var(--white); padding: 16px 14px 14px; margin-top: 14px; border-radius: 6px; box-shadow: var(--shadow); overflow: hidden; border: 1px solid var(--border); }
         .mp-marquee-wrap { width: 100%; overflow: hidden; position: relative; margin-top: 10px; }
-        .mp-marquee-wrap::before, .mp-marquee-wrap::after { content: ''; position: absolute; top: 0; bottom: 0; width: 40px; z-index: 2; pointer-events: none; }
+        .mp-marquee-wrap::before,
+        .mp-marquee-wrap::after { content: ''; position: absolute; top: 0; bottom: 0; width: 40px; z-index: 2; pointer-events: none; }
         .mp-marquee-wrap::before { left: 0; background: linear-gradient(to right, var(--white), transparent); }
         .mp-marquee-wrap::after  { right: 0; background: linear-gradient(to left, var(--white), transparent); }
         .mp-track { display: flex; gap: 28px; align-items: center; width: max-content; animation: mpScroll 28s linear infinite; }
@@ -241,16 +286,52 @@
         .partner-logo:hover img { filter: grayscale(0) opacity(1); transform: scale(1.08); }
         .mp-grid { display: flex; flex-wrap: wrap; gap: 16px; justify-content: center; align-items: center; margin-top: 10px; }
         
-        .article-body, .blok-teks-wrap, .article-title, #artIsi, #blokKontenContainer { -webkit-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none; }
-        .article-img, .blok-foto-img { pointer-events: none; -webkit-user-drag: none; user-drag: none; }
-        #anticopy-toast { position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%) translateY(20px); background: rgba(20,20,20,0.92); color: #fff; padding: 10px 22px; border-radius: 6px; font-size: 13px; font-weight: 600; z-index: 9999; opacity: 0; transition: opacity .3s, transform .3s; pointer-events: none; white-space: nowrap; border-left: 3px solid var(--red); }
-        #anticopy-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+        /* ANTI COPAS */
+        .article-body, .blok-teks-wrap, .article-title, #artIsi, #blokKontenContainer {
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+        .article-img, .blok-foto-img {
+            pointer-events: none;
+            -webkit-user-drag: none;
+            user-drag: none;
+        }
+        /* Notif copas */
+        #anticopy-toast {
+            position: fixed;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: rgba(20,20,20,0.92);
+            color: #fff;
+            padding: 10px 22px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            z-index: 9999;
+            opacity: 0;
+            transition: opacity .3s, transform .3s;
+            pointer-events: none;
+            white-space: nowrap;
+            border-left: 3px solid var(--red);
+        }
+        #anticopy-toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+
         .sec-label { display: flex; align-items: center; gap: 8px; margin: 14px 0 10px; font-size: 12.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .8px; }
+
+                .sec-label::before { content: ''; display: block; width: 4px; height: 16px; background: var(--red); border-radius: 2px; flex-shrink: 0; }
+
     </style>
 </head>
 <body>
 
-    <a href="https://wa.me/6281234567890" target="_blank" class="wa-float" title="Hubungi Redaksi" id="waFloatBtn">    <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></a>
+    <a href="https://wa.me/6281234567890" target="_blank" class="wa-float" title="Hubungi Redaksi" id="waFloatBtn">    <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+</a>
 
     <header class="site-header">
         <div class="ticker-bar">
@@ -264,7 +345,7 @@
                 <button class="hdr-btn" id="themeBtn" title="Ganti Tema">🌓</button>
             </div>
             <div class="header-logo">
-                <a href="/index.html">
+                <a href="index.html">
                     <img src="https://res.cloudinary.com/dc7guxgnm/image/upload/q_auto/f_auto/v1780978628/1000305972_ynq9xo.png" alt="KJNI">
                 </a>
             </div>
@@ -277,9 +358,10 @@
                 </button>
                 
                 <div class="h-dropdown" id="hamburgerDropdown">
-                    <a href="/index.html" class="h-drop-link">Beranda</a>
-                    <a href="/tentangkami.html" class="h-drop-link">Tentang Kami</a>
-                    <a href="/pendaftaran.html" class="h-drop-link">Pendaftaran</a>
+                    <a href="index.html" class="h-drop-link">Beranda</a>
+                    <a href="tentangkami.html" class="h-drop-link">Tentang Kami</a>
+                    
+                    <a href="pendaftaran.html" class="h-drop-link">Pendaftaran</a>
                 </div>
             </div>
         </div>
@@ -289,29 +371,32 @@
         </div>
         <nav class="cat-nav">
             <div class="cat-nav-inner">
-                <a href="/index.html">Semua</a>
-                <a href="/index.html?kategori=Nasional">Nasional</a>
-                <a href="/index.html?kategori=Tangerang Raya">Tangerang Raya</a>
-                <a href="/index.html?kategori=Banten">Banten</a>
-                <a href="/index.html?kategori=Serang">Serang</a>
-                <a href="/index.html?kategori=Peristiwa">Peristiwa</a>
-                <a href="/index.html?kategori=Politik">Politik</a>
-                <a href="/index.html?kategori=Hukum dan Kriminal">Hukum dan Kriminal</a>
-                <a href="/index.html?kategori=Ekonomi">Ekonomi</a>
-                <a href="/index.html?kategori=Pendidikan">Pendidikan</a>
-                <a href="/index.html?kategori=Olahraga">Olahraga</a>
-                <a href="/index.html?kategori=Teknologi">Teknologi</a>
-                <a href="/index.html?kategori=Hiburan">Hiburan</a>
-                <a href="/index.html?kategori=Lifestyle">Lifestyle</a>
-                <a href="/index.html?kategori=Opini">Opini</a>
+                <a href="index.html">Semua</a>
+                <a href="index.html?kategori=Nasional">Nasional</a>
+               <a href="index.html?kategori=Tangerang Raya">Tangerang Raya</a>
+                <a href="index.html?kategori=Banten">Banten</a>
+                <a href="index.html?kategori=Serang">Serang</a>
+                <a href="index.html?kategori=Peristiwa">Peristiwa</a>
+                <a href="index.html?kategori=Politik">Politik</a>
+                <a href="index.html?kategori=Hukum dan Kriminal">Hukum dan Kriminal</a>
+                <a href="index.html?kategori=Ekonomi">Ekonomi</a>
+                <a href="index.html?kategori=Pendidikan">Pendidikan</a>
+                <a href="index.html?kategori=Olahraga">Olahraga</a>
+                <a href="index.html?kategori=Teknologi">Teknologi</a>
+                <a href="index.html?kategori=Hiburan">Hiburan</a>
+                <a href="index.html?kategori=Lifestyle">Lifestyle</a>
+                <a href="index.html?kategori=Opini">Opini</a>
+                
             </div>
         </nav>
     </header>
 
     <div class="page-body">
+        
         <div id="dynamicAdTop" style="display:none;"></div>
 
         <div class="layout" id="mainLayout">
+            
             <aside class="sidebar-left" id="dynamicAdLeft" style="display:none;"></aside>
 
             <main style="max-width: 100%; overflow: hidden;">
@@ -325,7 +410,7 @@
                 <div id="errorState" class="status-container hidden">
                     <h2 class="status-title" id="errorTitle">Artikel Tidak Ditemukan</h2>
                     <p id="errorDesc" style="color: var(--text-muted)">ID Artikel tidak valid atau telah dihapus oleh admin.</p>
-                    <a href="/index.html" class="btn-error-home">Kembali ke Beranda</a>
+                    <a href="index.html" class="btn-error-home">Kembali ke Beranda</a>
                 </div>
 
                 <div id="mainContent" class="hidden">
@@ -344,27 +429,35 @@
                         </div>
 
                         <div class="article-body" id="artIsi"></div>
+
                         <div id="blokKontenContainer" class="hidden"></div>
+
                         <div id="artHashtagsContainer" class="article-hashtags hidden"></div>
+
                         <div id="adTengahContainer" class="ad-tengah-wrapper hidden"></div>
 
                         <div class="share-row">
                             <span style="font-size:12px; font-weight:700; color:var(--text-muted);">Bagikan Artikel Ini:</span>
                             <a href="#" target="_blank" class="share-btn btn-fb" id="shareFb">
-                                <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg> Facebook
+                                <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                                Facebook
                             </a>
                             <a href="#" target="_blank" class="share-btn btn-tw" id="shareTw">
-                                <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.261 5.636L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg> X (Twitter)
+                                <svg viewBox="0 0 24 24"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.746l7.73-8.835L1.254 2.25H8.08l4.261 5.636L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                                X (Twitter)
                             </a>
                             <a href="#" target="_blank" class="share-btn btn-wa" id="shareWa">
-                                <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg> WhatsApp
+                                <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+                                WhatsApp
                             </a>
                             <a href="#" target="_blank" class="share-btn btn-tg" id="shareTg">
-                                <svg viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg> Telegram
+                                <svg viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>
+                                Telegram
                             </a>
                         </div>
                     </article>
-                    <div id="dynamicAdFooter" style="display:none;"></div>
+                                <div id="dynamicAdFooter" style="display:none;"></div>
+
                 </div>
 
                 <div class="media-partner">
@@ -400,17 +493,17 @@
                         <div class="widget-head">Kategori</div>
                         <div class="widget-body">
                             <div class="cat-cloud" id="tagCloud">
-                                <a href="/index.html" class="cat-tag">Nasional</a>
-                                <a href="/index.html" class="cat-tag">Tangerang Raya</a>
-                                <a href="/index.html" class="cat-tag">Banten</a>
-                                <a href="/index.html" class="cat-tag">Serang</a>
-                                <a href="/index.html" class="cat-tag">Peristiwa</a>
-                                <a href="/index.html" class="cat-tag">Politik</a>
-                                <a href="/index.html" class="cat-tag">Ekonomi</a>
-                                <a href="/index.html" class="cat-tag">Pendidikan</a>
-                                <a href="/index.html" class="cat-tag">Olahraga</a>
-                                <a href="/index.html" class="cat-tag">Teknologi</a>
-                                <a href="/index.html" class="cat-tag">Hiburan</a>
+                                <a href="index.html" class="cat-tag">Nasional</a>
+                                <a href="index.html" class="cat-tag">Tangerang Raya</a>
+                                <a href="index.html" class="cat-tag">Banten</a>
+                                <a href="index.html" class="cat-tag">Serang</a>
+                                <a href="index.html" class="cat-tag">Peristiwa</a>
+                                <a href="index.html" class="cat-tag">Politik</a>
+                                <a href="index.html" class="cat-tag">Ekonomi</a>
+                                <a href="index.html" class="cat-tag">Pendidikan</a>
+                                <a href="index.html" class="cat-tag">Olahraga</a>
+                                <a href="index.html" class="cat-tag">Teknologi</a>
+                                <a href="index.html" class="cat-tag">Hiburan</a>
                             </div>
                         </div>
                     </div>
@@ -438,56 +531,68 @@
                 <div class="footer-widget">
                     <h4>Halaman</h4>
                     <ul class="footer-links">
-                        <li><a href="/SusunanPengurus.html">Susunan Pengurus</a></li>
-                        <li><a href="/KontakKami.html">Kontak Kami</a></li>
-                        <li><a href="/PedomanMediaSiber.html">Pedoman Media Siber</a></li>
-                        <li><a href="/Disclaimer.html">Disclaimer</a></li>
+                        <li><a href="SusunanPengurus.html">Susunan Pengurus</a></li>
+                        <li><a href="KontakKami.html">Kontak Kami</a></li>
+                        <li><a href="PedomanMediaSiber.html">Pedoman Media Siber</a></li>
+                        <li><a href="Disclaimer.html">Disclaimer</a></li>
+                       
                     </ul>
                 </div>
             </div>
+            
             <div class="footer-bottom"><p>&copy; 2026 KJNI.my.id &mdash; Portal Berita Tangerang, Banten &amp; Indonesia.</p></div>
         </div>
     </footer>
 
     <script>
-        // GLOBAL UTILITY: Fungsi pembuat slug dari judul berita
-        window.createSlug = function(text) {
-            return text.toString().toLowerCase()
-                .replace(/\s+/g, '-')     
-                .replace(/[^\w\-]+/g, '') 
-                .replace(/\-\-+/g, '-')   
-                .replace(/^-+/, '')       
-                .replace(/-+$/, '');      
-        };
-
+        // Pengaturan Dark & Light Mode
         const themeBtn = document.getElementById('themeBtn');
         const savedTheme = localStorage.getItem('theme');
-        if(savedTheme === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+        if(savedTheme === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+        }
 
         themeBtn.addEventListener('click', () => {
             const h = document.documentElement;
             if(h.getAttribute('data-theme') === 'dark') {
-                h.removeAttribute('data-theme'); localStorage.setItem('theme', 'light');
+                h.removeAttribute('data-theme');
+                localStorage.setItem('theme', 'light');
             } else {
-                h.setAttribute('data-theme', 'dark'); localStorage.setItem('theme', 'dark');
+                h.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
             }
         });
 
-        const hamburgerBtn = document.getElementById('hamburgerBtn'), hDropdown = document.getElementById('hamburgerDropdown');
-        function toggleDropdown() { hamburgerBtn.classList.toggle('open'); hDropdown.classList.toggle('open'); }
-        hamburgerBtn.addEventListener('click', e => { e.stopPropagation(); toggleDropdown(); });
+        /* LOGIKA MENU DROPDOWN HAMBURGER */
+        const hamburgerBtn = document.getElementById('hamburgerBtn'), 
+              hDropdown = document.getElementById('hamburgerDropdown');
+
+        function toggleDropdown() {
+            hamburgerBtn.classList.toggle('open');
+            hDropdown.classList.toggle('open');
+        }
+
+        hamburgerBtn.addEventListener('click', e => {
+            e.stopPropagation();
+            toggleDropdown();
+        });
+
         document.addEventListener('click', e => {
             if (!hDropdown.contains(e.target) && !hamburgerBtn.contains(e.target)) {
-                hamburgerBtn.classList.remove('open'); hDropdown.classList.remove('open');
+                hamburgerBtn.classList.remove('open');
+                hDropdown.classList.remove('open');
             }
         });
+        /* AKHIR LOGIKA DROPDOWN */
 
+        // Toggle drop-down search bar
         const searchDrop = document.getElementById('searchDrop');
         document.getElementById('searchToggleBtn').addEventListener('click', () => {
             searchDrop.classList.toggle('open');
             if (searchDrop.classList.contains('open')) document.getElementById('searchInput').focus();
         });
 
+        // Search Realtime
         function formatTglSearch(ts) {
             if (!ts || !ts.seconds) return '';
             return new Date(ts.seconds * 1000).toLocaleDateString('id-ID', { day:'numeric', month:'short', year:'numeric' });
@@ -498,45 +603,80 @@
             const area = document.getElementById('searchResultsArea');
             const mainContentEl = document.getElementById('mainContent');
 
-            if (keyword.length < 2) { area.style.display = 'none'; area.innerHTML = ''; mainContentEl.classList.remove('hidden'); return; }
+            if (keyword.length < 2) {
+                area.style.display = 'none';
+                area.innerHTML = '';
+                mainContentEl.classList.remove('hidden');
+                return;
+            }
 
             const semua = Object.values(window._beritaMap || {});
             const hasil = semua.filter(b =>
-                (b.judul || '').toLowerCase().includes(keyword) || (b.isi || '').toLowerCase().includes(keyword) || (b.kategori || '').toLowerCase().includes(keyword) || (b.penulis || '').toLowerCase().includes(keyword) || (b.hashtags || '').toLowerCase().includes(keyword)
+                (b.judul || '').toLowerCase().includes(keyword) ||
+                (b.isi || '').toLowerCase().includes(keyword) ||
+                (b.kategori || '').toLowerCase().includes(keyword) ||
+                (b.penulis || '').toLowerCase().includes(keyword) ||
+                (b.hashtags || '').toLowerCase().includes(keyword) // TAMBAHAN: Cari berdasarkan hashtags juga
             );
 
             mainContentEl.classList.add('hidden');
             area.style.display = 'block';
+
             const inp = document.getElementById('searchInput').value;
-            
             if (hasil.length === 0) {
-                area.innerHTML = `<div class="sr-box"><div class="sr-hdr"><span>Hasil pencarian: "<em>${inp}</em>"</span><button class="sr-clear" id="clearSearch">✕ Bersihkan</button></div><div style="text-align: center; padding: 30px 20px; color: var(--text-muted);"><p style="font-size:36px;margin-bottom:8px;">😔</p><p>Tidak ditemukan hasil berita.</p></div></div>`;
+                area.innerHTML = `
+                    <div class="sr-box">
+                        <div class="sr-hdr">
+                            <span>Hasil pencarian: "<em>${inp}</em>"</span>
+                            <button class="sr-clear" id="clearSearch">✕ Bersihkan</button>
+                        </div>
+                        <div style="text-align: center; padding: 30px 20px; color: var(--text-muted);">
+                            <p style="font-size:36px;margin-bottom:8px;">😔</p>
+                            <p>Tidak ditemukan hasil berita.</p>
+                        </div>
+                    </div>`;
             } else {
-                area.innerHTML = `<div class="sr-box"><div class="sr-hdr"><span>Ditemukan <strong>${hasil.length}</strong> berita untuk "<em>${inp}</em>"</span><button class="sr-clear" id="clearSearch">✕ Bersihkan</button></div>
+                area.innerHTML = `
+                    <div class="sr-box">
+                        <div class="sr-hdr">
+                            <span>Ditemukan <strong>${hasil.length}</strong> berita untuk "<em>${inp}</em>"</span>
+                            <button class="sr-clear" id="clearSearch">✕ Bersihkan</button>
+                        </div>
                         ${hasil.map(b => `
-                            <div class="sr-item" data-id="${b.id}" data-judul="${b.judul}">
-                                <div class="sr-thumb">${b.gambar ? `<img src="${b.gambar}" alt="${b.judul}">` : '📰'}</div>
+                            <div class="sr-item" data-id="${b.id}">
+                                <div class="sr-thumb">
+                                    ${b.gambar ? `<img src="${b.gambar}" alt="${b.judul}">` : '📰'}
+                                </div>
                                 <div>
                                     <span class="cat-badge" style="font-size:9px;padding:2px 6px;margin-bottom:4px;">${b.kategori}</span>
                                     <div class="sr-title">${b.judul}</div>
                                     <div class="sr-meta">✍️ ${b.penulis || 'Redaksi KJNI'} &nbsp;•&nbsp; 📅 ${formatTglSearch(b.tanggalDibuat)}</div>
                                 </div>
-                            </div>`).join('')}</div>`;
+                            </div>`).join('')}
+                    </div>`;
             }
 
             area.querySelectorAll('.sr-item').forEach(item => {
                 item.addEventListener('click', () => {
-                    const slug = window.createSlug(item.dataset.judul);
-                    window.location.href = `/artikel/${slug}-${item.dataset.id}`;
+                    window.location.href = `artikel.html?id=${item.dataset.id}`;
                 });
             });
 
             const clearBtn = document.getElementById('clearSearch');
-            if (clearBtn) clearBtn.addEventListener('click', () => { document.getElementById('searchInput').value = ''; area.style.display = 'none'; area.innerHTML = ''; mainContentEl.classList.remove('hidden'); });
+            if (clearBtn) {
+                clearBtn.addEventListener('click', () => {
+                    document.getElementById('searchInput').value = '';
+                    area.style.display = 'none';
+                    area.innerHTML = '';
+                    mainContentEl.classList.remove('hidden');
+                });
+            }
         }
 
         document.getElementById('searchBtn').addEventListener('click', lakukan_search);
-        document.getElementById('searchInput').addEventListener('keydown', (e) => { if (e.key === 'Enter') lakukan_search(); });
+        document.getElementById('searchInput').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') lakukan_search();
+        });
     </script>
 
     <script type="module">
@@ -556,20 +696,9 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
 
-        // FITUR BARU: Ambil ID dari URL gaya baru maupun gaya lama
         function getArtikelId() {
             const params = new URLSearchParams(window.location.search);
-            const legacyId = params.get('id');
-            if (legacyId) return legacyId;
-
-            // Jika formatnya adalah /artikel/judul-berita-I2dxEN6dtu2oAWnKKKRt
-            const pathParts = window.location.pathname.split('/');
-            const lastPart = pathParts[pathParts.length - 1];
-            if (lastPart && lastPart !== 'artikel.html') {
-                const dashParts = lastPart.split('-');
-                return dashParts[dashParts.length - 1]; // Mengambil string terakhir setelah strip (-)
-            }
-            return null;
+            return params.get('id');
         }
 
         function hitungWaktuBaca(text) {
@@ -590,7 +719,7 @@
                 loadingEl.classList.add('hidden');
                 errorEl.classList.remove('hidden');
                 document.getElementById('errorTitle').innerText = "ID Artikel Tidak Ditemukan";
-                document.getElementById('errorDesc').innerText = "Silakan pilih berita valid dari halaman utama.";
+                document.getElementById('errorDesc').innerText = "Silahkan pilih berita valid dari halaman utama.";
                 return;
             }
 
@@ -601,16 +730,6 @@
                 if (docSnap.exists()) {
                     const data = docSnap.data();
 
-                    // --- MENGUBAH URL BARIS BROWSER OTOMATIS (SEO & CLEAN URL) ---
-                    const slug = window.createSlug(data.judul);
-                    const expectedPath = `/artikel/${slug}-${id}`;
-                    
-                    // Ganti URL agar bersih tanpa me-refresh halaman
-                    if (window.location.pathname !== expectedPath) {
-                        window.history.replaceState({path: expectedPath}, '', expectedPath);
-                    }
-                    // -------------------------------------------------------------
-
                     document.title = `${data.judul} - KJNI`;
                     document.getElementById('artKategori').innerText = data.kategori || 'Umum';
                     document.getElementById('artJudul').innerText = data.judul || 'Tanpa Judul';
@@ -618,7 +737,11 @@
                     
                     if (data.tanggalDibuat && data.tanggalDibuat.seconds) {
                         const tgl = new Date(data.tanggalDibuat.seconds * 1000);
-                        document.getElementById('artTanggal').innerText = tgl.toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+                        document.getElementById('artTanggal').innerText = tgl.toLocaleDateString('id-ID', {
+                            day: 'numeric',
+                            month: 'long',
+                            year: 'numeric'
+                        });
                     } else {
                         document.getElementById('artTanggal').innerText = 'Baru saja';
                     }
@@ -626,53 +749,86 @@
                     document.getElementById('artWaktuBaca').innerText = hitungWaktuBaca(data.isi || '');
 
                     const imgEl = document.getElementById('artGambar');
-                    if (data.gambar) { imgEl.src = data.gambar; imgEl.alt = data.judul; } 
-                    else { document.getElementById('artImgContainer').style.display = 'none'; }
+                    if (data.gambar) {
+                        imgEl.src = data.gambar;
+                        imgEl.alt = data.judul;
+                    } else {
+                        document.getElementById('artImgContainer').style.display = 'none';
+                    }
 
-                    const isiFormatted = (data.isi || '').split('\n\n').filter(p => p.trim() !== '').map(p => `<p>${p}</p>`).join('');
+                    const isiFormatted = (data.isi || '')
+                        .split('\n\n')
+                        .filter(p => p.trim() !== '')
+                        .map(p => `<p>${p}</p>`)
+                        .join('');
                     document.getElementById('artIsi').innerHTML = isiFormatted;
 
+                    // Render blok konten dinamis (foto + teks)
                     const blokContainer = document.getElementById('blokKontenContainer');
                     if (data.blok_konten && Array.isArray(data.blok_konten) && data.blok_konten.length > 0) {
-                        blokContainer.classList.remove('hidden'); blokContainer.innerHTML = '';
+                        blokContainer.classList.remove('hidden');
+                        blokContainer.innerHTML = '';
                         data.blok_konten.forEach(blok => {
                             if (blok.tipe === 'foto' && blok.url) {
-                                const wrapper = document.createElement('div'); wrapper.className = 'blok-foto-wrap';
-                                wrapper.innerHTML = `<figure class="blok-figure"><img src="${blok.url}" alt="${blok.caption || ''}" class="blok-foto-img" loading="lazy">${blok.caption ? `<figcaption class="blok-caption-txt">${blok.caption}</figcaption>` : ''}</figure>`;
+                                const wrapper = document.createElement('div');
+                                wrapper.className = 'blok-foto-wrap';
+                                wrapper.innerHTML = `
+                                    <figure class="blok-figure">
+                                        <img src="${blok.url}" alt="${blok.caption || ''}" class="blok-foto-img" loading="lazy">
+                                        ${blok.caption ? `<figcaption class="blok-caption-txt">${blok.caption}</figcaption>` : ''}
+                                    </figure>
+                                `;
                                 blokContainer.appendChild(wrapper);
                             } else if (blok.tipe === 'teks' && blok.teks) {
-                                const wrapper = document.createElement('div'); wrapper.className = 'blok-teks-wrap article-body';
-                                const paragraf = blok.teks.split('\n\n').filter(p => p.trim()).map(p => `<p>${p.replace(/\n/g, '<br>')}</p>`).join('');
+                                const wrapper = document.createElement('div');
+                                wrapper.className = 'blok-teks-wrap article-body';
+                                const paragraf = blok.teks.split('\n\n')
+                                    .filter(p => p.trim())
+                                    .map(p => `<p>${p.replace(/\n/g, '<br>')}</p>`)
+                                    .join('');
                                 wrapper.innerHTML = paragraf || `<p>${blok.teks}</p>`;
                                 blokContainer.appendChild(wrapper);
                             }
                         });
                     }
 
+                    // FITUR BARU: Pemrosesan dan Paparan Hashtags di dalam Artikel
                     const hashtagsContainer = document.getElementById('artHashtagsContainer');
                     if (data.hashtags && data.hashtags.trim() !== '') {
-                        hashtagsContainer.classList.remove('hidden'); hashtagsContainer.innerHTML = '';
-                        data.hashtags.split(',').forEach(tag => {
+                        hashtagsContainer.classList.remove('hidden');
+                        hashtagsContainer.innerHTML = '';
+                        
+                        const tagsArray = data.hashtags.split(',');
+                        tagsArray.forEach(tag => {
                             const cleanTag = tag.trim();
                             if (cleanTag !== '') {
+                                // Memastikan simbol '#' ada di hadapan teks tag
                                 const displayTag = cleanTag.startsWith('#') ? cleanTag : '#' + cleanTag;
-                                const tagBtn = document.createElement('a'); tagBtn.href = '#'; tagBtn.className = 'hashtag-item'; tagBtn.innerText = displayTag;
+                                const tagBtn = document.createElement('a');
+                                tagBtn.href = '#';
+                                tagBtn.className = 'hashtag-item';
+                                tagBtn.innerText = displayTag;
+                                
+                                // Event click untuk cari berita berasaskan hashtag
                                 tagBtn.addEventListener('click', (e) => {
                                     e.preventDefault();
                                     const searchInput = document.getElementById('searchInput');
                                     const searchDrop = document.getElementById('searchDrop');
-                                    searchInput.value = cleanTag.replace('#', '');
-                                    if (!searchDrop.classList.contains('open')) searchDrop.classList.add('open');
+                                    searchInput.value = cleanTag.replace('#', ''); // Masukkan kata kunci tanpa '#'
+                                    if (!searchDrop.classList.contains('open')) {
+                                        searchDrop.classList.add('open');
+                                    }
                                     window.scrollTo({ top: 0, behavior: 'smooth' });
-                                    lakukan_search();
+                                    lakukan_search(); // Jalankan fungsi pencarian global
                                 });
                                 hashtagsContainer.appendChild(tagBtn);
                             }
                         });
-                    } else { hashtagsContainer.classList.add('hidden'); }
+                    } else {
+                        hashtagsContainer.classList.add('hidden');
+                    }
 
-                    // Fix format Share URL ke Origin yang absolut
-                    const currentUrl = encodeURIComponent(window.location.origin + expectedPath);
+                    const currentUrl = encodeURIComponent(window.location.href);
                     const currentTitle = encodeURIComponent(data.judul);
 
                     document.getElementById('shareFb').href = `https://www.facebook.com/sharer.php?u=${currentUrl}`;
@@ -680,12 +836,18 @@
                     document.getElementById('shareWa').href = `https://wa.me/?text=${currentTitle}%20${currentUrl}`;
                     document.getElementById('shareTg').href = `https://t.me/share/url?url=${currentUrl}&text=${currentTitle}`;
 
-                    loadingEl.classList.add('hidden'); mainContentEl.classList.remove('hidden');
+                    loadingEl.classList.add('hidden');
+                    mainContentEl.classList.remove('hidden');
                     if(sidebarSection) sidebarSection.classList.remove('hidden');
 
-                } else { loadingEl.classList.add('hidden'); errorEl.classList.remove('hidden'); }
+                } else {
+                    loadingEl.classList.add('hidden');
+                    errorEl.classList.remove('hidden');
+                }
             } catch (error) {
-                loadingEl.classList.add('hidden'); errorEl.classList.remove('hidden');
+                console.error("Gagal memuat artikel:", error);
+                loadingEl.classList.add('hidden');
+                errorEl.classList.remove('hidden');
                 document.getElementById('errorTitle').innerText = "Terjadi Kesalahan Sistem";
                 document.getElementById('errorDesc').innerText = "Gagal terhubung ke database Firebase. Periksa konfigurasi Anda.";
             }
@@ -695,19 +857,22 @@
             const q = query(collection(db, "berita"), orderBy("tanggalDibuat", "desc"));
             onSnapshot(q, (snapshot) => {
                 const semuaBerita = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+                
                 const beritaMap = {};
                 semuaBerita.forEach(b => beritaMap[b.id] = b);
                 window._beritaMap = beritaMap;
 
-                if(semuaBerita.length > 0) document.getElementById('tickerText').innerText = semuaBerita.map(b => b.judul).join('  •  ');
+                if(semuaBerita.length > 0) {
+                    document.getElementById('tickerText').innerText = semuaBerita.map(b => b.judul).join('  •  ');
+                }
 
                 const sidebarContainer = document.getElementById('sidebarNews');
-                let listHtml = ''; let index = 0;
+                let listHtml = '';
+                let index = 0;
                 semuaBerita.forEach((b) => {
                     if (b.id !== getArtikelId() && index < 5) {
-                        const slug = window.createSlug(b.judul);
                         listHtml += `
-                            <a href="/artikel/${slug}-${b.id}" class="pop-item">
+                            <a href="artikel.html?id=${b.id}" class="pop-item">
                                 <div class="pop-num">${String(index + 1).padStart(2, '0')}</div>
                                 <div class="pop-title">${b.judul}</div>
                             </a>
@@ -716,43 +881,85 @@
                     }
                 });
                 sidebarContainer.innerHTML = listHtml || '<p style="font-size:13px; color:var(--text-muted)">Belum ada berita lain.</p>';
+            }, (error) => {
+                console.error("Gagal sinkronisasi data berita global:", error);
             });
         }
 
         async function muatIklan() {
             try {
-                const adRef = doc(db, "pengaturan", "iklan"); const adSnap = await getDoc(adRef);
+                const adRef = doc(db, "pengaturan", "iklan");
+                const adSnap = await getDoc(adRef);
+
                 if (adSnap.exists()) {
                     const data = adSnap.data();
+
                     const ws=document.getElementById("dynamicAdSidebar");
-                    if(data.ads_sidebar&&data.ads_sidebar.length>0){ ws.style.display="block"; ws.innerHTML=`<p style="font-size:10px;color:var(--text-muted);text-transform:uppercase;text-align:center;margin-bottom:6px;">Advertisement</p>`+data.ads_sidebar.map(ad=>`<a href="${ad.link||'#'}" target="_blank" style="display:block;margin-bottom:10px;"><img src="${ad.img}" alt="Ad" style="max-width:100%;border-radius:4px;"></a>`).join(''); }
+                    if(data.ads_sidebar&&data.ads_sidebar.length>0){
+                        ws.style.display="block";
+                        ws.innerHTML=`<p style="font-size:10px;color:var(--text-muted);text-transform:uppercase;text-align:center;margin-bottom:6px;">Advertisement</p>`+data.ads_sidebar.map(ad=>`<a href="${ad.link||'#'}" target="_blank" style="display:block;margin-bottom:10px;"><img src="${ad.img}" alt="Ad" style="max-width:100%;border-radius:4px;"></a>`).join('');
+                    }
+                    
                     const wf=document.getElementById("dynamicAdFooter");
-                    if(data.ads_footer&&data.ads_footer.length>0){ wf.style.display="block"; wf.innerHTML=`<p class="ad-lbl">Advertisement</p>`+data.ads_footer.map(ad=>`<a href="${ad.link||'#'}" target="_blank"><img src="${ad.img}" alt="Ad" style="max-width:100%;border-radius:4px; margin: 0 auto;"></a>`).join(''); }
+                    if(data.ads_footer&&data.ads_footer.length>0){
+                        wf.style.display="block";
+                        wf.innerHTML=`<p class="ad-lbl">Advertisement</p>`+data.ads_footer.map(ad=>`<a href="${ad.link||'#'}" target="_blank"><img src="${ad.img}" alt="Ad" style="max-width:100%;border-radius:4px; margin: 0 auto;"></a>`).join('');
+                    }
+
                     const wt=document.getElementById("dynamicAdTop");
-                    if(data.ads_top&&data.ads_top.length>0){ wt.style.display="block"; wt.innerHTML=`<p class="ad-lbl">Advertisement</p>`+data.ads_top.map(ad=>`<a href="${ad.link||'#'}" target="_blank" style="display:block;margin-bottom:10px;"><img src="${ad.img}" alt="Ad" style="max-width:100%;border-radius:4px; margin: 0 auto; max-height:250px; object-fit:contain;"></a>`).join(''); }
+                    if(data.ads_top&&data.ads_top.length>0){
+                        wt.style.display="block";
+                        wt.innerHTML=`<p class="ad-lbl">Advertisement</p>`+data.ads_top.map(ad=>`<a href="${ad.link||'#'}" target="_blank" style="display:block;margin-bottom:10px;"><img src="${ad.img}" alt="Ad" style="max-width:100%;border-radius:4px; margin: 0 auto; max-height:250px; object-fit:contain;"></a>`).join('');
+                    }
+
                     const wl=document.getElementById("dynamicAdLeft");
-                    if(data.ads_left&&data.ads_left.length>0){ wl.style.display="block"; document.getElementById('mainLayout').classList.add('has-left-ad'); wl.innerHTML=`<div style="position:sticky;top:112px;"><p style="font-size:10px;color:var(--text-muted);text-transform:uppercase;text-align:center;margin-bottom:6px;">Advertisement</p>`+data.ads_left.map(ad=>`<a href="${ad.link||'#'}" target="_blank" style="display:block;margin-bottom:10px;"><img src="${ad.img}" alt="Ad" style="max-width:100%;border-radius:4px;"></a>`).join('')+`</div>`; }
+                    if(data.ads_left&&data.ads_left.length>0){
+                        wl.style.display="block";
+                        document.getElementById('mainLayout').classList.add('has-left-ad');
+                        wl.innerHTML=`<div style="position:sticky;top:112px;"><p style="font-size:10px;color:var(--text-muted);text-transform:uppercase;text-align:center;margin-bottom:6px;">Advertisement</p>`+data.ads_left.map(ad=>`<a href="${ad.link||'#'}" target="_blank" style="display:block;margin-bottom:10px;"><img src="${ad.img}" alt="Ad" style="max-width:100%;border-radius:4px;"></a>`).join('')+`</div>`;
+                    }
+                    
                     const wTengah=document.getElementById("adTengahContainer");
-                    if(data.ads_tengah&&data.ads_tengah.length>0){ wTengah.classList.remove('hidden'); wTengah.innerHTML=`<p class="ad-lbl">Advertisement</p>`+data.ads_tengah.map(ad=>`<a href="${ad.link||'#'}" target="_blank" style="display:block;margin-bottom:10px;"><img src="${ad.img}" alt="Ad" style="max-width:100%;border-radius:4px;"></a>`).join(''); }
+                    if(data.ads_tengah&&data.ads_tengah.length>0){
+                        wTengah.classList.remove('hidden');
+                        wTengah.innerHTML=`<p class="ad-lbl">Advertisement</p>`+data.ads_tengah.map(ad=>`<a href="${ad.link||'#'}" target="_blank" style="display:block;margin-bottom:10px;"><img src="${ad.img}" alt="Ad" style="max-width:100%;border-radius:4px;"></a>`).join('');
+                    }
                 }
-            } catch (error) {}
+            } catch (error) {
+                console.error("Gagal memuat data iklan dinamis:", error);
+            }
         }
 
         async function renderMediaPartner() {
-            const marqueeWrap = document.getElementById('mediaPartnerMarquee'); if (!marqueeWrap) return;
+            const marqueeWrap = document.getElementById('mediaPartnerMarquee');
+            if (!marqueeWrap) return;
             try {
                 const snap = await getDocs(collection(db, 'media_partners'));
-                if (snap.empty) { marqueeWrap.innerHTML = '<p style="color:var(--text-muted);font-size:13px;text-align:center;padding:8px 0;">Belum ada media partner.</p>'; return; }
+                if (snap.empty) {
+                    marqueeWrap.innerHTML = '<p style="color:var(--text-muted);font-size:13px;text-align:center;padding:8px 0;">Belum ada media partner.</p>';
+                    return;
+                }
                 const partners = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-                const semuaItem = partners.map(dt => `<a href="${dt.link || '#'}" class="partner-logo" target="_blank" title="${dt.nama || 'Partner'}"><img src="${dt.logo || ''}" alt="${dt.nama || 'Partner'}" loading="lazy"></a>`).join('');
-                let trackHTML = ''; for (let i = 0; i < (partners.length < 4 ? 4 : 2); i++) trackHTML += semuaItem;
+                const buatItem = (dt) => `<a href="${dt.link || '#'}" class="partner-logo" target="_blank" title="${dt.nama || 'Partner'}"><img src="${dt.logo || ''}" alt="${dt.nama || 'Partner'}" loading="lazy"></a>`;
+                const semuaItem = partners.map(buatItem).join('');
+                const ulang = partners.length < 4 ? 4 : 2;
+                let trackHTML = '';
+                for (let i = 0; i < ulang; i++) trackHTML += semuaItem;
                 marqueeWrap.innerHTML = `<div class="mp-track">${trackHTML}</div>`;
-                marqueeWrap.querySelector('.mp-track').style.animationDuration = Math.max(18, partners.length * 4) + 's';
-            } catch(e) {}
+                const durasi = Math.max(18, partners.length * 4);
+                marqueeWrap.querySelector('.mp-track').style.animationDuration = durasi + 's';
+            } catch(e) {
+                marqueeWrap.innerHTML = '<p style="color:var(--text-muted);font-size:13px;text-align:center;padding:8px 0;">Gagal memuat media partner.</p>';
+            }
         }
 
-        window.addEventListener('DOMContentLoaded', () => { muatArtikel(); dataBeritaListener(); muatIklan(); renderMediaPartner(); });
-        
+        window.addEventListener('DOMContentLoaded', () => {
+            muatArtikel();
+            dataBeritaListener();
+            muatIklan();
+            renderMediaPartner();
+        });
+        // ===== LOAD NOMOR WA DINAMIS =====
         (async () => {
             try {
                 const snap = await getDoc(doc(db, 'pengaturan', 'whatsapp'));
@@ -760,36 +967,90 @@
                     const { nomor, pesan } = snap.data();
                     if (nomor) {
                         const url = 'https://wa.me/' + nomor + (pesan ? '?text=' + encodeURIComponent(pesan) : '');
-                        const waBtn = document.getElementById('waFloatBtn'); if (waBtn) waBtn.href = url;
-                        const fsb = document.querySelector('.fsb-wa'); if (fsb) fsb.href = url;
+                        const waBtn = document.getElementById('waFloatBtn');
+                        if (waBtn) waBtn.href = url;
+                        // Update juga tombol WA di share bar jika ada
+                        const fsb = document.querySelector('.fsb-wa');
+                        if (fsb) fsb.href = url;
                     }
                 }
-            } catch(e) {}
+            } catch(e) { console.warn('Gagal load WA settings:', e.message); }
         })();
     </script>
     <div id="anticopy-toast">🚫 Konten ini dilindungi hak cipta © KJNI</div>
 
     <script>
+        // ===== ANTI COPAS =====
         (function() {
-            const toast = document.getElementById('anticopy-toast'); let toastTimer;
-            function tampilToast(msg) { toast.textContent = msg || '🚫 Konten ini dilindungi hak cipta © KJNI'; toast.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(() => toast.classList.remove('show'), 2800); }
-            document.addEventListener('contextmenu', function(e) { if (e.target.closest('.article-body, .blok-teks-wrap, .article-title, #artIsi, #blokKontenContainer, .article-img-container, .blok-foto-wrap')) { e.preventDefault(); tampilToast('🚫 Silahkan Hubungi Admin KJNI!'); } });
-            document.addEventListener('keydown', function(e) {
-                if ((e.ctrlKey || e.metaKey) && ['c', 'a', 'x', 'u', 's', 'p'].includes(e.key.toLowerCase())) {
-                    const sel = window.getSelection();
-                    if (sel && sel.toString().length > 0) { e.preventDefault(); tampilToast('🚫 Salin teks dinonaktifkan pada artikel ini'); return; }
-                    if (['a','u','s','p'].includes(e.key.toLowerCase())) { e.preventDefault(); tampilToast('🚫 Konten ini dilindungi hak cipta © KJNI'); }
+            const toast = document.getElementById('anticopy-toast');
+            let toastTimer;
+
+            function tampilToast(msg) {
+                toast.textContent = msg || '🚫 Konten ini dilindungi hak cipta © KJNI';
+                toast.classList.add('show');
+                clearTimeout(toastTimer);
+                toastTimer = setTimeout(() => toast.classList.remove('show'), 2800);
+            }
+
+            // Blokir klik kanan
+            document.addEventListener('contextmenu', function(e) {
+                const el = e.target;
+                const isArtikel = el.closest('.article-body, .blok-teks-wrap, .article-title, #artIsi, #blokKontenContainer, .article-img-container, .blok-foto-wrap');
+                if (isArtikel) {
+                    e.preventDefault();
+                    tampilToast('🚫 Silahkan Hubungi Admin KJNI!');
                 }
-                if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && ['i','j','c'].includes(e.key.toLowerCase()))) e.preventDefault();
             });
+
+            // Blokir keyboard shortcut copy (Ctrl+C, Ctrl+A, Ctrl+X, Ctrl+U, F12)
+            document.addEventListener('keydown', function(e) {
+                const blockedKeys = ['c', 'a', 'x', 'u', 's', 'p'];
+                if ((e.ctrlKey || e.metaKey) && blockedKeys.includes(e.key.toLowerCase())) {
+                    const sel = window.getSelection();
+                    if (sel && sel.toString().length > 0) {
+                        e.preventDefault();
+                        tampilToast('🚫 Salin teks dinonaktifkan pada artikel ini');
+                        return;
+                    }
+                    // Blokir Ctrl+A, Ctrl+U, Ctrl+S, Ctrl+P global
+                    if (['a','u','s','p'].includes(e.key.toLowerCase())) {
+                        e.preventDefault();
+                        tampilToast('🚫 Konten ini dilindungi hak cipta © KJNI');
+                    }
+                }
+                // Blokir F12 dan Ctrl+Shift+I / Ctrl+Shift+J / Ctrl+Shift+C (DevTools)
+                if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && ['i','j','c'].includes(e.key.toLowerCase()))) {
+                    e.preventDefault();
+                }
+            });
+
+            // Blokir event copy & cut
             document.addEventListener('copy', function(e) {
-                const sel = window.getSelection(); if (!sel || sel.toString().length === 0) return;
-                const container = sel.getRangeAt(0).commonAncestorContainer;
-                const isProtected = container.nodeType === 3 ? container.parentElement.closest('.article-body, .blok-teks-wrap, .article-title, #artIsi, #blokKontenContainer') : container.closest && container.closest('.article-body, .blok-teks-wrap, .article-title, #artIsi, #blokKontenContainer');
-                if (isProtected) { e.preventDefault(); e.clipboardData && e.clipboardData.setData('text/plain', '© KJNI - Konten dilindungi hak cipta. Kunjungi kjni.my.id'); tampilToast('🚫 Salin teks dinonaktifkan pada artikel ini'); }
+                const sel = window.getSelection();
+                if (!sel || sel.toString().length === 0) return;
+                const range = sel.getRangeAt(0);
+                const container = range.commonAncestorContainer;
+                const isProtected = container.nodeType === 3
+                    ? container.parentElement.closest('.article-body, .blok-teks-wrap, .article-title, #artIsi, #blokKontenContainer')
+                    : container.closest && container.closest('.article-body, .blok-teks-wrap, .article-title, #artIsi, #blokKontenContainer');
+                if (isProtected) {
+                    e.preventDefault();
+                    e.clipboardData && e.clipboardData.setData('text/plain', '© KJNI - Konten dilindungi hak cipta. Kunjungi kjni.my.id');
+                    tampilToast('🚫 Salin teks dinonaktifkan pada artikel ini');
+                }
             });
-            document.addEventListener('cut', function(e) { e.preventDefault(); });
-            document.addEventListener('dragstart', function(e) { if (e.target.closest && e.target.closest('.article-body, .blok-teks-wrap, #artIsi, #blokKontenContainer, .article-img-container, .blok-foto-wrap')) e.preventDefault(); });
+
+            document.addEventListener('cut', function(e) {
+                e.preventDefault();
+            });
+
+            // Blokir drag teks
+            document.addEventListener('dragstart', function(e) {
+                const el = e.target;
+                if (el.closest && el.closest('.article-body, .blok-teks-wrap, #artIsi, #blokKontenContainer, .article-img-container, .blok-foto-wrap')) {
+                    e.preventDefault();
+                }
+            });
         })();
     </script>
 </body>
