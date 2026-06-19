@@ -109,12 +109,18 @@ module.exports = async (req, res) => {
     return;
   }
 
-  // Dukung ?id=... (link lama dari index.html) DAN ?slug=... (link baru)
-  const slug = (req.query && (req.query.id || req.query.slug)) || "";
+  // ID Firestore selalu diprioritaskan untuk mengambil data artikel.
+  // Param ?slug=... yang menyertai ?id=... (dari link baru index.html) HANYA kosmetik di URL
+  // dan TIDAK dipakai untuk query — supaya tidak salah ambil data jika ada slug yang bentrok.
+  // Fallback ambilBySlugField hanya dipakai kalau benar-benar tidak ada ?id= sama sekali
+  // (misalnya link lama yang murni berbasis slug, kalau pernah ada).
+  const idParam   = (req.query && req.query.id) || "";
+  const slugParam = (req.query && req.query.slug) || "";
+  const key = idParam || slugParam;
 
-  if (slug) {
+  if (key) {
     try {
-      const artikel = await ambilArtikel(slug);
+      const artikel = idParam ? await ambilByDocId(idParam) : await ambilArtikel(key);
       if (artikel && artikel.judul) {
         const judulLengkap = `${artikel.judul} - KJNI`;
         const isiBersih    = (artikel.isi || "").replace(/\s+/g, " ").trim();
