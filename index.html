@@ -528,7 +528,7 @@
             area.innerHTML = `<div class="sr-box"><div class="sr-hdr"><span>Hasil: "<em>${inp}</em>"</span><button class="sr-clear" onclick="clearSearch()">&#x2715; Bersihkan</button></div><div class="sr-none"><p style="font-size:36px;margin-bottom:8px;">&#x1F614;</p><p>Tidak ditemukan hasil.</p></div></div>`;
         } else {
             area.innerHTML = `<div class="sr-box"><div class="sr-hdr"><span>Ditemukan <strong>${hasil.length}</strong> berita untuk "<em>${inp}</em>"</span><button class="sr-clear" onclick="clearSearch()">&#x2715; Bersihkan</button></div>${hasil.map(b=>`<div class="sr-item" data-id="${b.id}"><div class="sr-thumb">${b.gambar?`<img src="${b.gambar}" alt="">`:'&#x1F4F0;'}</div><div><span class="cat-badge" style="font-size:9px;padding:2px 6px;">${b.kategori}</span><div class="sr-title">${b.judul}</div><div class="sr-meta">&#x270D;&#xFE0F; ${b.penulis||'Redaksi KJNI'} &nbsp;&bull;&nbsp; ${formatTglS(b.tanggalDibuat)}</div></div></div>`).join('')}</div>`;
-            area.querySelectorAll('.sr-item').forEach(el => el.addEventListener('click', () => { window.location.href=`artikel.html?id=${el.dataset.id}`; }));
+            area.querySelectorAll('.sr-item').forEach(el => el.addEventListener('click', () => { window.location.href=`artikel-app.html?id=${el.dataset.id}`; }));
         }
     }
 
@@ -565,7 +565,7 @@
         const card=e.target.closest('[data-id]');
         if(!card) return;
         if(e.target.closest('.filter-pill')||e.target.closest('.cat-nav-inner')||e.target.closest('.cat-tag')) return;
-        window.location.href=`artikel.html?id=${card.dataset.id}`;
+        window.location.href=`artikel-app.html?id=${card.dataset.id}`;
     });
 </script>
 
@@ -711,7 +711,7 @@
         document.getElementById('sliderPrev').onclick = e=>{e.stopPropagation();goTo(cur-1);resetAuto();};
         document.getElementById('sliderNext').onclick = e=>{e.stopPropagation();goTo(cur+1);resetAuto();};
         document.querySelectorAll('.slider-dot').forEach(d=>d.addEventListener('click',e=>{e.stopPropagation();goTo(+d.dataset.idx);resetAuto();}));
-        document.querySelectorAll('#heroSlider .hero-slide').forEach(s=>s.addEventListener('click',()=>{window.location.href=`artikel.html?id=${s.dataset.id}`;}));
+        document.querySelectorAll('#heroSlider .hero-slide').forEach(s=>s.addEventListener('click',()=>{window.location.href=`artikel-app.html?id=${s.dataset.id}`;}));
 
         let tx=0; const wrap = document.querySelector('#heroSlider .hero-slider-wrap');
         wrap.addEventListener('touchstart',e=>{tx=e.touches[0].clientX;},{passive:true});
