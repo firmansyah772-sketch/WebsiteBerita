@@ -531,7 +531,7 @@
             area.querySelectorAll('.sr-item').forEach(el => el.addEventListener('click', () => {
                 const b = window._beritaMap && window._beritaMap[el.dataset.id];
                 const slug = b && window._buatSlug ? window._buatSlug(b.judul) : '';
-                window.location.href = `artikel.html?id=${el.dataset.id}` + (slug ? `&slug=${slug}` : '');
+                window.location.href = `/artikel/${slug ? slug + '-' : ''}${el.dataset.id}`;
             }));
         }
     }
@@ -571,7 +571,7 @@
         if(e.target.closest('.filter-pill')||e.target.closest('.cat-nav-inner')||e.target.closest('.cat-tag')) return;
         const b = window._beritaMap && window._beritaMap[card.dataset.id];
         const slug = b ? (window._buatSlug ? window._buatSlug(b.judul) : '') : '';
-        window.location.href = `artikel.html?id=${card.dataset.id}` + (slug ? `&slug=${slug}` : '');
+        window.location.href = `/artikel/${slug ? slug + '-' : ''}${card.dataset.id}`;
     });
 </script>
 
@@ -732,7 +732,7 @@
         document.getElementById('sliderPrev').onclick = e=>{e.stopPropagation();goTo(cur-1);resetAuto();};
         document.getElementById('sliderNext').onclick = e=>{e.stopPropagation();goTo(cur+1);resetAuto();};
         document.querySelectorAll('.slider-dot').forEach(d=>d.addEventListener('click',e=>{e.stopPropagation();goTo(+d.dataset.idx);resetAuto();}));
-        document.querySelectorAll('#heroSlider .hero-slide').forEach((s,i)=>s.addEventListener('click',()=>{const slug=buatSlug(slides[i].judul);window.location.href=`artikel.html?id=${s.dataset.id}`+(slug?`&slug=${slug}`:'');}));
+        document.querySelectorAll('#heroSlider .hero-slide').forEach((s,i)=>s.addEventListener('click',()=>{const slug=buatSlug(slides[i].judul);window.location.href=`/artikel/${slug?slug+'-':''}${s.dataset.id}`;}));
 
         let tx=0; const wrap = document.querySelector('#heroSlider .hero-slider-wrap');
         wrap.addEventListener('touchstart',e=>{tx=e.touches[0].clientX;},{passive:true});
