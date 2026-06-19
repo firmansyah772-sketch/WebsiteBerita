@@ -509,9 +509,22 @@
         async function muatPedoman() {
             try {
                 const snap = await getDoc(doc(db, 'pengaturan', 'pedoman_media_siber'));
-                if (snap.exists() && snap.data().sections && snap.data().sections.length) {
-                    renderPedoman(snap.data());
+                if (snap.exists()) {
+                    // Selalu pakai data dari Firestore jika dokumen ada,
+                    // merge dengan DEFAULT hanya untuk field yang belum diisi
+                    const dataFirestore = snap.data();
+                    const dataMerge = {
+                        judul:    dataFirestore.judul    || DEFAULT_PEDOMAN.judul,
+                        intro:    dataFirestore.intro    !== undefined ? dataFirestore.intro    : DEFAULT_PEDOMAN.intro,
+                        tanggal:  dataFirestore.tanggal  !== undefined ? dataFirestore.tanggal  : DEFAULT_PEDOMAN.tanggal,
+                        penutup:  dataFirestore.penutup  !== undefined ? dataFirestore.penutup  : DEFAULT_PEDOMAN.penutup,
+                        sections: Array.isArray(dataFirestore.sections) && dataFirestore.sections.length > 0
+                                    ? dataFirestore.sections
+                                    : DEFAULT_PEDOMAN.sections,
+                    };
+                    renderPedoman(dataMerge);
                 } else {
+                    // Dokumen belum pernah dibuat di admin — pakai default
                     renderPedoman(DEFAULT_PEDOMAN);
                 }
             } catch (e) {
