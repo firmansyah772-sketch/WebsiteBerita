@@ -328,6 +328,7 @@
                     <a href="#sec-redaksi" class="nav-item">Susunan Pengurus</a>
                     <a href="#sec-halaman" class="nav-item">Tentang & Kontak</a>
                     <a href="#sec-pedoman" class="nav-item">Pedoman Media Siber</a>
+                    <a href="#sec-kodeetik" class="nav-item">Kode Etik Jurnalistik</a>
                     <a href="#sec-iklan" class="nav-item">Iklan & WhatsApp</a>
                     <a href="#sec-statistik" class="nav-item">Statistik & Partner</a>
                     <a href="#sec-pengguna" class="nav-item">Kelola Pengguna</a>
@@ -575,6 +576,41 @@
 
                 <button type="button" id="btnSimpanPedoman" class="btn" style="width:100%; font-size:16px; padding:15px;">💾 Simpan Pedoman Media Siber</button>
             </div>
+
+            <div id="sec-kodeetik" class="content-section admin-only-section">
+                <h3>📰 Pengaturan Kode Etik Jurnalistik</h3>
+                <p style="font-size: 13px; color: #7f8c8d;">Atur seluruh teks, judul, dan isi pasal yang tampil di halaman Kode Etik Jurnalistik.</p>
+
+                <div class="ad-section">
+                    <h4 style="margin-top:0; color:#d32f2f;">📝 Header & Info Dasar</h4>
+                    <div class="form-group">
+                        <label>Judul Halaman</label>
+                        <input type="text" id="kodeEtikJudul" placeholder="Kode Etik Jurnalistik">
+                    </div>
+                    <div class="form-group">
+                        <label>Tanggal / Tempat</label>
+                        <input type="text" id="kodeEtikTanggal" placeholder="Jakarta, 14 Maret 2006">
+                    </div>
+                    <div class="form-group">
+                        <label>Teks Pengantar (Intro)</label>
+                        <textarea id="kodeEtikIntro" rows="5" placeholder="Kemerdekaan pers adalah salah satu wujud kedaulatan rakyat..."></textarea>
+                    </div>
+                    <div class="form-group" style="margin-bottom:0;">
+                        <label>Teks Penutup</label>
+                        <textarea id="kodeEtikPenutup" rows="2" placeholder="(Kode etik ini ditetapkan oleh organisasi wartawan...)"></textarea>
+                    </div>
+                </div>
+
+                <div class="ad-section">
+                    <h4 style="margin-top:0; color:#d32f2f;">📑 Pasal Kode Etik</h4>
+                    <p style="font-size: 12px; margin-bottom: 10px; color: #555;">Gunakan tag HTML dasar seperti <code>&lt;p&gt;</code>, <code>&lt;strong&gt;</code>, <code>&lt;ol&gt;</code>, <code>&lt;li&gt;</code> untuk menyusun isi pasal agar rapi.</p>
+                    <div id="wrapKodeEtikSections"></div>
+                    <button type="button" class="btn-tambah" id="btnTambahPasalKodeEtik">+ Tambah Pasal Kode Etik</button>
+                </div>
+
+                <button type="button" id="btnSimpanKodeEtik" class="btn" style="width:100%; font-size:16px; padding:15px;">💾 Simpan Kode Etik Jurnalistik</button>
+            </div>
+
             <div id="sec-iklan" class="content-section admin-only-section">
                 <h3>📢 Pengaturan Iklan Banner & WhatsApp</h3>
                 
@@ -871,6 +907,7 @@
                     muatDataRedaksi();
                     muatPengaturanKontak();
                     muatPedomanMediaSiber(); // <-- Panggil load pedoman media siber
+                    muatKodeEtikJurnalistik(); // <-- Panggil load kode etik jurnalistik
                     muatDaftarPengguna();
                 }
             } else {
@@ -1513,6 +1550,85 @@
                 alert('❌ Gagal menyimpan: ' + e.message);
             } finally {
                 btn.innerText = '💾 Simpan Pedoman Media Siber'; btn.disabled = false;
+            }
+        });
+
+
+        // PENGATURAN KODE ETIK JURNALISTIK
+        window.tambahPasalKodeEtik = function(judul = '', isiHtml = '') {
+            const wrap = document.getElementById('wrapKodeEtikSections');
+            const item = document.createElement('div');
+            item.className = 'blok-item kodeetik-pasal-item';
+            item.innerHTML = `
+                <div class="blok-item-header">
+                    <div><span class="blok-type-label teks">📑 PASAL KODE ETIK</span></div>
+                    <div class="blok-order-btns">
+                        <button type="button" class="btn-blok-up">▲</button>
+                        <button type="button" class="btn-blok-down">▼</button>
+                        <button type="button" class="btn-hapus-blok">Hapus ❌</button>
+                    </div>
+                </div>
+                <div class="form-group" style="margin-bottom:8px;">
+                    <input type="text" class="kodeetik-pasal-judul" placeholder="Judul Pasal (contoh: Pasal 1 — Akurat & Berimbang)" value="${esc(judul)}">
+                </div>
+                <textarea class="kodeetik-pasal-html" placeholder="Isi Pasal (Mendukung tag HTML: <p>...</p>)" rows="5">${isiHtml}</textarea>
+            `;
+            item.querySelector('.btn-hapus-blok').addEventListener('click', () => item.remove());
+            item.querySelector('.btn-blok-up').addEventListener('click', () => { const prev = item.previousElementSibling; if (prev) wrap.insertBefore(item, prev); });
+            item.querySelector('.btn-blok-down').addEventListener('click', () => { const next = item.nextElementSibling; if (next) wrap.insertBefore(next, item); });
+            wrap.appendChild(item);
+        };
+
+        document.getElementById('btnTambahPasalKodeEtik').addEventListener('click', () => tambahPasalKodeEtik());
+
+        async function muatKodeEtikJurnalistik() {
+            try {
+                const snap = await getDoc(doc(db, 'pengaturan', 'kode_etik_jurnalistik'));
+                document.getElementById('wrapKodeEtikSections').innerHTML = ''; // reset wrapper
+                if (snap.exists()) {
+                    const data = snap.data();
+                    document.getElementById('kodeEtikJudul').value = data.judul || '';
+                    document.getElementById('kodeEtikTanggal').value = data.tanggal || '';
+                    document.getElementById('kodeEtikIntro').value = data.intro || '';
+                    document.getElementById('kodeEtikPenutup').value = data.penutup || '';
+
+                    if (data.sections && data.sections.length > 0) {
+                        data.sections.forEach(sec => tambahPasalKodeEtik(sec.judul, sec.html));
+                    }
+                }
+            } catch(e) {
+                console.error("Gagal muat kode etik jurnalistik", e);
+            }
+        }
+
+        document.getElementById('btnSimpanKodeEtik').addEventListener('click', async () => {
+            const btn = document.getElementById('btnSimpanKodeEtik');
+            btn.innerText = '⏳ Menyimpan...'; btn.disabled = true;
+            try {
+                const sections = [];
+                document.querySelectorAll('#wrapKodeEtikSections .kodeetik-pasal-item').forEach(item => {
+                    const judul = item.querySelector('.kodeetik-pasal-judul').value.trim();
+                    const html = item.querySelector('.kodeetik-pasal-html').value.trim();
+                    if (judul || html) {
+                        sections.push({ judul, html });
+                    }
+                });
+
+                const payload = {
+                    judul: document.getElementById('kodeEtikJudul').value.trim(),
+                    tanggal: document.getElementById('kodeEtikTanggal').value.trim(),
+                    intro: document.getElementById('kodeEtikIntro').value.trim(),
+                    penutup: document.getElementById('kodeEtikPenutup').value.trim(),
+                    sections: sections,
+                    diupdate: new Date()
+                };
+
+                await setDoc(doc(db, 'pengaturan', 'kode_etik_jurnalistik'), payload);
+                alert('✅ Kode Etik Jurnalistik berhasil disimpan!');
+            } catch (e) {
+                alert('❌ Gagal menyimpan: ' + e.message);
+            } finally {
+                btn.innerText = '💾 Simpan Kode Etik Jurnalistik'; btn.disabled = false;
             }
         });
 
