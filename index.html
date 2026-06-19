@@ -596,7 +596,7 @@
             .trim()
             .replace(/\s+/g,'-')           // spasi jadi strip
             .replace(/-+/g,'-')            // gabungkan strip ganda
-            .slice(0,80)                   // batasi panjang
+            .slice(0,120)                   // batasi panjang
             .replace(/-+$/,'');            // hapus strip di ujung akibat slice
     }
     window._buatSlug = buatSlug;
