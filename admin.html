@@ -154,37 +154,24 @@
 
         /* ===== MOBILE RESPONSIVE TWEAKS ===== */
         @media (max-width: 768px) {
-            /* Tampilkan header mobile */
             .mobile-header { display: flex; }
-            
-            /* Ubah layout utama */
             .dashboard-layout { flex-direction: column; }
-            .main-content { padding: 80px 15px 20px 15px; } /* Offset header */
+            .main-content { padding: 80px 15px 20px 15px; }
             .content-section { padding: 15px; }
-            
-            /* Sidebar Off-canvas */
-            .sidebar { 
-                position: fixed; left: -280px; top: 0; bottom: 0; height: 100vh;
-            }
+            .sidebar { position: fixed; left: -280px; top: 0; bottom: 0; height: 100vh; }
             .sidebar.open { left: 0; }
             .sidebar-overlay.open { display: block; }
             .close-sidebar-btn { display: block; }
-            .sidebar-footer { display: none; } /* Logout sudah ada di header */
-
-            /* Stack baris form yang rumit */
+            .sidebar-footer { display: none; }
             .ad-row, .mp-admin-row, .gen-row { flex-direction: column; align-items: stretch; gap: 12px; }
             .ad-row img, .mp-admin-row img.mp-preview { width: 100%; height: auto; max-height: 150px; object-fit: contain; }
             .ad-order-btns, .gen-order-btns { flex-direction: row; justify-content: center; }
             .ad-order-btns button, .gen-order-btns button { flex: 1; padding: 8px; }
             .gen-fields-2col { min-width: 100%; }
             .btn-tambah, .btn-hapus, .btn-hapus-gen, .btn-hapus-prow { width: 100%; text-align: center; }
-            
-            /* Pagination & Filters */
             .pagination-search { flex-direction: column; align-items: stretch; }
             .pagination-search input, .pagination-search select, .pagination-search button { width: 100%; min-width: 0; }
             .stat-grid { grid-template-columns: 1fr 1fr; }
-
-            /* Blok Item */
             .blok-img-row { flex-direction: column; align-items: flex-start; }
             .blok-img-row input[type="file"] { width: 100%; }
             .blok-order-btns { margin-top: 10px; width: 100%; display: flex; }
@@ -340,6 +327,7 @@
                     <a href="#sec-pendaftar" class="nav-item">Data Pendaftar</a>
                     <a href="#sec-redaksi" class="nav-item">Susunan Pengurus</a>
                     <a href="#sec-halaman" class="nav-item">Tentang & Kontak</a>
+                    <a href="#sec-pedoman" class="nav-item">Pedoman Media Siber</a>
                     <a href="#sec-iklan" class="nav-item">Iklan & WhatsApp</a>
                     <a href="#sec-statistik" class="nav-item">Statistik & Partner</a>
                     <a href="#sec-pengguna" class="nav-item">Kelola Pengguna</a>
@@ -554,6 +542,39 @@
                 <button type="button" id="btnSimpanKontak" class="btn" style="width:100%; font-size:16px; padding:15px;">💾 Simpan Pengaturan Halaman</button>
             </div>
 
+            <div id="sec-pedoman" class="content-section admin-only-section">
+                <h3>⚖️ Pengaturan Pedoman Media Siber</h3>
+                <p style="font-size: 13px; color: #7f8c8d;">Atur seluruh teks, judul, dan isi bab yang tampil di halaman Pedoman Media Siber.</p>
+
+                <div class="ad-section">
+                    <h4 style="margin-top:0; color:#d32f2f;">📝 Header & Info Dasar</h4>
+                    <div class="form-group">
+                        <label>Judul Halaman</label>
+                        <input type="text" id="pedomanJudul" placeholder="Pedoman Media Siber">
+                    </div>
+                    <div class="form-group">
+                        <label>Tanggal / Tempat</label>
+                        <input type="text" id="pedomanTanggal" placeholder="Jakarta, 3 Februari 2012">
+                    </div>
+                    <div class="form-group">
+                        <label>Teks Pengantar (Intro)</label>
+                        <textarea id="pedomanIntro" rows="5" placeholder="Kemerdekaan berpendapat, kemerdekaan berekspresi..."></textarea>
+                    </div>
+                    <div class="form-group" style="margin-bottom:0;">
+                        <label>Teks Penutup</label>
+                        <textarea id="pedomanPenutup" rows="2" placeholder="(Pedoman ini ditandatangani oleh Dewan Pers...)"></textarea>
+                    </div>
+                </div>
+
+                <div class="ad-section">
+                    <h4 style="margin-top:0; color:#d32f2f;">📑 Bab / Pasal Pedoman</h4>
+                    <p style="font-size: 12px; margin-bottom: 10px; color: #555;">Gunakan tag HTML dasar seperti <code>&lt;ol&gt;</code>, <code>&lt;li&gt;</code>, <code>&lt;p&gt;</code> untuk menyusun isi bab agar rapi.</p>
+                    <div id="wrapPedomanSections"></div>
+                    <button type="button" class="btn-tambah" id="btnTambahBabPedoman">+ Tambah Bab Pedoman</button>
+                </div>
+
+                <button type="button" id="btnSimpanPedoman" class="btn" style="width:100%; font-size:16px; padding:15px;">💾 Simpan Pedoman Media Siber</button>
+            </div>
             <div id="sec-iklan" class="content-section admin-only-section">
                 <h3>📢 Pengaturan Iklan Banner & WhatsApp</h3>
                 
@@ -752,6 +773,9 @@
         let idBeritaYangDiedit = null;
         let currentUserRole = 'admin'; 
 
+        // Fungsi bantu escape HTML statis
+        function esc(str) { return String(str ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+
         // ===== TAB NAVIGATION LOGIC =====
         const sidebar = document.getElementById('sidebar');
         const sidebarOverlay = document.getElementById('sidebarOverlay');
@@ -846,6 +870,7 @@
                     muatPengaturanWA();
                     muatDataRedaksi();
                     muatPengaturanKontak();
+                    muatPedomanMediaSiber(); // <-- Panggil load pedoman media siber
                     muatDaftarPengguna();
                 }
             } else {
@@ -1297,7 +1322,7 @@
         const DEFAULT_REDAKSI = {
             judul_pendiri: "☆ Pendiri KJNI ☆", judul_pengurus_inti: "☆ Pengurus Inti DPP KJNI ☆", judul_dewan_pembina: "☆ Dewan Pembina & Penasehat ☆", judul_pimpinan_redaksi: "☆ Pimpinan Redaksi ☆", judul_investigasi: "☆ Bidang Investigasi PTI ☆", judul_dpw: "☆ Pengurus DPW/DPC ☆", judul_asosiasi: "☆ Asosiasi Wartawan / Jurnalis ☆"
         };
-        function esc(str) { return String(str ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+        
         function buatTombolUrutan(el) {
             const wrap = document.createElement('div'); wrap.className = 'gen-order-btns';
             wrap.innerHTML = `<button type="button" class="btn-gen-up" title="Naik">▲</button><button type="button" class="btn-gen-down" title="Turun">▼</button>`;
@@ -1412,6 +1437,85 @@
                 await setDoc(doc(db, 'pengaturan', 'halaman_kontak'), payload); alert('✅ Pengaturan Tentang Kami & Kontak berhasil disimpan!');
             } catch (e) { alert('❌ Gagal menyimpan: ' + e.message); } finally { btn.innerText = '💾 Simpan Pengaturan Halaman'; btn.disabled = false; }
         });
+
+        // PENGATURAN PEDOMAN MEDIA SIBER
+        window.tambahBabPedoman = function(judul = '', isiHtml = '') {
+            const wrap = document.getElementById('wrapPedomanSections');
+            const item = document.createElement('div');
+            item.className = 'blok-item pedoman-bab-item';
+            item.innerHTML = `
+                <div class="blok-item-header">
+                    <div><span class="blok-type-label teks">📑 BAB PEDOMAN</span></div>
+                    <div class="blok-order-btns">
+                        <button type="button" class="btn-blok-up">▲</button>
+                        <button type="button" class="btn-blok-down">▼</button>
+                        <button type="button" class="btn-hapus-blok">Hapus ❌</button>
+                    </div>
+                </div>
+                <div class="form-group" style="margin-bottom:8px;">
+                    <input type="text" class="pedoman-bab-judul" placeholder="Judul Bab (contoh: Ruang Lingkup)" value="${esc(judul)}">
+                </div>
+                <textarea class="pedoman-bab-html" placeholder="Isi Bab (Mendukung tag HTML: <ol><li>...</li></ol>)" rows="5">${isiHtml}</textarea>
+            `;
+            item.querySelector('.btn-hapus-blok').addEventListener('click', () => item.remove());
+            item.querySelector('.btn-blok-up').addEventListener('click', () => { const prev = item.previousElementSibling; if (prev) wrap.insertBefore(item, prev); });
+            item.querySelector('.btn-blok-down').addEventListener('click', () => { const next = item.nextElementSibling; if (next) wrap.insertBefore(next, item); });
+            wrap.appendChild(item);
+        };
+
+        document.getElementById('btnTambahBabPedoman').addEventListener('click', () => tambahBabPedoman());
+
+        async function muatPedomanMediaSiber() {
+            try {
+                const snap = await getDoc(doc(db, 'pengaturan', 'pedoman_media_siber'));
+                document.getElementById('wrapPedomanSections').innerHTML = ''; // reset wrapper
+                if (snap.exists()) {
+                    const data = snap.data();
+                    document.getElementById('pedomanJudul').value = data.judul || '';
+                    document.getElementById('pedomanTanggal').value = data.tanggal || '';
+                    document.getElementById('pedomanIntro').value = data.intro || '';
+                    document.getElementById('pedomanPenutup').value = data.penutup || '';
+                    
+                    if (data.sections && data.sections.length > 0) {
+                        data.sections.forEach(sec => tambahBabPedoman(sec.judul, sec.html));
+                    }
+                }
+            } catch(e) {
+                console.error("Gagal muat pedoman media siber", e);
+            }
+        }
+
+        document.getElementById('btnSimpanPedoman').addEventListener('click', async () => {
+            const btn = document.getElementById('btnSimpanPedoman');
+            btn.innerText = '⏳ Menyimpan...'; btn.disabled = true;
+            try {
+                const sections = [];
+                document.querySelectorAll('#wrapPedomanSections .pedoman-bab-item').forEach(item => {
+                    const judul = item.querySelector('.pedoman-bab-judul').value.trim();
+                    const html = item.querySelector('.pedoman-bab-html').value.trim();
+                    if (judul || html) {
+                        sections.push({ judul, html });
+                    }
+                });
+                
+                const payload = {
+                    judul: document.getElementById('pedomanJudul').value.trim(),
+                    tanggal: document.getElementById('pedomanTanggal').value.trim(),
+                    intro: document.getElementById('pedomanIntro').value.trim(),
+                    penutup: document.getElementById('pedomanPenutup').value.trim(),
+                    sections: sections,
+                    diupdate: new Date()
+                };
+
+                await setDoc(doc(db, 'pengaturan', 'pedoman_media_siber'), payload);
+                alert('✅ Pedoman Media Siber berhasil disimpan!');
+            } catch (e) {
+                alert('❌ Gagal menyimpan: ' + e.message);
+            } finally {
+                btn.innerText = '💾 Simpan Pedoman Media Siber'; btn.disabled = false;
+            }
+        });
+
 
         // KELOLA PENGGUNA
         document.getElementById('formTambahPengguna').addEventListener('submit', async (e) => {
