@@ -546,6 +546,25 @@
     </footer>
 
     <script>
+        // Ubah judul artikel menjadi slug URL yang rapi (sama seperti index.html)
+        function buatSlug(judul = '') {
+            return String(judul)
+                .toLowerCase()
+                .normalize('NFKD').replace(/[\u0300-\u036f]/g, '')
+                .replace(/[^a-z0-9\s-]/g, '')
+                .trim()
+                .replace(/\s+/g, '-')
+                .replace(/-+/g, '-')
+                .slice(0, 120)
+                .replace(/-+$/, '');
+        }
+        // Bangun URL cantik /artikel/<slug>-<docId>
+        function buatLinkArtikel(id, judul = '') {
+            const slug = buatSlug(judul);
+            return `/artikel/${slug ? slug + '-' : ''}${id}`;
+        }
+        window._buatLinkArtikel = buatLinkArtikel;
+
         // Pengaturan Dark & Light Mode
         const themeBtn = document.getElementById('themeBtn');
         const savedTheme = localStorage.getItem('theme');
@@ -659,7 +678,8 @@
 
             area.querySelectorAll('.sr-item').forEach(item => {
                 item.addEventListener('click', () => {
-                    window.location.href = `artikel.html?id=${item.dataset.id}`;
+                    const b = window._beritaMap && window._beritaMap[item.dataset.id];
+                    window.location.href = window._buatLinkArtikel(item.dataset.id, b ? b.judul : '');
                 });
             });
 
@@ -722,7 +742,15 @@
             // sedangkan slug hanya teks kosmetik dari judul (dibuat di index.html) dan
             // TIDAK pernah disimpan sebagai field di Firestore — jadi tidak bisa dipakai
             // untuk query data. id tetap dipakai meski slug juga ada di URL.
-            return params.get('id') || params.get('slug');
+            if (params.get('id')) return params.get('id');
+            if (params.get('slug')) return params.get('slug');
+
+            // Skema pretty URL: /artikel/<slug>-<docId> (tanpa query string sama sekali).
+            // Document ID Firestore tidak pernah mengandung tanda "-", jadi ambil segmen
+            // setelah tanda "-" TERAKHIR di bagian akhir path sebagai id.
+            const segmen = window.location.pathname.split('/').filter(Boolean).pop() || '';
+            const dash = segmen.lastIndexOf('-');
+            return dash !== -1 ? segmen.slice(dash + 1) : segmen;
         }
 
         function hitungWaktuBaca(text) {
@@ -940,7 +968,7 @@
                     // dari ?id= atau ?slug= di URL, lihat getArtikelId)
                     if (b.id !== currentId && index < 5) {
                         listHtml += `
-                            <a href="artikel.html?id=${b.id}" class="pop-item">
+                            <a href="${buatLinkArtikel(b.id, b.judul)}" class="pop-item">
                                 <div class="pop-num">${String(index + 1).padStart(2, '0')}</div>
                                 <div class="pop-title">${b.judul}</div>
                             </a>
