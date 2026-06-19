@@ -94,9 +94,8 @@ async function ambilArtikel(slug) {
 
 // ─── Handler utama ────────────────────────────────────────────────────────────
 module.exports = async (req, res) => {
-  const proto   = req.headers["x-forwarded-proto"] || "https";
-  const host    = req.headers["x-forwarded-host"]  || req.headers.host;
-  const fullUrl = `${proto}://${host}${req.url}`;
+  const proto = req.headers["x-forwarded-proto"] || "https";
+  const host  = req.headers["x-forwarded-host"]  || req.headers.host;
 
   // Baca template LANGSUNG dari disk — tidak perlu HTTP request ke diri sendiri
   const templatePath = path.join(process.cwd(), "artikel-app.html");
@@ -109,13 +108,34 @@ module.exports = async (req, res) => {
     return;
   }
 
+  // ── Pretty URL: /artikel/<slug>-<docId> ──────────────────────────────────
+  // vercel.json me-rewrite /artikel/:slugid -> /api/artikel?combo=:slugid
+  // "combo" adalah gabungan slug+id, contoh: "arul-ketua-umum-kjni-gS3B3Xw9XR8cmtgATJSs"
+  // Document ID Firestore TIDAK pernah mengandung tanda "-", jadi aman ambil
+  // segmen setelah tanda "-" TERAKHIR sebagai id, sisanya adalah slug (kosmetik).
+  const combo = (req.query && req.query.combo) || "";
+
   // ID Firestore selalu diprioritaskan untuk mengambil data artikel.
-  // Param ?slug=... yang menyertai ?id=... (dari link baru index.html) HANYA kosmetik di URL
-  // dan TIDAK dipakai untuk query — supaya tidak salah ambil data jika ada slug yang bentrok.
-  // Fallback ambilBySlugField hanya dipakai kalau benar-benar tidak ada ?id= sama sekali
-  // (misalnya link lama yang murni berbasis slug, kalau pernah ada).
-  const idParam   = (req.query && req.query.id) || "";
-  const slugParam = (req.query && req.query.slug) || "";
+  // Param ?slug=... yang menyertai ?id=... (dari link lama berbasis query string) HANYA
+  // kosmetik di URL dan TIDAK dipakai untuk query — supaya tidak salah ambil data jika
+  // ada slug yang bentrok. Fallback ambilBySlugField hanya dipakai kalau benar-benar
+  // tidak ada ?id= sama sekali.
+  let idParam   = (req.query && req.query.id) || "";
+  let slugParam = (req.query && req.query.slug) || "";
+
+  // routePath dipakai untuk membangun fullUrl (canonical/OG) — default ke req.url
+  // (skema lama ?id=&slug=), tapi kalau datang dari pretty URL kita bangun manual
+  // supaya canonical tetap /artikel/<slug>-<id>, bukan URL internal /api/artikel?combo=...
+  let routePath = req.url;
+
+  if (combo) {
+    const dash = combo.lastIndexOf("-");
+    idParam   = dash !== -1 ? combo.slice(dash + 1) : combo;
+    slugParam = dash !== -1 ? combo.slice(0, dash)  : "";
+    routePath = `/artikel/${combo}`;
+  }
+
+  const fullUrl = `${proto}://${host}${routePath}`;
   const key = idParam || slugParam;
 
   if (key) {
