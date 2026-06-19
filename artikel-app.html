@@ -644,7 +644,7 @@
                             <button class="sr-clear" id="clearSearch">✕ Bersihkan</button>
                         </div>
                         ${hasil.map(b => `
-                            <div class="sr-item" data-slug="${b.slug || b.id}">
+                            <div class="sr-item" data-id="${b.id}">
                                 <div class="sr-thumb">
                                     ${b.gambar ? `<img src="${b.gambar}" alt="${b.judul}">` : '📰'}
                                 </div>
@@ -659,7 +659,7 @@
 
             area.querySelectorAll('.sr-item').forEach(item => {
                 item.addEventListener('click', () => {
-                    window.location.href = `artikel.html?slug=${item.dataset.slug}`;
+                    window.location.href = `artikel.html?id=${item.dataset.id}`;
                 });
             });
 
@@ -716,10 +716,13 @@
             }
         }
 
-        function getArtikelSlug() {
+        function getArtikelId() {
             const params = new URLSearchParams(window.location.search);
-            // Dukung link lama yang pakai ?id=... selain link baru yang pakai ?slug=...
-            return params.get('slug') || params.get('id');
+            // PENTING: id harus diprioritaskan. id adalah Document ID Firestore yang valid,
+            // sedangkan slug hanya teks kosmetik dari judul (dibuat di index.html) dan
+            // TIDAK pernah disimpan sebagai field di Firestore — jadi tidak bisa dipakai
+            // untuk query data. id tetap dipakai meski slug juga ada di URL.
+            return params.get('id') || params.get('slug');
         }
 
         function hitungWaktuBaca(text) {
@@ -730,7 +733,7 @@
         }
 
         async function muatArtikel() {
-            const slug = getArtikelSlug();
+            const slug = getArtikelId();
             const loadingEl = document.getElementById('loadingState');
             const errorEl = document.getElementById('errorState');
             const mainContentEl = document.getElementById('mainContent');
@@ -745,19 +748,19 @@
             }
 
             try {
-                // Mencari berdasarkan Field Slug
-                const q = query(collection(db, "berita"), where("slug", "==", slug), limit(1));
-                const querySnapshot = await getDocs(q);
-
+                // Coba sebagai Document ID dulu — ini kasus yang berlaku untuk semua link
+                // dari index.html saat ini (?id=...), termasuk yang juga membawa &slug=...
                 let docSnap;
-                if (!querySnapshot.empty) {
-                    docSnap = querySnapshot.docs[0];
+                const docRef = doc(db, "berita", slug);
+                const directSnap = await getDoc(docRef);
+                if (directSnap.exists()) {
+                    docSnap = directSnap;
                 } else {
-                    // Fallback jika URL masih menggunakan ID lama
-                    const docRef = doc(db, "berita", slug);
-                    const fallbackSnap = await getDoc(docRef);
-                    if (fallbackSnap.exists()) {
-                        docSnap = fallbackSnap;
+                    // Fallback: cari berdasarkan field "slug" (untuk skema lain di masa depan)
+                    const q = query(collection(db, "berita"), where("slug", "==", slug), limit(1));
+                    const querySnapshot = await getDocs(q);
+                    if (!querySnapshot.empty) {
+                        docSnap = querySnapshot.docs[0];
                     }
                 }
 
@@ -930,13 +933,14 @@
                 const sidebarContainer = document.getElementById('sidebarNews');
                 let listHtml = '';
                 let index = 0;
-                const currentSlug = getArtikelSlug();
+                const currentId = getArtikelId();
                 
                 semuaBerita.forEach((b) => {
-                    // Update Pengecekan Link agar menggunakan slug
-                    if (b.slug !== currentSlug && b.id !== currentSlug && index < 5) {
+                    // Bandingkan dengan id artikel yang sedang dibuka (currentId bisa berasal
+                    // dari ?id= atau ?slug= di URL, lihat getArtikelId)
+                    if (b.id !== currentId && index < 5) {
                         listHtml += `
-                            <a href="artikel.html?slug=${b.slug || b.id}" class="pop-item">
+                            <a href="artikel.html?id=${b.id}" class="pop-item">
                                 <div class="pop-num">${String(index + 1).padStart(2, '0')}</div>
                                 <div class="pop-title">${b.judul}</div>
                             </a>
