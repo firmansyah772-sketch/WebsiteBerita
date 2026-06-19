@@ -1,5 +1,6 @@
 {
   "rewrites": [
-    { "source": "/artikel.html", "destination": "/api/artikel" }
+    { "source": "/artikel.html", "destination": "/api/artikel" },
+    { "source": "/artikel/:slugid", "destination": "/api/artikel?combo=:slugid" }
   ]
 }
