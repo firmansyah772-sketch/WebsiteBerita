@@ -280,8 +280,11 @@
         /* ===== KELOLA PENGGUNA ===== */
         .role-badge { display: inline-block; padding: 3px 10px; border-radius: 12px; font-size: 11px; font-weight: bold; text-transform: uppercase; }
         .role-badge.admin { background: #ffebee; color: #d32f2f; } .role-badge.user { background: #e3f2fd; color: #1565c0; }
+        .role-badge.nonaktif { background: #eceff1; color: #455a64; }
+        .user-row.row-nonaktif { opacity: 0.65; background: #fafafa; }
         .user-row { display: flex; align-items: center; gap: 10px; background: #fff; padding: 10px; border: 1px solid #ddd; border-radius: 6px; margin-bottom: 8px; flex-wrap: wrap; }
         .user-row .user-email { flex: 1; min-width: 160px; font-size: 13px; font-weight: bold; }
+        .user-row .pu-email-edit { flex: 1; min-width: 160px; font-size: 13px; padding: 6px 8px; border: 1px solid #ccc; border-radius: 4px; }
     </style>
 </head>
 <body>
@@ -300,6 +303,9 @@
             </div>
             <button type="submit" id="btnLogin" class="btn" style="width: 100%;">Masuk Ke Panel</button>
         </form>
+        <p style="margin-top: 14px; text-align: center;">
+            <a href="#" id="linkLupaPassword" style="color:#1976d2; font-size: 13px; text-decoration: underline;">Lupa Password?</a>
+        </p>
     </div>
 
     <div id="dashboardSection" class="dashboard-layout hidden">
@@ -321,6 +327,7 @@
                 <div class="nav-title">Menu Utama</div>
                 <a href="#sec-tulis" class="nav-item active">Tulis Berita Baru</a>
                 <a href="#sec-kelola" class="nav-item">Kelola Berita</a>
+                <a href="#sec-ganti-password" class="nav-item">🔒 Ganti Password</a>
 
                 <div id="adminOnlyNav" class="admin-only">
                     <div class="nav-title">Menu Administrator</div>
@@ -368,6 +375,11 @@
                     <div class="form-group">
                         <label>Judul Berita</label>
                         <input type="text" id="inputJudul" required placeholder="Masukkan judul yang menarik...">
+                    </div>
+                    <div class="form-group">
+                        <label>Nama Penulis</label>
+                        <div id="infoPenulisOtomatis" style="background:#f5f5f5; border:1px solid #ddd; border-radius:4px; padding:10px 12px; font-size:14px; color:#444;">✍️ <strong id="namaPenulisOtomatis">Redaksi KJNI</strong></div>
+                        <small style="color:#7f8c8d;">Otomatis sesuai Nama Penulis akun Anda (atur di menu Kelola Pengguna).</small>
                     </div>
                     <div class="form-group">
                         <label>Gambar Utama / Cover </label>
@@ -432,6 +444,29 @@
 
                 <div id="daftarBeritaAdmin"><p>Memuat data berita...</p></div>
                 <div id="paginasiBerita"></div>
+            </div>
+
+            <div id="sec-ganti-password" class="content-section">
+                <h3>🔒 Ganti Password</h3>
+                <p style="font-size: 13px; color: #7f8c8d;">Ubah password akun Anda sendiri di sini. Fitur ini tersedia untuk semua role (Admin maupun User). Masukkan password lama Anda untuk verifikasi keamanan, lalu masukkan password baru.</p>
+
+                <div class="ad-section" style="max-width:500px;">
+                    <form id="formGantiPassword">
+                        <div class="form-group">
+                            <label>Password Lama</label>
+                            <input type="password" id="gpPasswordLama" required placeholder="Masukkan password Anda saat ini">
+                        </div>
+                        <div class="form-group">
+                            <label>Password Baru</label>
+                            <input type="password" id="gpPasswordBaru" required minlength="6" placeholder="Minimal 6 karakter">
+                        </div>
+                        <div class="form-group" style="margin-bottom:0;">
+                            <label>Konfirmasi Password Baru</label>
+                            <input type="password" id="gpPasswordKonfirmasi" required minlength="6" placeholder="Ulangi password baru">
+                        </div>
+                        <button type="submit" id="btnGantiPassword" class="btn" style="margin-top:14px; width:100%;">💾 Simpan Password Baru</button>
+                    </form>
+                </div>
             </div>
 
             <div id="sec-pendaftar" class="content-section admin-only-section">
@@ -688,6 +723,8 @@
             <div id="sec-pengguna" class="content-section admin-only-section">
                 <h3>👥 Kelola Pengguna</h3>
                 <p style="font-size: 13px; color: #7f8c8d;">Role <strong>Admin</strong> memiliki akses penuh, role <strong>User</strong> hanya bisa mengelola berita.</p>
+                <p style="font-size: 13px; color: #7f8c8d;">🔑 <strong>Reset Password</strong> akan mengirim email ke pengguna berisi link untuk membuat password baru. Admin tidak bisa mengetik password langsung untuk pengguna lain — ini dibatasi oleh Firebase demi keamanan.</p>
+                <p style="font-size: 13px; color: #7f8c8d;">🚫 <strong>Nonaktifkan</strong> akan langsung mengunci akses pengguna (otomatis logout & tidak bisa login lagi) tanpa menghapus datanya. Bisa diaktifkan kembali kapan saja.</p>
 
                 <div class="ad-section">
                     <h4 style="margin-top:0; color:#d32f2f;">➕ Tambah Pengguna Baru</h4>
@@ -699,6 +736,10 @@
                         <div class="form-group">
                             <label>Password (minimal 6 karakter)</label>
                             <input type="password" id="puPassword" required placeholder="Minimal 6 karakter">
+                        </div>
+                        <div class="form-group">
+                            <label>Nama Penulis</label>
+                            <input type="text" id="puNamaPenulis" placeholder="Contoh: Andi Pratama (dipakai otomatis saat dia posting berita)">
                         </div>
                         <div class="form-group" style="margin-bottom:0;">
                             <label>Role</label>
@@ -726,6 +767,10 @@
             <div class="form-group">
                 <label>Judul Berita</label>
                 <input type="text" id="editJudul" required placeholder="Judul berita...">
+            </div>
+            <div class="form-group">
+                <label>Nama Penulis</label>
+                <input type="text" id="editPenulis" placeholder="Contoh: Andi Pratama (kosongkan = Redaksi KJNI)">
             </div>
             <div class="form-group">
                 <label>Kategori</label>
@@ -780,7 +825,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged, createUserWithEmailAndPassword, sendPasswordResetEmail, EmailAuthProvider, reauthenticateWithCredential, updatePassword } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, collection, addDoc, deleteDoc, updateDoc, doc, onSnapshot, query, orderBy, setDoc, getDoc, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -808,6 +853,7 @@
 
         let idBeritaYangDiedit = null;
         let currentUserRole = 'admin'; 
+        let currentNamaPenulis = ''; 
 
         // Fungsi bantu escape HTML statis
         function esc(str) { return String(str ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
@@ -866,6 +912,18 @@
         // A. CEK STATUS LOGIN REALTIME
         onAuthStateChanged(auth, async (user) => {
             if (user) {
+                let dataProfil = null;
+                try {
+                    const snapCek = await getDoc(doc(db, 'pengguna', user.uid));
+                    if (snapCek.exists()) dataProfil = snapCek.data();
+                } catch (e) { console.warn('Gagal cek status pengguna:', e.message); }
+
+                if (dataProfil && dataProfil.dinonaktifkan === true) {
+                    await signOut(auth);
+                    alert('❌ Akun ini telah dinonaktifkan oleh admin. Silakan hubungi admin jika ini sebuah kesalahan.');
+                    return;
+                }
+
                 loginSection.classList.add("hidden");
                 dashboardSection.classList.remove("hidden");
 
@@ -876,11 +934,12 @@
                 document.getElementById('sec-tulis').classList.add('active');
 
                 let role = 'admin';
-                try {
-                    const snapRole = await getDoc(doc(db, 'pengguna', user.uid));
-                    if (snapRole.exists() && snapRole.data().role === 'user') role = 'user';
-                } catch (e) { console.warn('Gagal cek role pengguna:', e.message); }
+                if (dataProfil && dataProfil.role === 'user') role = 'user';
                 currentUserRole = role;
+
+                currentNamaPenulis = (dataProfil && dataProfil.namaPenulis && dataProfil.namaPenulis.trim()) ? dataProfil.namaPenulis.trim() : 'Redaksi KJNI';
+                const elNamaPenulisOtomatis = document.getElementById('namaPenulisOtomatis');
+                if (elNamaPenulisOtomatis) elNamaPenulisOtomatis.innerText = currentNamaPenulis;
 
                 const adminOnlyNav = document.getElementById('adminOnlyNav');
                 const roleBanner = document.getElementById('roleBanner');
@@ -934,9 +993,62 @@
                 });
         });
 
+        document.getElementById("linkLupaPassword").addEventListener("click", async (e) => {
+            e.preventDefault();
+            let emailUser = document.getElementById("loginEmail").value.trim();
+            if (!emailUser) {
+                emailUser = (prompt("Masukkan email akun Anda untuk menerima link reset password:") || "").trim();
+            }
+            if (!emailUser) return;
+            try {
+                await sendPasswordResetEmail(auth, emailUser);
+                alert(`✅ Email reset password telah dikirim ke "${emailUser}".\n\nSilakan periksa inbox (dan folder spam), lalu ikuti link di dalamnya untuk membuat password baru.`);
+            } catch (err) {
+                alert("❌ Gagal mengirim email reset: " + err.message);
+            }
+        });
+
         const doLogout = () => signOut(auth).then(() => alert("Berhasil Logout!"));
         document.getElementById("btnLogout").addEventListener("click", doLogout);
         document.getElementById("mobileLogoutBtn").addEventListener("click", doLogout);
+
+        // C2. GANTI PASSWORD (tersedia untuk Admin & User)
+        document.getElementById("formGantiPassword").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById("btnGantiPassword");
+            const passLama = document.getElementById("gpPasswordLama").value;
+            const passBaru = document.getElementById("gpPasswordBaru").value;
+            const passKonfirmasi = document.getElementById("gpPasswordKonfirmasi").value;
+
+            if (passBaru.length < 6) { alert("❌ Password baru minimal 6 karakter."); return; }
+            if (passBaru !== passKonfirmasi) { alert("❌ Konfirmasi password baru tidak cocok dengan password baru."); return; }
+            if (passBaru === passLama) { alert("❌ Password baru tidak boleh sama dengan password lama."); return; }
+
+            const user = auth.currentUser;
+            if (!user || !user.email) { alert("❌ Sesi login tidak ditemukan. Silakan login ulang."); return; }
+
+            btn.innerText = "⏳ Menyimpan..."; btn.disabled = true;
+            try {
+                // Verifikasi ulang identitas dengan password lama sebelum mengganti password
+                const credential = EmailAuthProvider.credential(user.email, passLama);
+                await reauthenticateWithCredential(user, credential);
+                await updatePassword(user, passBaru);
+                alert("✅ Password berhasil diubah! Gunakan password baru Anda saat login berikutnya.");
+                document.getElementById("formGantiPassword").reset();
+            } catch (err) {
+                if (err.code === 'auth/wrong-password' || err.code === 'auth/invalid-credential') {
+                    alert("❌ Password lama yang Anda masukkan salah.");
+                } else if (err.code === 'auth/too-many-requests') {
+                    alert("❌ Terlalu banyak percobaan gagal. Coba lagi beberapa saat lagi.");
+                } else if (err.code === 'auth/weak-password') {
+                    alert("❌ Password baru terlalu lemah. Gunakan minimal 6 karakter.");
+                } else {
+                    alert("❌ Gagal mengubah password: " + err.message);
+                }
+            } finally {
+                btn.innerText = "💾 Simpan Password Baru"; btn.disabled = false;
+            }
+        });
 
         // D. CLOUDINARY UPLOAD & PUBLISH BERITA
         const CLOUDINARY_CLOUD_NAME = "dc7guxgnm";
@@ -961,6 +1073,7 @@
             btnPublish.innerText = "⏳ Mengupload..."; btnPublish.disabled = true;
 
             const judul     = document.getElementById("inputJudul").value;
+            const penulis   = currentNamaPenulis || "Redaksi KJNI";
             const kategori  = document.getElementById("inputKategori").value;
             const isi       = document.getElementById("inputIsi").value;
             const hashtags  = document.getElementById("inputHashtags").value;
@@ -973,6 +1086,7 @@
 
                 await addDoc(collection(db, "berita"), {
                     judul, kategori, isi, hashtags, gambar: urlGambar, 
+                    penulis: penulis || "Redaksi KJNI",
                     blok_konten: blokData, status: 'aktif', tanggalDibuat: new Date()
                 });
                 alert("✅ Berita berhasil dipublish!");
@@ -983,9 +1097,10 @@
         });
 
         // E. MODAL EDIT BERITA
-        function bukaModalEdit(id, judul, kategori, isi, blokKonten, gambarLama, hashtags) {
+        function bukaModalEdit(id, judul, kategori, isi, blokKonten, gambarLama, hashtags, penulis) {
             idBeritaYangDiedit = id;
             document.getElementById("editJudul").value = judul;
+            document.getElementById("editPenulis").value = penulis || "";
             document.getElementById("editKategori").value = kategori;
             document.getElementById("editIsi").value = isi;
             document.getElementById("editHashtags").value = hashtags || "";
@@ -1017,6 +1132,7 @@
             if (!idBeritaYangDiedit) return;
             const btnSimpan = document.getElementById("btnSimpanEdit");
             const judulBaru = document.getElementById("editJudul").value.trim();
+            const penulisBaru = document.getElementById("editPenulis").value.trim();
             const kategoriBaru = document.getElementById("editKategori").value;
             const isiBaru = document.getElementById("editIsi").value.trim();
             const hashtagsBaru = document.getElementById("editHashtags").value.trim();
@@ -1034,6 +1150,7 @@
                 const blokData = await kumpulkanBlok('blokListEdit', btnSimpan);
                 await updateDoc(doc(db, "berita", idBeritaYangDiedit), {
                     judul: judulBaru, kategori: kategoriBaru, isi: isiBaru,
+                    penulis: penulisBaru || "Redaksi KJNI",
                     hashtags: hashtagsBaru, gambar: urlGambarAkhir, blok_konten: blokData,
                     tanggalDiedit: new Date()
                 });
@@ -1109,7 +1226,7 @@
                         try { await updateDoc(doc(db, "berita", idnya), { status: statusBaru }); } catch(err) { alert("Gagal mengubah status: " + err.message); }
                     });
                 }
-                item.querySelector(".btn-edit").addEventListener("click", () => bukaModalEdit(beritaDocId, data.judul, data.kategori, data.isi, data.blok_konten || [], data.gambar, data.hashtags || ""));
+                item.querySelector(".btn-edit").addEventListener("click", () => bukaModalEdit(beritaDocId, data.judul, data.kategori, data.isi, data.blok_konten || [], data.gambar, data.hashtags || "", data.penulis || ""));
                 if (isAdmin) {
                     item.querySelector(".btn-delete").addEventListener("click", async (e) => {
                         if (confirm("Yakin ingin menghapus berita ini permanen?")) await deleteDoc(doc(db, "berita", e.target.getAttribute("data-id")));
@@ -1635,11 +1752,11 @@
 
         // KELOLA PENGGUNA
         document.getElementById('formTambahPengguna').addEventListener('submit', async (e) => {
-            e.preventDefault(); const btn = document.getElementById('btnTambahPengguna'); const email = document.getElementById('puEmail').value.trim(); const password = document.getElementById('puPassword').value; const role = document.getElementById('puRole').value;
+            e.preventDefault(); const btn = document.getElementById('btnTambahPengguna'); const email = document.getElementById('puEmail').value.trim(); const password = document.getElementById('puPassword').value; const role = document.getElementById('puRole').value; const namaPenulis = document.getElementById('puNamaPenulis').value.trim();
             btn.innerText = '⏳ Membuat akun...'; btn.disabled = true;
             try {
                 const cred = await createUserWithEmailAndPassword(secondaryAuth, email, password); const uid = cred.user.uid;
-                await setDoc(doc(db, 'pengguna', uid), { email, role, dibuat: new Date() }); await signOut(secondaryAuth); 
+                await setDoc(doc(db, 'pengguna', uid), { email, role, namaPenulis, dibuat: new Date() }); await signOut(secondaryAuth); 
                 alert(`✅ Akun "${email}" berhasil dibuat dengan role ${role.toUpperCase()}.`); document.getElementById('formTambahPengguna').reset(); muatDaftarPengguna();
             } catch (err) { alert('❌ Gagal membuat akun: ' + err.message); } finally { btn.innerText = '➕ Buat Akun Pengguna'; btn.disabled = false; }
         });
@@ -1652,10 +1769,58 @@
                 wrap.innerHTML = '';
                 snap.forEach(docSnap => {
                     const d = docSnap.data(); const uid = docSnap.id; const row = document.createElement('div'); row.className = 'user-row';
-                    row.innerHTML = `<span class="user-email">${esc(d.email || uid)}</span><span class="role-badge ${d.role === 'admin' ? 'admin' : 'user'}">${d.role === 'admin' ? 'Admin' : 'User'}</span><select class="pu-role-select"><option value="user" ${d.role !== 'admin' ? 'selected' : ''}>User</option><option value="admin" ${d.role === 'admin' ? 'selected' : ''}>Admin</option></select><button type="button" class="btn-tambah pu-simpan-role" style="padding:8px 12px; font-size:12px; margin-bottom:0; width:auto;">💾 Simpan</button>`;
+                    const isNonaktif = d.dinonaktifkan === true;
+                    if (isNonaktif) row.classList.add('row-nonaktif');
+
+                    const badgeHtml = isNonaktif
+                        ? `<span class="role-badge nonaktif">Nonaktif</span>`
+                        : `<span class="role-badge ${d.role === 'admin' ? 'admin' : 'user'}">${d.role === 'admin' ? 'Admin' : 'User'}</span>`;
+
+                    const tombolStatusHtml = isNonaktif
+                        ? `<button type="button" class="btn-tambah pu-aktifkan" style="padding:8px 12px; font-size:12px; margin-bottom:0; width:auto; background:#e8f5e9; color:#2e7d32; border-color:#2e7d32;">✅ Aktifkan</button>`
+                        : `<button type="button" class="btn-hapus pu-nonaktifkan" style="width:auto;">🚫 Nonaktifkan</button>`;
+
+                    row.innerHTML = `<input type="email" class="pu-email-edit" value="${esc(d.email || '')}" placeholder="email pengguna">${badgeHtml}<select class="pu-role-select"><option value="user" ${d.role !== 'admin' ? 'selected' : ''}>User</option><option value="admin" ${d.role === 'admin' ? 'selected' : ''}>Admin</option></select><input type="text" class="pu-nama-penulis" value="${esc(d.namaPenulis || '')}" placeholder="✍️ Nama Penulis (untuk posting berita)" style="width:100%; order:10; flex:1; min-width:160px; font-size:13px; padding:6px 8px; border:1px solid #ccc; border-radius:4px;"><button type="button" class="btn-tambah pu-simpan-role" style="padding:8px 12px; font-size:12px; margin-bottom:0; width:auto;">💾 Simpan</button><button type="button" class="btn-tambah pu-reset-pass" style="padding:8px 12px; font-size:12px; margin-bottom:0; width:auto; background:#fff3e0; color:#e65100; border-color:#e65100;">🔑 Reset Password</button>${tombolStatusHtml}`;
+
+                    row.querySelector('.pu-reset-pass').addEventListener('click', async () => {
+                        const emailTarget = (d.email || '').trim();
+                        if (!emailTarget) return alert('❌ Pengguna ini tidak punya email tersimpan.');
+                        if (!confirm(`Kirim email reset password ke "${emailTarget}"?\n\nUser akan menerima link dari Firebase untuk membuat password baru sendiri.`)) return;
+                        const btnReset = row.querySelector('.pu-reset-pass');
+                        btnReset.innerText = '⏳ Mengirim...'; btnReset.disabled = true;
+                        try {
+                            await sendPasswordResetEmail(auth, emailTarget);
+                            alert(`✅ Email reset password telah dikirim ke "${emailTarget}".\n\nMinta user untuk memeriksa inbox (dan folder spam) lalu mengikuti link di dalamnya.`);
+                        } catch (err) {
+                            alert('❌ Gagal mengirim email reset: ' + err.message);
+                        } finally {
+                            btnReset.innerText = '🔑 Reset Password'; btnReset.disabled = false;
+                        }
+                    });
                     row.querySelector('.pu-simpan-role').addEventListener('click', async () => {
                         const newRole = row.querySelector('.pu-role-select').value;
-                        try { await setDoc(doc(db, 'pengguna', uid), { email: d.email || '', role: newRole, dibuat: d.dibuat || new Date() }); alert(`✅ Role "${d.email}" diubah menjadi ${newRole.toUpperCase()}.`); muatDaftarPengguna(); } catch (err) { alert('❌ Gagal mengubah role: ' + err.message); }
+                        const newEmail = row.querySelector('.pu-email-edit').value.trim();
+                        const newNamaPenulis = row.querySelector('.pu-nama-penulis').value.trim();
+                        if (!newEmail) return alert('Email tidak boleh kosong!');
+                        try {
+                            await setDoc(doc(db, 'pengguna', uid), { ...d, email: newEmail, role: newRole, namaPenulis: newNamaPenulis, dibuat: d.dibuat || new Date() });
+                            alert(`✅ Data "${newEmail}" diperbarui (role: ${newRole.toUpperCase()}).\n\nCatatan: ini hanya mengubah data profil & hak akses di aplikasi. Email login akun Firebase Auth pengguna tidak ikut berubah secara otomatis.`);
+                            muatDaftarPengguna();
+                        } catch (err) { alert('❌ Gagal menyimpan: ' + err.message); }
+                    });
+                    const tombolStatus = row.querySelector('.pu-nonaktifkan, .pu-aktifkan');
+                    tombolStatus.addEventListener('click', async () => {
+                        if (auth.currentUser && auth.currentUser.uid === uid) { alert('❌ Tidak bisa menonaktifkan akun yang sedang Anda gunakan untuk login.'); return; }
+                        const aksiNonaktif = !isNonaktif;
+                        const pesanKonfirmasi = aksiNonaktif
+                            ? `Nonaktifkan pengguna "${d.email || uid}"?\n\nUser ini akan otomatis ter-logout dan tidak bisa masuk lagi sampai diaktifkan kembali oleh admin.`
+                            : `Aktifkan kembali pengguna "${d.email || uid}"?\n\nUser ini akan bisa login dan mengakses panel lagi sesuai role-nya.`;
+                        if (!confirm(pesanKonfirmasi)) return;
+                        try {
+                            await setDoc(doc(db, 'pengguna', uid), { ...d, dinonaktifkan: aksiNonaktif });
+                            alert(aksiNonaktif ? `✅ Pengguna "${d.email || uid}" berhasil dinonaktifkan.` : `✅ Pengguna "${d.email || uid}" berhasil diaktifkan kembali.`);
+                            muatDaftarPengguna();
+                        } catch (err) { alert('❌ Gagal mengubah status: ' + err.message); }
                     });
                     wrap.appendChild(row);
                 });
