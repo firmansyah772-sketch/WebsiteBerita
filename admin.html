@@ -505,24 +505,10 @@
                 </div>
 
                 <div class="ad-section">
-                    <h4 style="margin-top:0; color:#d32f2f;">☆ Dewan Pembina &amp; Penasehat</h4>
+                    <h4 style="margin-top:0; color:#d32f2f;">☆ REDAKSI KJNI</h4>
                     <div class="form-group"><label>Judul Section</label><input type="text" id="redJudulPembina" placeholder="☆ Dewan Pembina & Penasehat ☆"></div>
                     <div id="wrapPembina"></div>
                     <button type="button" class="btn-tambah" data-target="wrapPembina" data-type="2col">+ Tambah Dewan Pembina/Penasehat</button>
-                </div>
-
-                <div class="ad-section">
-                    <h4 style="margin-top:0; color:#d32f2f;">☆ Pimpinan Redaksi</h4>
-                    <div class="form-group"><label>Judul Section</label><input type="text" id="redJudulPimpinan" placeholder="☆ Pimpinan Redaksi ☆"></div>
-                    <div id="wrapPimpinan"></div>
-                    <button type="button" class="btn-tambah" data-target="wrapPimpinan" data-type="2col">+ Tambah Pimpinan Redaksi</button>
-                </div>
-
-                <div class="ad-section">
-                    <h4 style="margin-top:0; color:#d32f2f;">☆ Bidang Investigasi PTI</h4>
-                    <div class="form-group"><label>Judul Section</label><input type="text" id="redJudulInvestigasi" placeholder="☆ Bidang Investigasi PTI ☆"></div>
-                    <div id="wrapInvestigasi"></div>
-                    <button type="button" class="btn-tambah" data-target="wrapInvestigasi" data-type="1col-foto">+ Tambah Nama/Anggota Investigasi</button>
                 </div>
 
                 <div class="ad-section">
@@ -1474,7 +1460,7 @@
 
         // PENGATURAN HALAMAN REDAKSI GENERIK 
         const DEFAULT_REDAKSI = {
-            judul_pendiri: "☆ Pendiri KJNI ☆", judul_pengurus_inti: "☆ Pengurus Inti DPP KJNI ☆", judul_dewan_pembina: "☆ Dewan Pembina & Penasehat ☆", judul_pimpinan_redaksi: "☆ Pimpinan Redaksi ☆", judul_investigasi: "☆ Bidang Investigasi PTI ☆", judul_dpw: "☆ Pengurus DPW/DPC ☆", judul_asosiasi: "☆ Asosiasi Wartawan / Jurnalis ☆"
+            judul_pendiri: "☆ Pendiri KJNI ☆", judul_pengurus_inti: "☆ Pengurus Inti DPP KJNI ☆", judul_dewan_pembina: "☆ Dewan Pembina & Penasehat ☆", judul_dpw: "☆ Pengurus DPW/DPC ☆", judul_asosiasi: "☆ Asosiasi Wartawan / Jurnalis ☆"
         };
         
         function buatTombolUrutan(el) {
@@ -1556,11 +1542,10 @@
 
         async function muatDataRedaksi() {
             let data = DEFAULT_REDAKSI; try { const snap = await getDoc(doc(db, 'pengaturan', 'redaksi')); if (snap.exists()) data = { ...DEFAULT_REDAKSI, ...snap.data() }; } catch (e) {}
-            document.getElementById('redJudulPendiri').value = data.judul_pendiri || DEFAULT_REDAKSI.judul_pendiri; document.getElementById('redJudulPengurus').value = data.judul_pengurus_inti || DEFAULT_REDAKSI.judul_pengurus_inti; document.getElementById('redJudulPembina').value = data.judul_dewan_pembina || DEFAULT_REDAKSI.judul_dewan_pembina; document.getElementById('redJudulPimpinan').value = data.judul_pimpinan_redaksi || DEFAULT_REDAKSI.judul_pimpinan_redaksi; document.getElementById('redJudulInvestigasi').value = data.judul_investigasi || DEFAULT_REDAKSI.judul_investigasi; document.getElementById('redJudulDPW').value = data.judul_dpw || DEFAULT_REDAKSI.judul_dpw; document.getElementById('redJudulAsosiasi').value = data.judul_asosiasi || DEFAULT_REDAKSI.judul_asosiasi;
+            document.getElementById('redJudulPendiri').value = data.judul_pendiri || DEFAULT_REDAKSI.judul_pendiri; document.getElementById('redJudulPengurus').value = data.judul_pengurus_inti || DEFAULT_REDAKSI.judul_pengurus_inti; document.getElementById('redJudulPembina').value = data.judul_dewan_pembina || DEFAULT_REDAKSI.judul_dewan_pembina; document.getElementById('redJudulDPW').value = data.judul_dpw || DEFAULT_REDAKSI.judul_dpw; document.getElementById('redJudulAsosiasi').value = data.judul_asosiasi || DEFAULT_REDAKSI.judul_asosiasi;
             const leg = data.legalitas || {}; document.getElementById('redLegalNama').value = leg.nama || ''; document.getElementById('redLegalAkte').value = leg.akte || ''; document.getElementById('redLegalSK').value = leg.sk || ''; document.getElementById('redLegalDaftar').value = leg.daftar_perseroan || ''; document.getElementById('redLegalNpwp').value = leg.npwp || '';
             const isiList = (wrapId, arr, type) => { const wrap = document.getElementById(wrapId); wrap.innerHTML = ''; (arr || []).forEach(item => { const values = (type === '1col') ? { nama: item } : item; buatBarisGenerik(wrapId, type, values); }); };
-            isiList('wrapPendiri', data.pendiri, '2col'); isiList('wrapPengurus', data.pengurus_inti, '2col'); isiList('wrapPembina', data.dewan_pembina, '2col'); isiList('wrapPimpinan', data.pimpinan_redaksi, '2col'); 
-            const invData = (data.investigasi || []).map(i => typeof i === 'string' ? {nama: i, foto: ''} : i); isiList('wrapInvestigasi', invData, '1col-foto');
+            isiList('wrapPendiri', data.pendiri, '2col'); isiList('wrapPengurus', data.pengurus_inti, '2col'); isiList('wrapPembina', data.dewan_pembina, '2col');
             const dpwData = (data.dpw || []).map(p => { if (p.perangkat) { return { label: p.label || 'DPW', nama: p.nama || p.provinsi || '', perangkat: p.perangkat }; } const toRole = (r, jabatan) => { const obj = typeof r === 'string' ? { nama: r, foto: '' } : (r || {}); return { jabatan, nama: obj.nama || '', foto: obj.foto || '' }; }; return { label: 'DPW', nama: p.provinsi || '', perangkat: [ toRole(p.ketua, 'Ketua'), toRole(p.sekretaris, 'Sekretaris'), toRole(p.bendahara, 'Bendahara') ] }; });
             isiList('wrapDPW', dpwData, 'dpw'); isiList('wrapAsosiasi', data.asosiasi, '1col'); document.getElementById('redPemberitahuan').value = data.pemberitahuan || '';
         }
@@ -1569,10 +1554,10 @@
             const btn = document.getElementById('btnSimpanRedaksi'); btn.innerText = '⏳ Menyimpan...'; btn.disabled = true;
             try {
                 const payload = {
-                    judul_pendiri: document.getElementById('redJudulPendiri').value.trim(), judul_pengurus_inti: document.getElementById('redJudulPengurus').value.trim(), judul_dewan_pembina: document.getElementById('redJudulPembina').value.trim(), judul_pimpinan_redaksi: document.getElementById('redJudulPimpinan').value.trim(), judul_investigasi: document.getElementById('redJudulInvestigasi').value.trim(), judul_dpw: document.getElementById('redJudulDPW').value.trim(), judul_asosiasi: document.getElementById('redJudulAsosiasi').value.trim(),
+                    judul_pendiri: document.getElementById('redJudulPendiri').value.trim(), judul_pengurus_inti: document.getElementById('redJudulPengurus').value.trim(), judul_dewan_pembina: document.getElementById('redJudulPembina').value.trim(), judul_dpw: document.getElementById('redJudulDPW').value.trim(), judul_asosiasi: document.getElementById('redJudulAsosiasi').value.trim(),
                     legalitas: { nama: document.getElementById('redLegalNama').value.trim(), akte: document.getElementById('redLegalAkte').value.trim(), sk: document.getElementById('redLegalSK').value.trim(), daftar_perseroan: document.getElementById('redLegalDaftar').value.trim(), npwp: document.getElementById('redLegalNpwp').value.trim() },
-                    pendiri: await kumpulkanGenerik('wrapPendiri', '2col', btn), pengurus_inti: await kumpulkanGenerik('wrapPengurus', '2col', btn), dewan_pembina: await kumpulkanGenerik('wrapPembina', '2col', btn), pimpinan_redaksi: await kumpulkanGenerik('wrapPimpinan', '2col', btn), 
-                    investigasi: await kumpulkanGenerik('wrapInvestigasi', '1col-foto', btn), dpw: await kumpulkanGenerik('wrapDPW', 'dpw', btn), asosiasi: await kumpulkanGenerik('wrapAsosiasi', '1col'), pemberitahuan: document.getElementById('redPemberitahuan').value.trim(), diupdate: new Date()
+                    pendiri: await kumpulkanGenerik('wrapPendiri', '2col', btn), pengurus_inti: await kumpulkanGenerik('wrapPengurus', '2col', btn), dewan_pembina: await kumpulkanGenerik('wrapPembina', '2col', btn), 
+                    dpw: await kumpulkanGenerik('wrapDPW', 'dpw', btn), asosiasi: await kumpulkanGenerik('wrapAsosiasi', '1col'), pemberitahuan: document.getElementById('redPemberitahuan').value.trim(), diupdate: new Date()
                 };
                 await setDoc(doc(db, 'pengaturan', 'redaksi'), payload); alert('✅ Pengaturan Redaksi berhasil disimpan!');
             } catch (e) { alert('❌ Gagal menyimpan: ' + e.message); } finally { btn.innerText = '💾 Simpan Pengaturan Redaksi'; btn.disabled = false; }
