@@ -327,16 +327,6 @@
             </div>
 
             <div class="widget">
-                <div class="widget-head" id="judulPimpinan">☆ Pimpinan Redaksi ☆</div>
-                <div class="widget-body pengurus-grid" id="redaksiPimpinan"></div>
-            </div>
-
-            <div class="widget">
-                <div class="widget-head" id="judulInvestigasi">☆ Bidang Investigasi PTI ☆</div>
-                <div class="widget-body pengurus-grid" id="redaksiInvestigasi"></div>
-            </div>
-
-            <div class="widget">
                 <div class="widget-head" id="judulDPW">☆ Pengurus DPW/DPC ☆</div>
                 <div class="widget-body dpw-grid" id="redaksiDPW" style="padding: 14px;"></div>
             </div>
@@ -556,16 +546,12 @@
         judul_pendiri: "☆ Pendiri KJNI ☆",
         judul_pengurus_inti: "☆ Pengurus Inti DPP KJNI ☆",
         judul_dewan_pembina: "☆ Dewan Pembina & Penasehat ☆",
-        judul_pimpinan_redaksi: "☆ Pimpinan Redaksi ☆",
-        judul_investigasi: "☆ Bidang Investigasi PTI ☆",
         judul_dpw: "☆ Pengurus DPW/DPC ☆",
         judul_asosiasi: "☆ Asosiasi Wartawan / Jurnalis ☆",
         legalitas: { nama: "Komite Jurnalis Nusantara Independen", akte: "EVA KURNIASIH, S.H., M.Kn.", sk: "AHU-0049584.AH.01.01.TAHUN.2021", daftar_perseroan: "AHU-0003690.AH.01.07.TAHUN 2026", npwp: "1000 0000 0989 2975" },
         pendiri: [ { jabatan: "Pendiri 1", nama: "NURUL QOMAR, C. BJ., PTI" }, { jabatan: "Pendiri 2", nama: "HERIYANTO" }, { jabatan: "Pendiri 3", nama: "YOGA KUMALA" } ],
         pengurus_inti: [ { jabatan: "Ketua DPP", nama: "NURUL QOMAR, C. BJ., PTI" }, { jabatan: "Wakil Ketua DPP", nama: "HERIYANTO" }, { jabatan: "Bendahara", nama: "SATI" }, { jabatan: "Sekretaris", nama: "YOGA KUMALA" } ],
         dewan_pembina: [ { jabatan: "Dewan Pembina", nama: "ILHAMMUDIN, SE, SH, CPM." }, { jabatan: "Dewan Pembina", nama: "H. FACHRUDIN HS, S. PDJ" } ],
-        pimpinan_redaksi: [ { jabatan: "Pimpinan Redaksi", nama: "ARUL / NURUL QOMAR, C. BJ., PTI" } ],
-        investigasi: [ { nama: "RAHMAT TOLETOLE", foto: "" }, { nama: "WAHYUDIN", foto: "" }, { nama: "TAMRIN", foto: "" }, { nama: "IMAM RAMADANI", foto: "" }, { nama: "SANGKUT", foto: "" } ],
         dpw: [
             { label: "DPW", nama: "Jawa Barat", perangkat: [ {jabatan: "Ketua", nama: "", foto: ""}, {jabatan: "Sekretaris", nama: "", foto: ""}, {jabatan: "Bendahara", nama: "", foto: ""} ] },
             { label: "DPW", nama: "Banten", perangkat: [ {jabatan: "Ketua", nama: "", foto: ""}, {jabatan: "Sekretaris", nama: "", foto: ""}, {jabatan: "Bendahara", nama: "", foto: ""} ] }
@@ -593,23 +579,6 @@
             const inisial = (item.nama || '?').trim().charAt(0).toUpperCase();
             const fotoHtml = item.foto ? `<img class="pengurus-card-foto" src="${esc(item.foto)}" alt="${esc(item.nama)}" loading="lazy">` : `<span class="pengurus-card-foto pengurus-card-foto-placeholder">${esc(inisial)}</span>`;
             return `<div class="pengurus-card">${fotoHtml}<span class="pengurus-card-nama">${esc(item.nama)}</span><span class="pengurus-card-jabatan">${esc(item.jabatan)}</span></div>`;
-        }).join('');
-    }
-
-    function renderInvestigasi(arr) {
-        const el = document.getElementById('redaksiInvestigasi');
-        if (!arr || !arr.length) { el.innerHTML = '<span style="color:var(--text-muted);font-size:13px;grid-column:1/-1;text-align:center;">Belum ada data.</span>'; return; }
-        
-        el.innerHTML = arr.map(item => {
-            const nama = typeof item === 'string' ? item : (item.nama || '');
-            const foto = typeof item === 'string' ? '' : (item.foto || '');
-            const inisial = (nama || '?').trim().charAt(0).toUpperCase();
-            
-            const fotoHtml = foto 
-                ? `<img class="pengurus-card-foto" src="${esc(foto)}" alt="${esc(nama)}" loading="lazy">`
-                : `<span class="pengurus-card-foto pengurus-card-foto-placeholder">${esc(inisial)}</span>`;
-                
-            return `<div class="pengurus-card">${fotoHtml}<span class="pengurus-card-nama">${esc(nama)}</span><span class="pengurus-card-jabatan">Investigasi</span></div>`;
         }).join('');
     }
 
@@ -680,8 +649,6 @@
         document.getElementById('judulPendiri').textContent = data.judul_pendiri || DEFAULT_REDAKSI.judul_pendiri;
         document.getElementById('judulPengurus').textContent = data.judul_pengurus_inti || DEFAULT_REDAKSI.judul_pengurus_inti;
         document.getElementById('judulPembina').textContent = data.judul_dewan_pembina || DEFAULT_REDAKSI.judul_dewan_pembina;
-        document.getElementById('judulPimpinan').textContent = data.judul_pimpinan_redaksi || DEFAULT_REDAKSI.judul_pimpinan_redaksi;
-        document.getElementById('judulInvestigasi').textContent = data.judul_investigasi || DEFAULT_REDAKSI.judul_investigasi;
         document.getElementById('judulDPW').textContent = data.judul_dpw || DEFAULT_REDAKSI.judul_dpw;
         document.getElementById('judulAsosiasi').textContent = data.judul_asosiasi || DEFAULT_REDAKSI.judul_asosiasi;
 
@@ -689,8 +656,6 @@
         renderTabel2Kolom('redaksiPendiri', data.pendiri);
         renderTabel2Kolom('redaksiPengurus', data.pengurus_inti);
         renderTabel2Kolom('redaksiPembina', data.dewan_pembina);
-        renderTabel2Kolom('redaksiPimpinan', data.pimpinan_redaksi);
-        renderInvestigasi(data.investigasi);
         renderDPW(data.dpw);
         renderAsosiasi(data.asosiasi);
         
