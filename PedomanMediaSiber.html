@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Susunan Pengurus & Redaksi - KJNI</title>
+    <title>Pedoman Media Siber - KJNI</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Source+Sans+3:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
@@ -29,9 +29,8 @@
             --shadow: 0 1px 4px rgba(0,0,0,0.4);
         }
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-        
-        html, body { width: 100%;  }
-        body { font-family: 'Source Sans 3', sans-serif; background: var(--gray-light); color: var(--text); transition: background .3s, color .3s; overflow-wrap: break-word; word-wrap: break-word; line-height: 1.6; }
+        html, body { width: 100%; }
+        body { font-family: 'Source Sans 3', sans-serif; background: var(--gray-light); color: var(--text); transition: background .3s, color .3s; line-height: 1.6; }
         a { text-decoration: none; color: inherit; }
         img { max-width: 100%; height: auto; display: block; }
 
@@ -54,7 +53,6 @@
         .hdr-btn:hover { background: rgba(255,255,255,.3); }
         .hamburger-lines { display: flex; flex-direction: column; gap: 5px; width: 20px; }
         .hamburger-lines span { display: block; width: 100%; height: 2px; background: black; border-radius: 2px; transition: all .3s; }
-        [data-theme="dark"] .hamburger-lines span { background: var(--text); }
         .hdr-btn.open .hamburger-lines span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
         .hdr-btn.open .hamburger-lines span:nth-child(2) { opacity: 0; }
         .hdr-btn.open .hamburger-lines span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
@@ -77,25 +75,21 @@
         .cat-nav::-webkit-scrollbar { display: none; }
         .cat-nav-inner { display: flex; white-space: nowrap; padding: 0 4px; max-width: 1100px; margin: 0 auto; }
         .cat-nav-inner a { display: inline-block; padding: 10px 13px; font-size: 12px; font-weight: 700; color: #aaa; text-transform: uppercase; letter-spacing: .4px; border-bottom: 2px solid transparent; transition: color .2s, border-color .2s; }
-        .cat-nav-inner a:hover, .cat-nav-inner a.active { color: #fff; border-bottom-color: var(--red); }
+        .cat-nav-inner a:hover { color: #fff; border-bottom-color: var(--red); }
 
-        /* LAYOUT & ADS MODIFICATIONS */
-        .page-body { padding: 20px 0 24px; }
-        .layout { display: grid; grid-template-columns: 1fr; gap: 0; max-width: 1100px; margin: 0 auto; padding: 0 12px; transition: max-width .3s; }
-        .layout > * { min-width: 0; }
+        /* LAYOUT */
+        .page-body { padding: 16px 0 24px; }
+        .layout { display: grid; grid-template-columns: 1fr; gap: 16px; max-width: 1100px; margin: 0 auto; padding: 0 12px; }
         @media(min-width: 900px) { .layout { grid-template-columns: 1fr 290px; gap: 18px; padding: 0 16px; } }
-        
-        .layout.has-left-ad { max-width: 1300px; }
-        @media(min-width: 1024px) { 
-            .layout.has-left-ad { grid-template-columns: 160px 1fr 290px; gap: 20px; }
-        }
-        @media(max-width: 1023px) {
-            #dynamicAdLeft { display: none !important; }
-        }
-        #dynamicAdTop { text-align: center; margin: 0 auto 15px; max-width: 1100px; padding: 0 12px; }
-        .layout.has-left-ad #dynamicAdTop { max-width: 1300px; }
 
-        /* ARTICLE & REDAKSI STYLES */
+        /* ARTICLE CONTAINER */
+        article {
+            background: var(--white); padding: 24px; border-radius: 6px;
+            box-shadow: var(--shadow); border: 1px solid var(--border);
+            max-width: 100%; overflow: hidden;
+        }
+        @media (max-width: 480px) { article { padding: 16px; } }
+
         .cat-badge { display: inline-block; background: var(--red); color: #fff; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 2px; text-transform: uppercase; letter-spacing: .5px; margin-bottom: 12px; }
 
         .article-title {
@@ -111,79 +105,54 @@
             padding-bottom: 12px; margin-bottom: 20px; align-items: center;
         }
 
-        /* WIDGET STYLES (Dipakai juga untuk box struktur pengurus) */
-        .widget { background: var(--white); border-radius: 6px; overflow: hidden; margin-bottom: 16px; box-shadow: var(--shadow); }
-        .widget-head { background: var(--red); color: #fff; font-size: 11.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .8px; padding: 9px 14px; }
-        .widget-body { padding: 14px; }
+        .intro-box {
+            background: var(--gray-light); border: 1px solid var(--border);
+            border-left: 4px solid var(--red); border-radius: 4px;
+            padding: 16px 18px; margin-bottom: 26px; font-size: 14px; line-height: 1.85;
+            text-align: justify;
+        }
 
-        /* PENGURUS CARD GRID */
-        .pengurus-grid {
-            display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
-            gap: 16px 10px;
-        }
-        .pengurus-card { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 6px; }
-        .pengurus-card-foto {
-            width: 78px; height: 78px; border-radius: 0; object-fit: cover;
-            border: 2px solid var(--red); background: var(--gray-light); flex-shrink: 0;
-        }
-        .pengurus-card-foto-placeholder {
-            display: flex; align-items: center; justify-content: center;
-            background: var(--red); color: #fff; font-size: 26px; font-weight: 700;
+        .pedoman-section { margin-bottom: 26px; }
+        .pedoman-section-title {
             font-family: 'Playfair Display', serif;
+            font-size: 17px; font-weight: 700;
+            color: var(--white);
+            background: var(--red);
+            padding: 10px 16px;
+            border-radius: 4px;
+            margin-bottom: 12px;
+            display: flex; align-items: center; gap: 10px;
         }
-        .pengurus-card-nama { font-weight: 700; font-size: 13px; color: var(--text); line-height: 1.3; word-break: break-word; }
-        .pengurus-card-jabatan { font-size: 11px; color: var(--red); font-weight: 700; text-transform: uppercase; letter-spacing: .4px; }
+        .pedoman-section-num {
+            background: rgba(255,255,255,0.25); border-radius: 50%;
+            width: 26px; height: 26px; display: flex; align-items: center; justify-content: center;
+            font-size: 13px; flex-shrink: 0;
+        }
+        .pedoman-body {
+            font-size: 14.5px; line-height: 1.9; color: var(--text);
+            padding: 0 4px;
+        }
+        .pedoman-body p { margin-bottom: 10px; text-align: justify; }
+        .pedoman-body ol, .pedoman-body ul { margin: 8px 0 8px 22px; }
+        .pedoman-body li { margin-bottom: 8px; text-align: justify; }
+        .pedoman-body ol[type="a"] { list-style-type: lower-alpha; }
 
-        /* DPW TABLE & FOTO GRID */
-        .dpw-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-        @media (max-width: 600px) { .dpw-grid { grid-template-columns: 1fr; } }
-        .dpw-card { background: var(--gray-light); border: 1px solid var(--border); border-radius: 4px; padding: 12px 14px; }
-        .dpw-card h4 { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .6px; color: var(--red); margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px dashed var(--border); }
-        
-        .dpw-role-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(90px, 1fr)); gap: 10px; margin-top: 14px; }
-        .dpw-role-item { display: flex; flex-direction: column; align-items: center; text-align: center; gap: 6px; }
-        .dpw-role-item > div { display: flex; flex-direction: column; align-items: center; }
-        .dpw-role-foto { width: 56px; height: 56px; border-radius: 0; object-fit: cover; border: 2px solid var(--red); background: var(--white); flex-shrink: 0; }
-        .dpw-role-foto-placeholder { display: flex; align-items: center; justify-content: center; width: 56px; height: 56px; border-radius: 0; background: var(--red); color: #fff; font-size: 20px; font-weight: 700; font-family: 'Playfair Display', serif; }
-        .dpw-role-nama { font-weight: 700; font-size: 11.5px; color: var(--text); line-height: 1.3; word-break: break-word; }
-        .dpw-role-jabatan { font-size: 10px; color: var(--red); font-weight: 700; text-transform: uppercase; letter-spacing: .4px; }
-        @media (max-width: 480px) {
-            .dpw-role-grid { grid-template-columns: 1fr; gap: 12px; }
-            .dpw-role-item { flex-direction: row; text-align: left; align-items: center; justify-content: flex-start; }
-            .dpw-role-item > div { align-items: flex-start; }
+        .signature-box {
+            margin-top: 30px; padding-top: 20px; border-top: 1px dashed var(--border);
+            text-align: right; font-size: 14px; font-style: italic; color: var(--text-muted);
         }
 
-        /* LEGAL INFO BOX & NOTICES */
-        .legal-box { background: var(--gray-light); border-left: 4px solid var(--red); padding: 14px 16px; margin-bottom: 24px; font-size: 13px; border-radius: 0 4px 4px 0; }
-        .legal-box .legal-title { font-weight: 700; font-size: 15px; color: var(--text); margin-bottom: 10px; font-family: 'Playfair Display', serif; }
-        .legal-box table { width: 100%; border-collapse: collapse; }
-        .legal-box table td { padding: 4px 0; font-size: 13px; color: var(--text-muted); vertical-align: top; }
-        .legal-box table td:first-child { font-weight: 700; color: var(--text); width: 200px; }
-
-        .notice-box {
-            background: #fff8e1; border: 1px solid #ffe082; border-left: 4px solid #f9a825; border-radius: 4px;
-            padding: 14px 16px; margin-top: 24px; font-size: 13px; line-height: 1.7; color: #111;
-        }
-        [data-theme="dark"] .notice-box { background: #2a2500; border-color: #5a4800; color: #eee; }
-        .notice-box strong { color: var(--red); }
-
-        .assoc-list { list-style: none; display: flex; flex-direction: column; gap: 8px; }
-        .assoc-list li { background: var(--gray-light); border: 1px solid var(--border); border-radius: 4px; padding: 9px 14px; font-size: 13.5px; font-weight: 600; color: var(--text); }
-        .assoc-list li::before { content: '✦ '; color: var(--red); }
-
-        /* SIDEBAR EXTRA ELEMENTS */
-        .pop-item { display: flex; gap: 10px; padding: 9px 0; border-bottom: 1px solid var(--border); cursor: pointer; align-items: flex-start; text-decoration: none; }
-        .pop-item:last-child { border-bottom: none; padding-bottom: 0; }
-        .pop-num { font-size: 20px; font-weight: 900; color: var(--red); opacity: .25; line-height: 1; flex-shrink: 0; min-width: 26px; }
-        .pop-title { font-size: 13px; font-weight: 700; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; word-break: break-word; overflow-wrap: break-word; color: var(--text); transition: color .2s; }
-        .pop-item:hover .pop-title { color: var(--red); }
+        /* WIDGET STYLES */
+        .widget { background: var(--white); border-radius: 6px; overflow: hidden; margin-bottom: 16px; box-shadow: var(--shadow); border: 1px solid var(--border); }
+        .widget-head { background: var(--black); color: #fff; font-size: 11.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .8px; padding: 9px 14px; }
+        .widget-body { padding: 12px 14px; }
 
         .cat-cloud { display: flex; flex-wrap: wrap; gap: 7px; }
         .cat-tag { background: var(--gray-light); border: 1px solid var(--border); color: var(--text-muted); font-size: 12px; font-weight: 600; padding: 4px 11px; border-radius: 3px; cursor: pointer; transition: all .2s; text-decoration: none; }
         .cat-tag:hover { background: var(--red); border-color: var(--red); color: #fff; }
 
         .soc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
-        .soc-card { color: #fff; padding: 9px 10px; border-radius: 4px; font-size: 11px; display: flex; flex-direction: column; gap: 2px; text-decoration: none; transition: opacity .2s; }
+        .soc-card { color: #fff; padding: 9px 10px; border-radius: 4px; font-size: 11px; display: flex; flex-direction: column; gap: 2px; text-decoration: none; }
         /* Mengatur posisi dan ukuran logo medsos di sidebar */
 .soc-name {
     display: flex;
@@ -195,20 +164,15 @@
     height: 14px;
     fill: #ffffff; /* Memastikan logo berwarna putih */
 }
-        .soc-card:hover { opacity: 0.85; }
         .soc-card .cnt { font-size: 14px; font-weight: 700; }
         .soc-fb { background: #3b5998; } .soc-tk { background: #000000; }.soc-yt { background: #ff0000; } .soc-ig { background: #e1306c; }
 
-        /* AD FOOTER & LBL */
-        #dynamicAdFooter { text-align: center; padding: 14px 0; }
-        .ad-lbl { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 5px; }
-
         /* FOOTER */
         footer { background: var(--black); color: #fff; padding: 30px 0 16px; margin-top: 20px; font-size: 13px; text-align: center; }
-        .footer-inner { max-width: 1100px; margin: 0 auto; padding: 0 16px; }
+        .footer-inner { max-width: 1100px; margin: 0 auto; padding: 0 16px; overflow: hidden; }
         .footer-grid { display: grid; grid-template-columns: 1fr; gap: 24px; margin-bottom: 22px; text-align: left; }
         @media(min-width: 640px) { .footer-grid { grid-template-columns: 2fr 1fr 1fr; } }
-        .footer-logo-img { height: 90px; width: auto; object-fit: contain; margin-bottom: 10px; }
+        .footer-logo-img { height: 90px; width: auto; object-fit: contain; margin-bottom: 10px; max-width: 100%; }
         .footer-desc { color: #999; line-height: 1.6; }
         .footer-widget h4 { font-size: 11.5px; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 13px; padding-bottom: 7px; border-bottom: 1px solid #2a2a2a; color: #ccc; }
         .footer-links { list-style: none; }
@@ -228,142 +192,99 @@
         .wa-float:hover { transform: scale(1.1); }
         .wa-float svg { width: 26px; height: 26px; fill: #fff; }
         @keyframes waPulse { 0%,100%{box-shadow:0 3px 12px rgba(37,211,102,.5)} 50%{box-shadow:0 3px 22px rgba(37,211,102,.8),0 0 0 8px rgba(37,211,102,.12)} }
+
+        .hidden { display: none !important; }
+        .loading-box { text-align: center; padding: 50px 0; color: var(--text-muted); }
     </style>
 </head>
 <body>
 
-<a href="https://wa.me/6283817591582" target="_blank" class="wa-float" title="Hubungi Redaksi" id="waFloatBtn">
-    <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
-</a>
+    <a href="https://wa.me/6283817591582" target="_blank" class="wa-float" title="Hubungi Redaksi" id="waFloatBtn">
+        <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    </a>
 
-<header class="site-header">
-    <div class="ticker-bar">
-        <div class="ticker-inner">
-            <span class="ticker-label">SUSUNAN PENGURUS</span>
-            <div class="ticker-scroll"><span class="ticker-text">Komite Jurnalis Nusantara Independen (KJNI) — Portal Berita Terpercaya Tangerang, Banten &amp; Indonesia</span></div>
-        </div>
-    </div>
-    <div class="header-inner">
-        <div class="header-left">
-            <button class="hdr-btn" id="themeBtn" title="Ganti Tema">🌓</button>
-        </div>
-        <div class="header-logo">
-            <a href="index.html">
-                <img src="https://res.cloudinary.com/dc7guxgnm/image/upload/q_auto/f_auto/v1780978628/1000305972_ynq9xo.png" alt="KJNI">
-            </a>
-        </div>
-        <div class="header-right">
-            <button class="hdr-btn" id="searchToggleBtn" title="Cari">
-                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="22" y2="22"/></svg>
-            </button>
-            <button class="hdr-btn" id="hamburgerBtn" title="Menu">
-                <div class="hamburger-lines"><span></span><span></span><span></span></div>
-            </button>
-            
-            <div class="h-dropdown" id="hamburgerDropdown">
-                <a href="index.html" class="h-drop-link">Beranda</a>
-                <a href="KontakKami.html" class="h-drop-link">Tentang Kami</a>
-                <a href="pendaftaran.html" class="h-drop-link">Pendaftaran</a>
+    <header class="site-header">
+        <div class="ticker-bar">
+            <div class="ticker-inner">
+                <span class="ticker-label">INFO</span>
+                <div class="ticker-scroll"><span class="ticker-text">Komite Jurnalis Nasional Independen (KJNI) — Portal Berita Terpercaya Tangerang, Banten &amp; Indonesia</span></div>
             </div>
         </div>
-    </div>
-    <div class="search-bar-drop" id="searchDrop">
-        <input type="text" id="searchInput" placeholder="Cari berita..." autocomplete="off">
-        <button id="searchBtn" onclick="window.location.href='index.html'">Cari</button>
-    </div>
-    <nav class="cat-nav">
-        <div class="cat-nav-inner">
-            <a href="index.html">Semua</a>
-            <a href="index.html?kategori=Nasional">Nasional</a>
-            <a href="index.html?kategori=Tangerang Raya">Tangerang</a>
-            <a href="index.html?kategori=Banten">Banten</a>
-            <a href="index.html?kategori=Serang">Serang</a>
-            <a href="index.html?kategori=Peristiwa">Peristiwa</a>
-            <a href="index.html?kategori=Politik">Politik</a>
-            <a href="index.html?kategori=Hukum dan Kriminal">Hukum dan Kriminal</a>
-            <a href="index.html?kategori=Ekonomi">Ekonomi</a>
-            <a href="index.html?kategori=Pendidikan">Pendidikan</a>
-            <a href="index.html?kategori=Olahraga">Olahraga</a>
-            <a href="index.html?kategori=Teknologi">Teknologi</a>
-            <a href="index.html?kategori=Hiburan">Hiburan</a>
-            <a href="index.html?kategori=Lifestyle">Lifestyle</a>
-            <a href="index.html?kategori=Opini">Opini</a>
-        </div>
-    </nav>
-</header>
-
-<div class="page-body">
-    
-    <div id="dynamicAdTop" style="display:none;"></div>
-
-    <div class="layout" id="mainLayout">
-        
-        <aside class="sidebar-left" id="dynamicAdLeft" style="display:none;"></aside>
-
-        <main>
-            <div style="background: var(--white); padding: 24px; border-radius: 6px; box-shadow: var(--shadow); border: 1px solid var(--border); margin-bottom: 16px;">
-                <span class="cat-badge">Box Redaksi</span>
-                <h1 class="article-title">Susunan Redaksi KJNI</h1>
-                <div class="article-meta">
-                    <span>🏛️ Komite Jurnalis Nusantara Independen</span>
-                    <span>📋 Data Kepengurusan Resmi</span>
-                </div>
-
-                <div class="legal-box">
-                    <div class="legal-title" id="redaksiLegalTitle">🏢 Komite Jurnalis Nusantara Independen</div>
-                    <table>
-                        <tbody id="redaksiLegalitas">
-                            <tr><td>Akte Notaris</td><td>: EVA KURNIASIH, S.H., M.Kn.</td></tr>
-                            <tr><td>SK Kemenkumham RI</td><td>: AHU-0049584.AH.01.01.TAHUN.2021</td></tr>
-                            <tr><td>Daftar Perseroan</td><td>: AHU-0003690.AH.01.07.TAHUN 2026</td></tr>
-                            <tr><td>NPWP</td><td>: 1000 0000 0989 2975</td></tr>
-                        </tbody>
-                    </table>
+        <div class="header-inner">
+            <div class="header-left">
+                <button class="hdr-btn" id="themeBtn" title="Ganti Tema">🌓</button>
+            </div>
+            <div class="header-logo">
+                <a href="index.html">
+                    <img src="https://res.cloudinary.com/dc7guxgnm/image/upload/q_auto/f_auto/v1780978628/1000305972_ynq9xo.png" alt="KJNI">
+                </a>
+            </div>
+            <div class="header-right">
+                <button class="hdr-btn" id="searchToggleBtn" title="Cari">
+                    <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="22" y2="22"/></svg>
+                </button>
+                <button class="hdr-btn" id="hamburgerBtn" title="Menu">
+                    <div class="hamburger-lines"><span></span><span></span><span></span></div>
+                </button>
+                <div class="h-dropdown" id="hamburgerDropdown">
+                    <a href="index.html" class="h-drop-link">Beranda</a>
+                    <a href="KontakKami.html" class="h-drop-link">Tentang Kami</a>
+                    <a href="SusunanPengurus.html" class="h-drop-link">Susunan Pengurus</a>
+                    <a href="pendaftaran.html" class="h-drop-link">Pendaftaran</a>
                 </div>
             </div>
-
-            <div class="widget">
-                <div class="widget-head" id="judulPendiri">☆ Pendiri KJNI ☆</div>
-                <div class="widget-body pengurus-grid" id="redaksiPendiri"></div>
+        </div>
+        <div class="search-bar-drop" id="searchDrop">
+            <input type="text" id="searchInput" placeholder="Cari berita..." autocomplete="off">
+            <button id="searchBtn">Cari</button>
+        </div>
+        <nav class="cat-nav">
+            <div class="cat-nav-inner">
+                <a href="index.html">Semua</a>
+                <a href="index.html?kategori=Nasional">Nasional</a>
+                <a href="index.html?kategori=Tangerang Raya">Tangerang Raya</a>
+                <a href="index.html?kategori=Banten">Banten</a>
+                <a href="index.html?kategori=Serang">Serang</a>
+                <a href="index.html?kategori=Peristiwa">Peristiwa</a>
+                <a href="index.html?kategori=Politik">Politik</a>
+                <a href="index.html?kategori=Hukum dan Kriminal">Hukum dan Kriminal</a>
+                <a href="index.html?kategori=Ekonomi">Ekonomi</a>
+                <a href="index.html?kategori=Pendidikan">Pendidikan</a>
+                <a href="index.html?kategori=Olahraga">Olahraga</a>
+                <a href="index.html?kategori=Teknologi">Teknologi</a>
+                <a href="index.html?kategori=Hiburan">Hiburan</a>
+                <a href="index.html?kategori=Lifestyle">Lifestyle</a>
+                <a href="index.html?kategori=Opini">Opini</a>
             </div>
+        </nav>
+    </header>
 
-            <div class="widget">
-                <div class="widget-head" id="judulPengurus">☆ Pengurus Inti DPP KJNI ☆</div>
-                <div class="widget-body pengurus-grid" id="redaksiPengurus"></div>
-            </div>
+    <div class="page-body">
+        <div class="layout">
+            <main style="max-width: 100%; overflow: hidden;">
+                <article>
+                    <div class="cat-badge">Pedoman</div>
+                    <h1 class="article-title" id="judulHalaman">Pedoman Media Siber</h1>
+                    <div class="article-meta">
+                        <span>⚖️ Dewan Pers Republik Indonesia</span>
+                        <span id="tglTayang">📅 3 Februari 2012</span>
+                    </div>
 
-            <div class="widget">
-                <div class="widget-head" id="judulPembina">☆ Dewan Pembina &amp; Penasehat ☆</div>
-                <div class="widget-body pengurus-grid" id="redaksiPembina"></div>
-            </div>
+                    <div id="loadingBox" class="loading-box">
+                        <p style="font-size:15px;">⏳ Memuat pedoman...</p>
+                    </div>
 
-            <div class="widget">
-                <div class="widget-head" id="judulDPW">☆ Pengurus DPW/DPC ☆</div>
-                <div class="widget-body dpw-grid" id="redaksiDPW" style="padding: 14px;"></div>
-            </div>
+                    <div id="kontenPedoman" class="hidden"></div>
 
-            <div class="widget">
-                <div class="widget-head" id="judulAsosiasi">☆ Asosiasi Wartawan / Jurnalis ☆</div>
-                <div class="widget-body">
-                    <ul class="assoc-list" id="redaksiAsosiasi"></ul>
-                </div>
-            </div>
+                </article>
+            </main>
 
-            <div class="notice-box">
-                <strong>⚠️ PEMBERITAHUAN PENTING:</strong><br>
-                <span id="redaksiPemberitahuan">Memuat pemberitahuan...</span>
-            </div>
-
-            <div id="dynamicAdFooter" style="display:none;"></div>
-        </main>
-        
-        <aside>
-            <div style="position:sticky;top:112px;">
-                <div style="height:12px;"></div>
-                <div class="widget">
-                    <div class="widget-head">Sosial Media</div>
-                     <div class="widget-body">
-                      <div class="soc-grid">
+            <aside style="max-width: 100%;">
+                <div style="position:sticky;top:112px;">
+                    <div style="height:12px;"></div>
+                    <div class="widget">
+                        <div class="widget-head">Sosial Media</div>
+                        <div class="soc-grid">
     <a href="https://facebook.com/halaman-anda" target="_blank" rel="noopener noreferrer" class="soc-card soc-fb">
         <span class="soc-name">
             <svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
@@ -396,312 +317,261 @@
         <span class="cnt"></span>
     </a>
 </div>
+                        </div>
                     </div>
-                </div>
-                <div class="widget">
-                    <div class="widget-head">Berita Populer</div>
-                    <div class="widget-body" style="padding:4px 14px 12px;">
-                        <div id="sidebarNews"><p style="color:var(--text-muted);font-size:13px;padding:8px 0;">Memuat...</p></div>
-                    </div>
-                </div>
-                <div class="widget">
-                    <div class="widget-head">Kategori</div>
-                    <div class="widget-body">
-                        <div class="cat-cloud" id="tagCloud">
-                            <a href="index.html?kategori=Nasional" class="cat-tag">Nasional</a>
-                            <a href="index.html?kategori=Tangerang Raya" class="cat-tag">Tangerang Raya</a>
-                            <a href="index.html?kategori=Banten" class="cat-tag">Banten</a>
-                            <a href="index.html?kategori=Serang" class="cat-tag">Serang</a>
-                            <a href="index.html?kategori=Peristiwa" class="cat-tag">Peristiwa</a>
-                            <a href="index.html?kategori=Politik" class="cat-tag">Politik</a>
-                            <a href="index.html?kategori=Ekonomi" class="cat-tag">Ekonomi</a>
-                            <a href="index.html?kategori=Pendidikan" class="cat-tag">Pendidikan</a>
-                            <a href="index.html?kategori=Olahraga" class="cat-tag">Olahraga</a>
-                            <a href="index.html?kategori=Teknologi" class="cat-tag">Teknologi</a>
-                            <a href="index.html?kategori=Hiburan" class="cat-tag">Hiburan</a>
-                            <a href="index.html?kategori=Lifestyle" class="cat-tag">Lifestyle</a>
-                            <a href="index.html?kategori=Opini" class="cat-tag">Opini</a>
+                    <div class="widget">
+                        <div class="widget-head">Halaman Lainnya</div>
+                        <div class="widget-body">
+                            <div class="cat-cloud">
+                                <a href="index.html" class="cat-tag">Beranda</a>
+                                <a href="KontakKami.html" class="cat-tag">Tentang Kami</a>
+                                <a href="SusunanPengurus.html" class="cat-tag">Susunan Pengurus</a>
+                                <a href="KodeEtikJurnalistik.html" class="cat-tag">Kode Etik Jurnalistik</a>
+                                <a href="pendaftaran.html" class="cat-tag">Pendaftaran</a>
+                            </div>
                         </div>
                     </div>
                 </div>
-                
-                <div id="dynamicAdSidebar" style="display:none;"></div>
-            </div>
-        </aside>
-    </div>
-</div>
-
-<footer>
-    <div class="footer-inner">
-        <div class="footer-grid">
-            <div>
-                <img class="footer-logo-img" src="https://res.cloudinary.com/dc7guxgnm/image/upload/q_auto/f_auto/v1780932379/1000305700_b9k0wb.jpg" alt="KJNI">
-                <p class="footer-desc">Portal berita terpercaya menyajikan informasi aktual seputar Tangerang, Banten, dan Indonesia.</p>
-                <div class="footer-soc">
-                    <a class="fsb-fb" href="#" target="_blank"><svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>FB</a>
-                    <a class="fsb-ig" href="#" target="_blank"><svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>IG</a>
-                    <a class="fsb-yt" href="#" target="_blank"><svg viewBox="0 0 24 24"><path d="M23.495 6.205a3.007 3.007 0 0 0-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 0 0 .527 6.205a31.247 31.247 0 0 0-.522 5.805 31.247 31.247 0 0 0 .522 5.783 3.007 3.007 0 0 0 2.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 0 0 2.088-2.088 31.247 31.247 0 0 0 .5-5.783 31.247 31.247 0 0 0-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/></svg>YT</a>
-                    <a class="fsb-wa" href="https://wa.me/6283817591582" target="_blank"><svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>WA</a>
-                    <a class="fsb-tg" href="#" target="_blank"><svg viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>TG</a>
-                </div>
-            </div>
-            <div class="footer-widget">
-                <h4>Halaman</h4>
-                <ul class="footer-links">
-                    <li><a href="SusunanPengurus.html">Susunan Pengurus</a></li>
-                    <li><a href="KontakKami.html">Kontak Kami</a></li>
-                    <li><a href="PedomanMediaSiber.html">Pedoman Media Siber</a></li>
-                    <li><a href="KodeEtikJurnalistik.html">Kode Etik Jurnalistik</a></li>
-                </ul>
-            </div>
+            </aside>
         </div>
-        <div class="footer-bottom"><p>&copy; 2026 KJNI.web.id &mdash; Portal Berita Tangerang, Banten &amp; Indonesia.</p></div>
     </div>
-</footer>
 
-<script>
-    // Theme & Interactivity (Sama persis dengan index.html)
-    document.getElementById('themeBtn').addEventListener('click', () => {
-        const h = document.documentElement;
-        h.getAttribute('data-theme') === 'dark' ? h.removeAttribute('data-theme') : h.setAttribute('data-theme','dark');
-    });
-    
-    const hamburgerBtn = document.getElementById('hamburgerBtn'), 
-          hDropdown = document.getElementById('hamburgerDropdown');
-
-    function toggleDropdown() {
-        hamburgerBtn.classList.toggle('open');
-        hDropdown.classList.toggle('open');
-    }
-
-    hamburgerBtn.addEventListener('click', e => {
-        e.stopPropagation();
-        toggleDropdown();
-    });
-
-    document.addEventListener('click', e => {
-        if (!hDropdown.contains(e.target) && !hamburgerBtn.contains(e.target)) {
-            hamburgerBtn.classList.remove('open');
-            hDropdown.classList.remove('open');
-        }
-    });
-
-    const searchDrop = document.getElementById('searchDrop');
-    document.getElementById('searchToggleBtn').addEventListener('click', () => {
-        searchDrop.classList.toggle('open');
-        if (searchDrop.classList.contains('open')) document.getElementById('searchInput').focus();
-    });
-    document.getElementById('searchInput').addEventListener('keydown', e => { 
-        if(e.key==='Enter') window.location.href='index.html'; 
-    });
-</script>
-
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, doc, getDoc, collection, query, orderBy, limit, getDocs } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-    const firebaseConfig = {
-        apiKey: "AIzaSyCCOOmXPfLhbDdSoil1UHfld5731689HVw",
-        authDomain: "webberita-8af66.firebaseapp.com",
-        projectId: "webberita-8af66",
-        storageBucket: "webberita-8af66.firebasestorage.app",
-        messagingSenderId: "752062961977",
-        appId: "1:752062961977:web:6af98cd5ebe074189c30e8"
-    };
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-
-    // FETCH IKLAN (Identik dengan index.html)
-    async function muatIklan() {
-        try {
-            const ds = await getDoc(doc(db, "pengaturan", "iklan")); 
-            if(!ds.exists()) return; 
-            const data = ds.data();
-            
-            const ws = document.getElementById("dynamicAdSidebar");
-            if(data.ads_sidebar && data.ads_sidebar.length > 0) {
-                ws.style.display = "block";
-                ws.innerHTML = `<p style="font-size:10px;color:var(--text-muted);text-transform:uppercase;text-align:center;margin-bottom:6px;">Advertisement</p>` + data.ads_sidebar.map(ad => `<a href="${ad.link||'#'}" target="_blank" style="display:block;margin-bottom:10px;"><img src="${ad.img}" alt="Ad" style="width:100%;border-radius:4px;"></a>`).join('');
-            }
-            
-            const wf = document.getElementById("dynamicAdFooter");
-            if(data.ads_footer && data.ads_footer.length > 0) {
-                wf.style.display = "block";
-                wf.innerHTML = `<p class="ad-lbl">Advertisement</p>` + data.ads_footer.map(ad => `<a href="${ad.link||'#'}" target="_blank"><img src="${ad.img}" alt="Ad" style="max-width:728px;width:100%;border-radius:4px; margin: 0 auto;"></a>`).join('');
-            }
-
-            const wt = document.getElementById("dynamicAdTop");
-            if(data.ads_top && data.ads_top.length > 0) {
-                wt.style.display = "block";
-                wt.innerHTML = `<p class="ad-lbl">Advertisement</p>` + data.ads_top.map(ad => `<a href="${ad.link||'#'}" target="_blank" style="display:block;margin-bottom:10px;"><img src="${ad.img}" alt="Ad" style="max-width:970px;width:100%;border-radius:4px; margin: 0 auto; max-height:250px; object-fit:contain;"></a>`).join('');
-            }
-
-            const wl = document.getElementById("dynamicAdLeft");
-            if(data.ads_left && data.ads_left.length > 0) {
-                wl.style.display = "block";
-                document.getElementById('mainLayout').classList.add('has-left-ad');
-                wl.innerHTML = `<div style="position:sticky;top:112px;"><p style="font-size:10px;color:var(--text-muted);text-transform:uppercase;text-align:center;margin-bottom:6px;">Advertisement</p>` + data.ads_left.map(ad => `<a href="${ad.link||'#'}" target="_blank" style="display:block;margin-bottom:10px;"><img src="${ad.img}" alt="Ad" style="width:100%;border-radius:4px;"></a>`).join('') + `</div>`;
-            }
-        } catch(e){}
-    }
-    muatIklan();
-
-    // FETCH BERITA POPULER SIDEBAR
-    async function muatBeritaPopuler() {
-        try {
-            const q = query(collection(db, "berita"), orderBy("tanggalDibuat", "desc"), limit(5));
-            const snapshot = await getDocs(q);
-            const top5 = snapshot.docs.map(d => ({id: d.id, ...d.data()})).filter(b => b.status !== 'nonaktif');
-            
-            document.getElementById('sidebarNews').innerHTML = !top5.length 
-                ? '<p style="color:var(--text-muted);font-size:13px;padding:6px 0;">Belum ada berita.</p>' 
-                : top5.map((b, i) => `<a href="artikel.html?id=${b.id}" class="pop-item"><div class="pop-num">${String(i+1).padStart(2,'0')}</div><div class="pop-title">${b.judul}</div></a>`).join('');
-        } catch(e) {
-            console.warn('Gagal muat berita sidebar:', e.message);
-        }
-    }
-    muatBeritaPopuler();
-
-    // FETCH WA DINAMIS
-    (async () => {
-        try {
-            const snap = await getDoc(doc(db, 'pengaturan', 'whatsapp'));
-            if (snap.exists()) {
-                const { nomor, pesan } = snap.data();
-                if (nomor) {
-                    const url = 'https://wa.me/' + nomor + (pesan ? '?text=' + encodeURIComponent(pesan) : '');
-                    const waBtn = document.getElementById('waFloatBtn');
-                    if (waBtn) waBtn.href = url;
-                    const fsb = document.querySelector('.fsb-wa');
-                    if (fsb) fsb.href = url;
-                }
-            }
-        } catch(e) { console.warn('Gagal load WA settings:', e.message); }
-    })();
-
-    // DEFAULT DATA REDAKSI
-    const DEFAULT_REDAKSI = {
-        judul_pendiri: "☆ Pendiri KJNI ☆",
-        judul_pengurus_inti: "☆ Pengurus Inti DPP KJNI ☆",
-        judul_dewan_pembina: "☆ Dewan Pembina & Penasehat ☆",
-        judul_dpw: "☆ Pengurus DPW/DPC ☆",
-        judul_asosiasi: "☆ Asosiasi Wartawan / Jurnalis ☆",
-        legalitas: { nama: "Komite Jurnalis Nusantara Independen", akte: "EVA KURNIASIH, S.H., M.Kn.", sk: "AHU-0049584.AH.01.01.TAHUN.2021", daftar_perseroan: "AHU-0003690.AH.01.07.TAHUN 2026", npwp: "1000 0000 0989 2975" },
-        pendiri: [ { jabatan: "Pendiri 1", nama: "NURUL QOMAR, C. BJ., PTI" }, { jabatan: "Pendiri 2", nama: "HERIYANTO" }, { jabatan: "Pendiri 3", nama: "YOGA KUMALA" } ],
-        pengurus_inti: [ { jabatan: "Ketua DPP", nama: "NURUL QOMAR, C. BJ., PTI" }, { jabatan: "Wakil Ketua DPP", nama: "HERIYANTO" }, { jabatan: "Bendahara", nama: "SATI" }, { jabatan: "Sekretaris", nama: "YOGA KUMALA" } ],
-        dewan_pembina: [ { jabatan: "Dewan Pembina", nama: "ILHAMMUDIN, SE, SH, CPM." }, { jabatan: "Dewan Pembina", nama: "H. FACHRUDIN HS, S. PDJ" } ],
-        dpw: [
-            { label: "DPW", nama: "Jawa Barat", perangkat: [ {jabatan: "Ketua", nama: "", foto: ""}, {jabatan: "Sekretaris", nama: "", foto: ""}, {jabatan: "Bendahara", nama: "", foto: ""} ] },
-            { label: "DPW", nama: "Banten", perangkat: [ {jabatan: "Ketua", nama: "", foto: ""}, {jabatan: "Sekretaris", nama: "", foto: ""}, {jabatan: "Bendahara", nama: "", foto: ""} ] }
-        ],
-        asosiasi: [ "Perkumpulan Pemimpin Redaksi Independent Indonesia (PPRI)", "Persatuan Pewarta Warga Indonesia (PPWI)", "Komite Jurnalis Nusantara Independen (KJNI)" ],
-        pemberitahuan: "Seluruh Pengurus KJNI dilegitimasi dengan <strong>KTA dan SURAT TUGAS</strong> serta namanya tercantum di Box Redaksi dan Kepengurusan."
-    };
-
-    function esc(str) { return String(str ?? '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-
-    function renderLegalitas(d) {
-        document.getElementById('redaksiLegalTitle').textContent = '🏢 ' + (d.nama || DEFAULT_REDAKSI.legalitas.nama);
-        document.getElementById('redaksiLegalitas').innerHTML = `
-            <tr><td>Akte Notaris</td><td>: ${esc(d.akte)}</td></tr>
-            <tr><td>SK Kemenkumham RI</td><td>: ${esc(d.sk)}</td></tr>
-            <tr><td>Daftar Perseroan</td><td>: ${esc(d.daftar_perseroan)}</td></tr>
-            <tr><td>NPWP</td><td>: ${esc(d.npwp)}</td></tr>
-        `;
-    }
-
-    function renderTabel2Kolom(elId, arr) {
-        const el = document.getElementById(elId);
-        if (!arr || !arr.length) { el.innerHTML = '<p style="text-align:center;color:var(--text-muted);padding:14px;width:100%;grid-column:1/-1;">Belum ada data.</p>'; return; }
-        el.innerHTML = arr.map(item => {
-            const inisial = (item.nama || '?').trim().charAt(0).toUpperCase();
-            const fotoHtml = item.foto ? `<img class="pengurus-card-foto" src="${esc(item.foto)}" alt="${esc(item.nama)}" loading="lazy">` : `<span class="pengurus-card-foto pengurus-card-foto-placeholder">${esc(inisial)}</span>`;
-            return `<div class="pengurus-card">${fotoHtml}<span class="pengurus-card-nama">${esc(item.nama)}</span><span class="pengurus-card-jabatan">${esc(item.jabatan)}</span></div>`;
-        }).join('');
-    }
-
-    function renderDPW(arr) {
-        const el = document.getElementById('redaksiDPW');
-        if (!arr || !arr.length) { el.innerHTML = '<p style="color:var(--text-muted);font-size:13px;padding:14px;grid-column:1/-1;">Belum ada data DPW.</p>'; return; }
-
-        const renderPerangkat = (p) => {
-            const jabatan = (p && p.jabatan) || '';
-            const nama = (p && p.nama && p.nama.trim()) ? p.nama : '—';
-            const foto = (p && p.foto) || '';
-
-            const validNama = (nama !== '—');
-            const inisial = validNama ? nama.trim().charAt(0).toUpperCase() : '?';
-
-            const fotoHtml = foto
-                ? `<img class="dpw-role-foto" src="${esc(foto)}" alt="${esc(nama)}" loading="lazy">`
-                : `<span class="dpw-role-foto-placeholder">${esc(inisial)}</span>`;
-
-            return `<div class="dpw-role-item">
-                ${fotoHtml}
+    <footer>
+        <div class="footer-inner">
+            <div class="footer-grid">
                 <div>
-                    <div class="dpw-role-nama">${esc(nama)}</div>
-                    <div class="dpw-role-jabatan">${esc(jabatan)}</div>
+                    <img class="footer-logo-img" src="https://res.cloudinary.com/dc7guxgnm/image/upload/q_auto/f_auto/v1780932379/1000305700_b9k0wb.jpg" alt="KJNI">
+                    <p class="footer-desc">Portal berita terpercaya menyajikan informasi aktual seputar Tangerang, Banten, dan Indonesia.</p>
+                    <div class="footer-soc">
+                        <a class="fsb-fb" href="#" target="_blank"><svg viewBox="0 0 24 24"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>FB</a>
+                        <a class="fsb-ig" href="#" target="_blank"><svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>IG</a>
+                        <a class="fsb-yt" href="#" target="_blank"><svg viewBox="0 0 24 24"><path d="M23.495 6.205a3.007 3.007 0 0 0-2.088-2.088c-1.87-.501-9.396-.501-9.396-.501s-7.507-.01-9.396.501A3.007 3.007 0 0 0 .527 6.205a31.247 31.247 0 0 0-.522 5.805 31.247 31.247 0 0 0 .522 5.783 3.007 3.007 0 0 0 2.088 2.088c1.868.502 9.396.502 9.396.502s7.506 0 9.396-.502a3.007 3.007 0 0 0 2.088-2.088 31.247 31.247 0 0 0 .5-5.783 31.247 31.247 0 0 0-.5-5.805zM9.609 15.601V8.408l6.264 3.602z"/></svg>YT</a>
+                        <a class="fsb-wa" href="https://wa.me/6283817591582" target="_blank"><svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" fill="currentColor"/></svg>WA</a>
+                        <a class="fsb-tg" href="#" target="_blank"><svg viewBox="0 0 24 24"><path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/></svg>TG</a>
+                    </div>
                 </div>
-            </div>`;
+                <div class="footer-widget">
+                    <h4>Halaman</h4>
+                    <ul class="footer-links">
+                        <li><a href="SusunanPengurus.html">Susunan Pengurus</a></li>
+                        <li><a href="KontakKami.html">Kontak Kami</a></li>
+                        <li><a href="PedomanMediaSiber.html">Pedoman Media Siber</a></li>
+                        <li><a href="KodeEtikJurnalistik.html">Kode Etik Jurnalistik</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom"><p>&copy; 2026 KJNI.web.id &mdash; Portal Berita Tangerang, Banten &amp; Indonesia.</p></div>
+        </div>
+    </footer>
+
+    <script>
+        // Dark & Light Mode
+        document.getElementById('themeBtn').addEventListener('click', () => {
+            const h = document.documentElement;
+            h.getAttribute('data-theme') === 'dark' ? h.removeAttribute('data-theme') : h.setAttribute('data-theme', 'dark');
+        });
+
+        // Hamburger Dropdown
+        const hamburgerBtn = document.getElementById('hamburgerBtn');
+        const hDropdown = document.getElementById('hamburgerDropdown');
+        hamburgerBtn.addEventListener('click', e => {
+            e.stopPropagation();
+            hamburgerBtn.classList.toggle('open');
+            hDropdown.classList.toggle('open');
+        });
+        document.addEventListener('click', e => {
+            if (!hDropdown.contains(e.target) && !hamburgerBtn.contains(e.target)) {
+                hamburgerBtn.classList.remove('open');
+                hDropdown.classList.remove('open');
+            }
+        });
+
+        // Search Toggle
+        const searchDrop = document.getElementById('searchDrop');
+        document.getElementById('searchToggleBtn').addEventListener('click', () => {
+            searchDrop.classList.toggle('open');
+            if (searchDrop.classList.contains('open')) document.getElementById('searchInput').focus();
+        });
+        document.getElementById('searchBtn').addEventListener('click', () => {
+            const kw = document.getElementById('searchInput').value.trim();
+            if (kw) window.location.href = `index.html?cari=${encodeURIComponent(kw)}`;
+        });
+        document.getElementById('searchInput').addEventListener('keydown', e => {
+            if (e.key === 'Enter') document.getElementById('searchBtn').click();
+        });
+    </script>
+
+    <!-- KONTEN PEDOMAN: DIAMBIL DINAMIS DARI FIRESTORE (diatur lewat admin.html) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = { apiKey:"AIzaSyCCOOmXPfLhbDdSoil1UHfld5731689HVw", authDomain:"webberita-8af66.firebaseapp.com", projectId:"webberita-8af66", storageBucket:"webberita-8af66.firebasestorage.app", messagingSenderId:"752062961977", appId:"1:752062961977:web:6af98cd5ebe074189c30e8" };
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // ====== DATA DEFAULT (FALLBACK) ======
+        // Dipakai jika admin belum pernah menyimpan apa pun di Firestore.
+        // Begitu admin simpan dari admin.html, data ini akan ditimpa oleh data Firestore.
+        const DEFAULT_PEDOMAN = {
+            judul: "Pedoman Media Siber",
+            intro: "Kemerdekaan berpendapat, kemerdekaan berekspresi, dan kemerdekaan pers adalah hak asasi manusia yang dilindungi Pancasila, Undang-Undang Dasar 1945, dan Deklarasi Universal Hak Asasi Manusia PBB. Keberadaan media siber di Indonesia juga merupakan bagian dari kemerdekaan berpendapat, kemerdekaan berekspresi, dan kemerdekaan pers. Media siber memiliki karakter khusus sehingga memerlukan pedoman agar pengelolaannya dapat dilaksanakan secara profesional, memenuhi fungsi, hak, dan kewajibannya sesuai Undang-Undang Nomor 40 Tahun 1999 tentang Pers dan Kode Etik Jurnalistik. Untuk itu Dewan Pers bersama organisasi pers, pengelola media siber, dan masyarakat menyusun Pedoman Pemberitaan Media Siber sebagai berikut:",
+            tanggal: "Jakarta, 3 Februari 2012",
+            penutup: "(Pedoman ini ditandatangani oleh Dewan Pers dan komunitas pers di Jakarta, 3 Februari 2012).",
+            sections: [
+                {
+                    judul: "Ruang Lingkup",
+                    html: `<ol>
+                        <li>Media Siber adalah segala bentuk media yang menggunakan wahana internet dan melaksanakan kegiatan jurnalistik, serta memenuhi persyaratan Undang-Undang Pers dan Standar Perusahaan Pers yang ditetapkan Dewan Pers.</li>
+                        <li>Isi Buatan Pengguna (User Generated Content) adalah segala isi yang dibuat dan atau dipublikasikan oleh pengguna media siber, antara lain, artikel, gambar, komentar, suara, video dan berbagai bentuk unggahan yang melekat pada media siber, seperti blog, forum, komentar pembaca atau pemirsa, dan bentuk lain.</li>
+                    </ol>`
+                },
+                {
+                    judul: "Verifikasi dan Keberimbangan Berita",
+                    html: `<ol>
+                        <li>Pada prinsipnya setiap berita harus melalui verifikasi.</li>
+                        <li>Berita yang dapat merugikan pihak lain memerlukan verifikasi pada berita yang sama untuk memenuhi prinsip akurasi dan keberimbangan.</li>
+                        <li>Ketentuan dalam butir (a) di atas dikecualikan, dengan syarat:
+                            <ol type="a">
+                                <li>Berita benar-benar mengandung kepentingan publik yang bersifat mendesak;</li>
+                                <li>Sumber berita yang pertama adalah sumber yang jelas disebutkan identitasnya, kredibel dan kompeten;</li>
+                                <li>Subyek berita yang harus dikonfirmasi tidak diketahui keberadaannya dan atau tidak dapat diwawancarai;</li>
+                                <li>Media memberikan penjelasan kepada pembaca bahwa berita tersebut masih memerlukan verifikasi lebih lanjut yang diupayakan dalam waktu secepatnya. Penjelasan dimuat pada bagian akhir dari berita yang sama, di dalam kurung dan menggunakan huruf miring.</li>
+                            </ol>
+                        </li>
+                        <li>Setelah memuat berita sesuai dengan butir (c), media wajib meneruskan upaya verifikasi, dan setelah verifikasi didapatkan, hasil verifikasi dicantumkan pada berita pemutakhiran (update) dengan tautan pada berita yang belum terverifikasi.</li>
+                    </ol>`
+                },
+                {
+                    judul: "Isi Buatan Pengguna (User Generated Content)",
+                    html: `<ol>
+                        <li>Media siber wajib mencantumkan syarat dan ketentuan mengenai Isi Buatan Pengguna yang tidak bertentangan dengan Undang-Undang No. 40 tahun 1999 tentang Pers dan Kode Etik Jurnalistik, yang ditempatkan secara terang dan jelas.</li>
+                        <li>Media siber mewajibkan setiap pengguna untuk melakukan registrasi keanggotaan dan melakukan proses log-in terlebih dahulu untuk dapat mempublikasikan semua bentuk Isi Buatan Pengguna. Ketentuan mengenai log-in akan diatur lebih lanjut.</li>
+                        <li>Dalam registrasi tersebut, media siber mewajibkan pengguna memberi persetujuan tertulis bahwa Isi Buatan Pengguna yang dipublikasikan:
+                            <ol type="a">
+                                <li>Tidak memuat isi bohong, fitnah, sadis dan cabul;</li>
+                                <li>Tidak memuat isi yang mengandung prasangka dan kebencian terkait dengan suku, agama, ras, dan antargolongan (SARA), serta menganjurkan tindakan kekerasan;</li>
+                                <li>Tidak memuat isi diskriminatif atas dasar perbedaan jenis kelamin dan bahasa, serta tidak merendahkan martabat orang lemah, miskin, sakit, cacat jiwa, atau cacat jasmani.</li>
+                            </ol>
+                        </li>
+                        <li>Media siber memiliki kewenangan mutlak untuk mengedit atau menghapus Isi Buatan Pengguna yang bertentangan dengan butir (c).</li>
+                        <li>Media siber wajib menyediakan mekanisme pengaduan Isi Buatan Pengguna yang dinilai melanggar ketentuan pada butir (c). Mekanisme tersebut harus disediakan di tempat yang dengan mudah dapat diakses pengguna.</li>
+                        <li>Media siber wajib menyunting, menghapus, dan melakukan tindakan koreksi setiap Isi Buatan Pengguna yang dilaporkan dan melanggar ketentuan butir (c), sesegera mungkin secara proporsional selambat-lambatnya 2 x 24 jam setelah pengaduan diterima.</li>
+                        <li>Media siber yang telah memenuhi ketentuan pada butir (a), (b), (c), dan (f) tidak dibebani tanggung jawab atas masalah yang ditimbulkan akibat pemuatan isi yang melanggar ketentuan pada butir (c).</li>
+                        <li>Media siber bertanggung jawab atas Isi Buatan Pengguna yang dilaporkan bila tidak mengambil tindakan koreksi setelah batas waktu sebagaimana tersebut pada butir (f).</li>
+                    </ol>`
+                },
+                {
+                    judul: "Ralat, Koreksi, dan Hak Jawab",
+                    html: `<ol>
+                        <li>Ralat, koreksi, dan hak jawab mengacu pada Undang-Undang Pers, Kode Etik Jurnalistik, dan Pedoman Hak Jawab yang ditetapkan Dewan Pers.</li>
+                        <li>Ralat, koreksi dan atau hak jawab wajib ditautkan pada berita yang diralat, dikoreksi atau yang diberi hak jawab.</li>
+                        <li>Di setiap berita ralat, koreksi, dan hak jawab wajib dicantumkan waktu pemuatan ralat, koreksi, dan atau hak jawab tersebut.</li>
+                        <li>Bila suatu berita media siber tertentu disebarluaskan media siber lain, maka:
+                            <ol type="a">
+                                <li>Tanggung jawab media siber pembuat berita terbatas pada berita yang dipublikasikan di media siber tersebut atau media siber yang berada di bawah otoritas teknisnya;</li>
+                                <li>Koreksi berita yang dilakukan oleh sebuah media siber, juga harus dilakukan oleh media siber lain yang mengutip berita dari media siber yang dikoreksi itu;</li>
+                                <li>Media yang menyebarluaskan berita dari sebuah media siber dan tidak melakukan koreksi atas berita sesuai yang dilakukan oleh media siber pemilik dan atau pembuat berita tersebut, bertanggung jawab penuh atas semua akibat hukum dari berita yang tidak dikoreksinya itu.</li>
+                            </ol>
+                        </li>
+                        <li>Sesuai dengan Undang-Undang Pers, media siber yang tidak melayani hak jawab dapat dijatuhi sanksi hukum pidana denda paling banyak Rp500.000.000 (Lima ratus juta rupiah).</li>
+                    </ol>`
+                },
+                {
+                    judul: "Pencabutan Berita",
+                    html: `<ol>
+                        <li>Berita yang sudah dipublikasikan tidak dapat dicabut karena alasan penyensoran dari pihak luar redaksi, kecuali terkait masalah SARA, kesusilaan, masa depan anak, pengalaman traumatik korban atau berdasarkan pertimbangan khusus lain yang ditetapkan Dewan Pers.</li>
+                        <li>Media siber lain wajib mengikuti pencabutan kutipan berita dari media asal yang telah dicabut.</li>
+                        <li>Pencabutan berita wajib disertai dengan alasan pencabutan dan diumumkan kepada publik.</li>
+                    </ol>`
+                },
+                {
+                    judul: "Iklan",
+                    html: `<ol>
+                        <li>Media siber wajib membedakan dengan tegas antara produk berita dan iklan.</li>
+                        <li>Setiap berita/artikel/isi yang merupakan iklan dan atau isi berbayar wajib mencantumkan keterangan 'advertorial', 'iklan', 'ads', 'sponsored', atau kata lain yang menjelaskan bahwa berita/artikel/isi tersebut adalah iklan.</li>
+                    </ol>`
+                },
+                {
+                    judul: "Hak Cipta",
+                    html: `<p>Media siber wajib menghormati hak cipta sebagaimana diatur dalam peraturan perundang-undangan yang berlaku.</p>`
+                },
+                {
+                    judul: "Pencantuman Pedoman",
+                    html: `<p>Media siber wajib mencantumkan Pedoman Pemberitaan Media Siber ini di medianya secara terang dan jelas.</p>`
+                },
+                {
+                    judul: "Sengketa",
+                    html: `<p>Penilaian akhir atas sengketa mengenai pelaksanaan Pedoman Pemberitaan Media Siber ini diselesaikan oleh Dewan Pers.</p>`
+                }
+            ]
         };
 
-        el.innerHTML = arr.map(p => {
-            let label = p.label || 'DPW';
-            let nama = p.nama || p.provinsi || '';
-            let perangkat = p.perangkat;
+        function renderPedoman(data) {
+            document.getElementById('judulHalaman').innerText = data.judul || 'Pedoman Media Siber';
+            document.title = `${data.judul || 'Pedoman Media Siber'} - KJNI`;
+            if (data.tanggal) document.getElementById('tglTayang').innerText = `📅 ${data.tanggal.replace(/^Jakarta,\s*/i,'')}`;
 
-            if (!perangkat) {
-                const toRole = (r, jabatan) => {
-                    const obj = typeof r === 'string' ? { nama: r, foto: '' } : (r || {});
-                    return { jabatan, nama: obj.nama || '', foto: obj.foto || '' };
-                };
-                perangkat = [ toRole(p.ketua, 'Ketua'), toRole(p.sekretaris, 'Sekretaris'), toRole(p.bendahara, 'Bendahara') ];
+            const sections = Array.isArray(data.sections) ? data.sections : [];
+            let html = '';
+
+            if (data.intro) {
+                html += `<div class="intro-box">${data.intro}</div>`;
             }
 
-            return `
-            <div class="dpw-card">
-                <h4>${esc(label)} ${esc(nama)}</h4>
-                <div class="dpw-role-grid">
-                    ${perangkat.map(renderPerangkat).join('')}
-                </div>
-            </div>`;
-        }).join('');
-    }
+            sections.forEach((sec, idx) => {
+                html += `
+                    <div class="pedoman-section">
+                        <div class="pedoman-section-title">
+                            <span class="pedoman-section-num">${idx + 1}</span>
+                            <span>${sec.judul || ''}</span>
+                        </div>
+                        <div class="pedoman-body">${sec.html || ''}</div>
+                    </div>
+                `;
+            });
 
-    function renderAsosiasi(arr) {
-        const el = document.getElementById('redaksiAsosiasi');
-        if (!arr || !arr.length) { el.innerHTML = '<li style="list-style:none;color:var(--text-muted);">Belum ada data.</li>'; return; }
-        el.innerHTML = arr.map(a => `<li>${esc(a)}</li>`).join('');
-    }
-
-    async function muatDataRedaksi() {
-        let data = DEFAULT_REDAKSI;
-        try {
-            const snap = await getDoc(doc(db, 'pengaturan', 'redaksi'));
-            if (snap.exists()) {
-                const fs = snap.data();
-                data = { ...DEFAULT_REDAKSI, ...fs };
+            if (data.tanggal || data.penutup) {
+                html += `<div class="signature-box">`;
+                if (data.tanggal) html += `${data.tanggal}<br>`;
+                if (data.penutup) html += data.penutup;
+                html += `</div>`;
             }
-        } catch (e) { console.warn('Gagal memuat data redaksi, menampilkan data default:', e.message); }
 
-        document.getElementById('judulPendiri').textContent = data.judul_pendiri || DEFAULT_REDAKSI.judul_pendiri;
-        document.getElementById('judulPengurus').textContent = data.judul_pengurus_inti || DEFAULT_REDAKSI.judul_pengurus_inti;
-        document.getElementById('judulPembina').textContent = data.judul_dewan_pembina || DEFAULT_REDAKSI.judul_dewan_pembina;
-        document.getElementById('judulDPW').textContent = data.judul_dpw || DEFAULT_REDAKSI.judul_dpw;
-        document.getElementById('judulAsosiasi').textContent = data.judul_asosiasi || DEFAULT_REDAKSI.judul_asosiasi;
+            document.getElementById('kontenPedoman').innerHTML = html;
+            document.getElementById('loadingBox').classList.add('hidden');
+            document.getElementById('kontenPedoman').classList.remove('hidden');
+        }
 
-        renderLegalitas(data.legalitas || DEFAULT_REDAKSI.legalitas);
-        renderTabel2Kolom('redaksiPendiri', data.pendiri);
-        renderTabel2Kolom('redaksiPengurus', data.pengurus_inti);
-        renderTabel2Kolom('redaksiPembina', data.dewan_pembina);
-        renderDPW(data.dpw);
-        renderAsosiasi(data.asosiasi);
-        
-        const pemberitahuan = data.pemberitahuan ? esc(data.pemberitahuan).replace(/\n/g,'<br>') : DEFAULT_REDAKSI.pemberitahuan;
-        document.getElementById('redaksiPemberitahuan').innerHTML = pemberitahuan;
-    }
+        async function muatPedoman() {
+            try {
+                const snap = await getDoc(doc(db, 'pengaturan', 'pedoman_media_siber'));
+                if (snap.exists()) {
+                    // Selalu pakai data dari Firestore jika dokumen ada,
+                    // merge dengan DEFAULT hanya untuk field yang belum diisi
+                    const dataFirestore = snap.data();
+                    const dataMerge = {
+                        judul:    dataFirestore.judul    || DEFAULT_PEDOMAN.judul,
+                        intro:    dataFirestore.intro    !== undefined ? dataFirestore.intro    : DEFAULT_PEDOMAN.intro,
+                        tanggal:  dataFirestore.tanggal  !== undefined ? dataFirestore.tanggal  : DEFAULT_PEDOMAN.tanggal,
+                        penutup:  dataFirestore.penutup  !== undefined ? dataFirestore.penutup  : DEFAULT_PEDOMAN.penutup,
+                        sections: Array.isArray(dataFirestore.sections) && dataFirestore.sections.length > 0
+                                    ? dataFirestore.sections
+                                    : DEFAULT_PEDOMAN.sections,
+                    };
+                    renderPedoman(dataMerge);
+                } else {
+                    // Dokumen belum pernah dibuat di admin — pakai default
+                    renderPedoman(DEFAULT_PEDOMAN);
+                }
+            } catch (e) {
+                console.error('Gagal memuat pedoman dari Firestore, memakai data default:', e);
+                renderPedoman(DEFAULT_PEDOMAN);
+            }
+        }
 
-    muatDataRedaksi();
-</script>
+        muatPedoman();
+    </script>
+
 </body>
 </html>
