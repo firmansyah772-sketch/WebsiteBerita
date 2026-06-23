@@ -78,7 +78,7 @@ Proyek ini telah dikonfigurasi untuk *CI/CD* otomatis menggunakan **Vercel**. Se
 ---
 
  💡 Tips Tambahan:
-* Ganti teks `username` dan `nama-repositori-anda` pada bagian langkah instalasi dengan akun GitHub dan nama repositori asli Anda.
-* Jika Anda menggunakan *framework* tertentu seperti React, Next.js, atau Vue.js, Anda bisa menambahkan informasi tersebut di bagian **Teknologi yang Digunakan** agar informasinya semakin lengkap.
+- Ganti teks `username` dan `nama-repositori-anda` pada bagian langkah instalasi dengan akun GitHub dan nama repositori asli Anda.
+- Jika Anda menggunakan *framework* tertentu seperti React, Next.js, atau Vue.js, Anda bisa menambahkan informasi tersebut di bagian **Teknologi yang Digunakan** agar informasinya semakin lengkap.
 
 ```
